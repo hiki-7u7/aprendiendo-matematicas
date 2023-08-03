@@ -3,18 +3,16 @@ import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "./Alert";
-import { collection, addDoc } from "firebase/firestore";
 
 //funcion que exporta el componente Register
 export function Register_2() {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    rol: "profesor",
   });
 
   //funcion que permite registrar un usuario
-  const { registrarUsuario } = useAuth();
+  const { Registrarse } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -32,16 +30,7 @@ export function Register_2() {
     setError("");
     //validacion de campos vacios
     try {
-      const credencialUsuario = await registrarUsuario(
-        user.email,
-        user.password,
-        user.rol
-      );
-      const idUsuario = credencialUsuario.user.uid;
-      await addDoc(collection(db, "usuarios"), {
-        uid: idUsuario,
-        rol: user.rol,
-      });
+      await Registrarse(user.email, user.password);
       navegar("/");
     } catch (error) {
       console.log(error.code);

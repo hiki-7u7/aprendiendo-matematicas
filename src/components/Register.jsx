@@ -12,7 +12,7 @@ export function Register() {
   });
 
   //funcion que permite registrar un usuario
-  const { inscribirse } = useAuth();
+  const { Registrarse } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -30,7 +30,7 @@ export function Register() {
     setError("");
     //validacion de campos vacios
     try {
-      await inscribirse(user.email, user.password);
+      await Registrarse(user.email, user.password);
       navegar("/");
     } catch (error) {
       console.log(error.code);

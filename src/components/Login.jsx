@@ -13,7 +13,7 @@ export function Login() {
   });
 
   //funcion que permite registrar un usuario
-  const { acceso, IniciarConGoogle } = useAuth();
+  const { iniciarSesion } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -32,7 +32,7 @@ export function Login() {
 
     //validacion de campos vacios
     try {
-      await acceso(user.email, user.password);
+      await iniciarSesion(user.email, user.password);
       navegar("/");
     } catch (error) {
       console.log(error.code);
@@ -51,15 +51,6 @@ export function Login() {
           "Demasiados intentos de inicio de sesión fallidos. Intente nuevamente más tarde"
         );
       }
-    }
-  };
-
-  const handleGoogleSignin = async () => {
-    try {
-      await IniciarConGoogle();
-      navegar("/");
-    } catch (error) {
-      setError(error.message);
     }
   };
 
