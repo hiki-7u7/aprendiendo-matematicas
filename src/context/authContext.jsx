@@ -7,26 +7,7 @@ import {
   signOut,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { app, auth, db } from "../firebase";
-import {
-  doc,
-  collection,
-  getDocs,
-  getDoc,
-  setDoc,
-  query,
-  where,
-  getFirestore,
-  addDoc,
-  deleteDoc,
-} from "firebase/firestore";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  getBytes,
-} from "firebase/storage";
+import { auth } from "../firebase";
 
 //creacion del contexto de autenticacion
 export const authContext = createContext();
@@ -46,34 +27,18 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   //estado que permite manejar el estado de carga
-  const [cargando, setCargando] = useState(true);
+  const [cargando, setcargando] = useState(true);
 
   //funcion que permite registrar un usuario
-  const registrarUsuario = async (email, password, rol) => {
-    const credencialUsuario = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const idUsuario = credencialUsuario.user.uid;
-    await setDoc(doc(db, "usuarios", idUsuario), {
-      rol: rol,
-    });
-    return credencialUsuario;
-  };
+  const Registrarse = (email, password) =>
+    createUserWithEmailAndPassword(auth, email, password);
 
   //funcion que permite acceder a un usuario
-  const iniciarSesion = async (email, password) => {
-    const credencialUsuario = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    return credencialUsuario;
-  };
+  const iniciarSesion = (email, password) =>
+    signInWithEmailAndPassword(auth, email, password);
 
   //funcion que permite cerrar sesion
-  const cerrarSesion = () => signOut(auth);
+  const CerrarSesion = () => signOut(auth);
 
   //funcion que permite resetear la contraseña
   const resetPassword = (email) => sendPasswordResetEmail(auth, email);
@@ -82,19 +47,18 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setCargando(false);
+      setcargando(false);
     });
     return () => unsubscribe();
   }, []);
-
   //retorno del componente
   return (
     <authContext.Provider
       value={{
-        registrarUsuario,
+        Registrarse,
         iniciarSesion,
         user,
-        cerrarSesion,
+        CerrarSesion,
         cargando,
         resetPassword,
       }}
