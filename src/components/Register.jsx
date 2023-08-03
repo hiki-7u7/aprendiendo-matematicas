@@ -3,18 +3,16 @@ import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "./Alert";
-import { collection, addDoc } from "firebase/firestore";
 
 //funcion que exporta el componente Register
 export function Register() {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    rol: "alumno",
   });
 
   //funcion que permite registrar un usuario
-  const { registrarUsuario } = useAuth();
+  const { inscribirse } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -30,25 +28,12 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     //validacion de campos vacios
     try {
-      const credencialUsuario = await registrarUsuario(
-        user.email,
-        user.password,
-        user.rol
-      );
-      const idUsuario = credencialUsuario.user.uid;
-      console.log("UID del usuario registrado:", userUid);
-
-      await addDoc(collection(db, "usuarios"), {
-        uid: idUsuario,
-        rol: user.rol,
-      });
-      console.log("Documento creado en Firestore.");
+      await inscribirse(user.email, user.password);
       navegar("/");
     } catch (error) {
-      console.log(error.code, " error en el catch");
+      console.log(error.code);
       if (error.code === "auth/email-already-in-use") {
         setError("El email ya esta registrado");
       } else if (error.code === "auth/invalid-email") {
@@ -65,11 +50,9 @@ export function Register() {
   return (
     <div className="w-full max-w-sm m-auto">
       {error && <Alert message={error} />}
-      {console.log("estas en el return con rol: ", user.rol)}
       <h1 className="text-center text-3xl font-bold py-2">
         Registro de Usuario
       </h1>
-
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

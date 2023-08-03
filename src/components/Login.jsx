@@ -1,8 +1,8 @@
 //importacion de librerias y hooks
 import { useState } from "react";
+import { useAuth } from "../context/authContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "./Alert";
-import { useAuth } from "../context/authContext.jsx";
 
 //funcion que exporta el componente Login
 export function Login() {
@@ -12,14 +12,14 @@ export function Login() {
     password: "",
   });
 
+  //funcion que permite registrar un usuario
+  const { acceso, IniciarConGoogle } = useAuth();
+
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
 
   //funcion que permite manejar los errores
   const [error, setError] = useState();
-
-  //funcion que permite manejar el contexto de autenticacion
-  const { iniciarSesion } = useAuth();
 
   //funcion que permite manejar los cambios en el formulario
   const handlechange = ({ target: { name, value } }) =>
@@ -32,7 +32,7 @@ export function Login() {
 
     //validacion de campos vacios
     try {
-      await iniciarSesion(user.email, user.password);
+      await acceso(user.email, user.password);
       navegar("/");
     } catch (error) {
       console.log(error.code);
@@ -54,6 +54,15 @@ export function Login() {
     }
   };
 
+  const handleGoogleSignin = async () => {
+    try {
+      await IniciarConGoogle();
+      navegar("/");
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   //retorno del componente
   return (
     <div className="w-full max-w-sm m-auto ">
@@ -70,7 +79,6 @@ export function Login() {
           <input
             type="email"
             name="email"
-            id="email"
             placeholder="ejemplo@email.com"
             onChange={handlechange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
