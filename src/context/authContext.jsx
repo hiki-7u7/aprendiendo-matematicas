@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   //estado que permite manejar el estado de carga
-  const [cargando, setcargando] = useState(true);
+  const [cargando, setCargando] = useState(true);
 
   //funcion que permite registrar un usuario
   const Registrarse = (email, password) =>
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setcargando(false);
+      setCargando(false);
     });
     return () => unsubscribe();
   }, []);

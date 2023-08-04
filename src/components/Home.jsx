@@ -16,6 +16,7 @@ export function Home() {
     <div className="w-full max-w-sm m-auto ">
       <h1>Home</h1>
       <p>Bienvenido {user.email}</p>
+      <p>Usted es {user.rol}</p>
       <button className="bg-white rounded-full mg px-2" onClick={handlelogout}>
         Cerrar Sesion
       </button>
