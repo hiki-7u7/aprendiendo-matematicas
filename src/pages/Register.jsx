@@ -2,16 +2,16 @@
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "./Alert";
+import { Alert } from "../components/Alert";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 //funcion que exporta el componente Register
-export function Register_2() {
+export function Register() {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    rol: "profesor",
+    rol: "alumno",
   });
 
   //funcion que permite registrar un usuario

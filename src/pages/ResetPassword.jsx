@@ -1,21 +1,18 @@
 //importacion de librerias y hooks
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
-import { Alert } from "./Alert";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { useNavigate, Link } from "react-router-dom";
+import { Alert } from "../components/Alert";
 
-//funcion que exporta el componente Register
-export function Register() {
+export function ResetPassword() {
+  //estado que permite manejar el usuario
   const [user, setUser] = useState({
     email: "",
     password: "",
-    rol: "alumno",
   });
 
   //funcion que permite registrar un usuario
-  const { Registrarse } = useAuth();
+  const { acceso, resetPassword } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -31,14 +28,10 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     //validacion de campos vacios
     try {
-      await Registrarse(user.email, user.password);
-      const docRef = await addDoc(collection(db, "usuarios"), {
-        email: user.email,
-        rol: user.rol,
-      });
-      console.log("Document written with ID: ", docRef.id);
+      await acceso(user.email, user.password);
       navegar("/");
     } catch (error) {
       console.log(error.code);
@@ -50,26 +43,44 @@ export function Register() {
         setError("La contraseña debe tener al menos 6 caracteres");
       } else if (error.code === "auth/operation-not-allowed") {
         setError("No se pudo crear el usuario");
+      } else if (error.code === "auth/user-not-found") {
+        setError("El usuario no existe");
+      } else if (error.code === "auth/too-many-requests") {
+        setError(
+          "Demasiados intentos de inicio de sesión fallidos. Intente nuevamente más tarde"
+        );
       }
     }
   };
 
-  //retorno del componente
+  const handleResetPassword = async () => {
+    if (!user.email) return setError("Por favor ingrese su email");
+
+    try {
+      await resetPassword(user.email);
+      setError("Se ha enviado un correo para resetear la contraseña");
+    } catch (error) {
+      setError(error.message);
+      if (error.code === "auth/user-not-found") {
+        setError("El usuario no existe");
+      } else if (error.code === "auth/invalid-email") {
+        setError("El email no es válido");
+      }
+    }
+  };
+
   return (
-    <div className="w-full max-w-sm m-auto">
+    <div className="w-full max-w-sm m-auto ">
       {error && <Alert message={error} />}
       <h1 className="text-center text-3xl font-bold py-2">
-        Registro de Usuario
+        Recuperar Contraseña
       </h1>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-gray-700 mr-2 text-sm font-bold"
-          >
+          <label htmlFor="email" className="mr-2 font-fold">
             Email
           </label>
           <input
@@ -80,26 +91,22 @@ export function Register() {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="password"
-            className="block text-gray-700 mr-2 text-sm font-bold"
-          >
-            Contraseña
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            onChange={handlechange}
-            placeholder="******"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-          />
-        </div>
 
-        <button className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outline">
-          Registrar
-        </button>
+        <div className="flex items-center justify-between">
+          <a
+            href="#!"
+            className="inline-block align-baseline font-bold text-blue-500 hover:text-blue-800"
+            onClick={handleResetPassword}
+          >
+            Recuperar Contraseña
+          </a>
+          <Link
+            to="/Login"
+            className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outlin"
+          >
+            Volver
+          </Link>{" "}
+        </div>
       </form>
     </div>
   );

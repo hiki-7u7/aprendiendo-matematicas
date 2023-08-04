@@ -2,9 +2,12 @@
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate, Link } from "react-router-dom";
-import { Alert } from "./Alert";
+import { Alert } from "../components/Alert";
+import imag1 from "../assets/img/ojo_cerrado.png";
+import imag2 from "../assets/img/ojo_abierto.png";
 
-export function ResetPassword() {
+//funcion que exporta el componente Login
+export function Login() {
   //estado que permite manejar el usuario
   const [user, setUser] = useState({
     email: "",
@@ -12,7 +15,7 @@ export function ResetPassword() {
   });
 
   //funcion que permite registrar un usuario
-  const { acceso, resetPassword } = useAuth();
+  const { iniciarSesion } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -24,6 +27,13 @@ export function ResetPassword() {
   const handlechange = ({ target: { name, value } }) =>
     setUser({ ...user, [name]: value });
 
+  //funcion que permite manejar el estado de la contraseña
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   //funcion que permite manejar el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +41,7 @@ export function ResetPassword() {
 
     //validacion de campos vacios
     try {
-      await acceso(user.email, user.password);
+      await iniciarSesion(user.email, user.password);
       navegar("/");
     } catch (error) {
       console.log(error.code);
@@ -53,28 +63,11 @@ export function ResetPassword() {
     }
   };
 
-  const handleResetPassword = async () => {
-    if (!user.email) return setError("Por favor ingrese su email");
-
-    try {
-      await resetPassword(user.email);
-      setError("Se ha enviado un correo para resetear la contraseña");
-    } catch (error) {
-      setError(error.message);
-      if (error.code === "auth/user-not-found") {
-        setError("El usuario no existe");
-      } else if (error.code === "auth/invalid-email") {
-        setError("El email no es válido");
-      }
-    }
-  };
-
+  //retorno del componente
   return (
     <div className="w-full max-w-sm m-auto ">
       {error && <Alert message={error} />}
-      <h1 className="text-center text-3xl font-bold py-2">
-        Recuperar Contraseña
-      </h1>
+      <h1 className="text-center text-3xl font-bold py-2">Iniciar Sesión</h1>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -92,21 +85,48 @@ export function ResetPassword() {
           />
         </div>
 
-        <div className="flex items-center justify-between">
-          <a
-            href="#!"
-            className="inline-block align-baseline font-bold text-blue-500 hover:text-blue-800"
-            onClick={handleResetPassword}
+        <div className="mb-4">
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            id="password"
+            onChange={handlechange}
+            placeholder="******"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+          />
+          <button
+            type="button"
+            onClick={handleShowPassword}
+            className="bg-gray-200 hover:bg-gray-300 rounded-full px-2 mt-2 focus:outline-none focus:shadow-outline"
           >
-            Recuperar Contraseña
-          </a>
-          <Link
-            to="/Login"
-            className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outlin"
-          >
-            Volver
-          </Link>{" "}
+            {showPassword ? (
+              <img id="img1" src={imag1} alt="Ocultar contraseña" />
+            ) : (
+              <img id="img2" src={imag2} alt="Mostrar contraseña" />
+            )}
+          </button>
         </div>
+        <div className="flex items-center justify-between">
+          <button className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outline">
+            Iniciar
+          </button>
+          <p className="ml-9">
+            No tienes cuenta{" "}
+            <Link
+              to="/SelectRole"
+              className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
+            >
+              Registrada
+            </Link>{" "}
+          </p>
+        </div>
+        <a
+          href="/ResetPassword"
+          className="inline-block align-baseline font-bold text-blue-500 hover:text-blue-800 mt-5"
+        >
+          ¿Olvidaste tu contraseña?
+        </a>
       </form>
     </div>
   );
