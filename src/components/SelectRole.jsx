@@ -44,7 +44,7 @@ export function SelectRole() {
               }`}
               onClick={() => setSelectedRole("profesor")}
             >
-              <a href="/Register">¿Eres Profesor?</a>
+              <a href="/Register_2">¿Eres Profesor?</a>
             </button>
           </div>
         </div>

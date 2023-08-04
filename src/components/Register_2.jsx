@@ -3,12 +3,15 @@ import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "./Alert";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 //funcion que exporta el componente Register
 export function Register_2() {
   const [user, setUser] = useState({
     email: "",
     password: "",
+    rol: "profesor",
   });
 
   //funcion que permite registrar un usuario
@@ -31,6 +34,11 @@ export function Register_2() {
     //validacion de campos vacios
     try {
       await Registrarse(user.email, user.password);
+      const docRef = await addDoc(collection(db, "usuarios"), {
+        email: user.email,
+        rol: user.rol,
+      });
+      console.log("Document written with ID: ", docRef.id);
       navegar("/");
     } catch (error) {
       console.log(error.code);
