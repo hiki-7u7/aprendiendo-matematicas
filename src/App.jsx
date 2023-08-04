@@ -1,13 +1,13 @@
 //import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Home } from "./components/Home.jsx";
-import { Login } from "./components/Login.jsx";
-import { Register } from "./components/Register.jsx";
+import { Home } from "./pages/Home.jsx";
+import { Login } from "./pages/Login.jsx";
+import { Register } from "./pages/Register.jsx";
 import { AuthProvider } from "./context/authContext.jsx";
 import { RutaProtegida } from "./components/ProtectedRoute.jsx";
-import { SelectRole } from "./components/SelectRole.jsx";
-import { ResetPassword } from "./components/ResetPassword.jsx";
-import { Register_2 } from "./components/Register_2.jsx";
+import { SelectRole } from "./pages/SelectRole.jsx";
+import { ResetPassword } from "./pages/ResetPassword.jsx";
+import { Register_2 } from "./pages/Register_2.jsx";
 
 //funcion que exporta el componente App
 function App() {
