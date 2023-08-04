@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "./Alert";
+import imag1 from "../assets/img/ojo_cerrado.png";
+import imag2 from "../assets/img/ojo_abierto.png";
 
 //funcion que exporta el componente Login
 export function Login() {
@@ -24,6 +26,13 @@ export function Login() {
   //funcion que permite manejar los cambios en el formulario
   const handlechange = ({ target: { name, value } }) =>
     setUser({ ...user, [name]: value });
+
+  //funcion que permite manejar el estado de la contraseña
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   //funcion que permite manejar el envio del formulario
   const handleSubmit = async (e) => {
@@ -79,13 +88,24 @@ export function Login() {
         <div className="mb-4">
           <label htmlFor="password">Contraseña</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             id="password"
             onChange={handlechange}
             placeholder="******"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
+          <button
+            type="button"
+            onClick={handleShowPassword}
+            className="bg-gray-200 hover:bg-gray-300 rounded-full px-2 mt-2 focus:outline-none focus:shadow-outline"
+          >
+            {showPassword ? (
+              <img id="img1" src={imag1} alt="Ocultar contraseña" />
+            ) : (
+              <img id="img2" src={imag2} alt="Mostrar contraseña" />
+            )}
+          </button>
         </div>
         <div className="flex items-center justify-between">
           <button className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outline">
