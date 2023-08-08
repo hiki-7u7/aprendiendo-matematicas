@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BotonVolver } from "../components/BotonVolver";
 
 export function SelectRole() {
   const [selectedRole, setSelectedRole] = useState("");
@@ -16,13 +17,14 @@ export function SelectRole() {
   };
 
   return (
-    <div className="w-full max-w-sm m-auto ">
-      <h1 className="text-center text-3xl font-bold py-2">
+    <div className="w-full max-w-sm m-auto">
+      <BotonVolver direccion="/Login" />
+      <h1 className=" text-center text-3xl font-bold py-2">
         Registro de Usuario
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className="grid auto-rows-max">
           <div className="flex justify-center">
