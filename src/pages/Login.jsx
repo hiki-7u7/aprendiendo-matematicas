@@ -65,12 +65,12 @@ export function Login() {
 
   //retorno del componente
   return (
-    <div className="w-full max-w-sm m-auto ">
+    <div className="flex flex-col items-center justify-center w-full h-screen ">
       {error && <Alert message={error} />}
       <h1 className="text-center text-3xl font-bold py-2">Iniciar Sesión</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 "
+        className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto sm:w-1/2 lg:w-1/3 xl:w-1/4"
       >
         <div className="mb-4">
           <label htmlFor="email" className="mr-2 font-fold">
