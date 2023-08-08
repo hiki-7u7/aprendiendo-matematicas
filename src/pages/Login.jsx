@@ -70,7 +70,7 @@ export function Login() {
       <h1 className="text-center text-3xl font-bold py-2">Iniciar Sesión</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 "
       >
         <div className="mb-4">
           <label htmlFor="email" className="mr-2 font-fold">
@@ -85,8 +85,10 @@ export function Login() {
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="password">Contraseña</label>
+        <label htmlFor="password" className="">
+          Contraseña
+        </label>
+        <div className="flex mb-4">
           <input
             type={showPassword ? "text" : "password"}
             name="password"
@@ -98,7 +100,7 @@ export function Login() {
           <button
             type="button"
             onClick={handleShowPassword}
-            className="bg-gray-200 hover:bg-gray-300 rounded-full px-2 mt-2 focus:outline-none focus:shadow-outline"
+            className="bg-gray-200 hover:bg-gray-300 rounded-full px-2 mt-2 focus:outline-none focus:shadow-outline ml-2"
           >
             {showPassword ? (
               <img id="img1" src={imag1} alt="Ocultar contraseña" />
