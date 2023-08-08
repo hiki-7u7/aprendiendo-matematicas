@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert } from "../components/Alert";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { BotonVolver } from "../components/BotonVolver";
 
 //funcion que exporta el componente Register
 export function Register_2() {
@@ -61,6 +62,7 @@ export function Register_2() {
       <h1 className="text-center text-3xl font-bold py-2">
         Registro de Usuario
       </h1>
+      <BotonVolver direccion="/SelectRole" />
       <form
         onSubmit={handleSubmit}
         className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8 mb-4"
