@@ -12,7 +12,7 @@ import { Register_2 } from "./pages/Register_2.jsx";
 //funcion que exporta el componente App
 function App() {
   return (
-    <div className="bg-slate-300 h-screen flex">
+    <div>
       <AuthProvider>
         <Routes>
           <Route
