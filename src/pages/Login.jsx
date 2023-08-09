@@ -85,9 +85,7 @@ export function Login() {
           />
         </div>
 
-        <label htmlFor="password" className="">
-          Contraseña
-        </label>
+        <label htmlFor="password">Contraseña</label>
         <div className="flex mb-4">
           <input
             type={showPassword ? "text" : "password"}
