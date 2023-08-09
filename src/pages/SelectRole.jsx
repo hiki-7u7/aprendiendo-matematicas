@@ -3,16 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { BotonVolver } from "../components/BotonVolver";
 
 export function SelectRole() {
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectRol, setSelectRol] = useState({
+    //"Seleccione el rol que desea registrar"
+    rol: "",
+  });
 
   const navegar = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (selectedRole === "alumno") {
-      navegar("/Register");
-    } else if (selectedRole === "profesor") {
-      navegar("/Register_2");
+    if (selectRol === "alumno") {
+      navegar("/Register", { state: { rol: "alumno" } });
+    } else if (selectRol === "profesor") {
+      navegar("/Register", { state: { rol: "profesor" } });
     }
   };
 
@@ -30,11 +33,11 @@ export function SelectRole() {
           <div className="flex justify-center">
             <button
               className={`bg-purple-500 hover:bg-purple-300 rounded-full  focus:outline-none focus:shadow-outline px-2${
-                selectedRole === "alumno" ? "bg-purple-300" : ""
+                selectRol === "alumno" ? "bg-purple-300" : ""
               }`}
-              onClick={() => setSelectedRole("alumno")}
+              onClick={() => setSelectRol("alumno")}
             >
-              <a href="/Register">¿Eres Alumno?</a>
+              <a>¿Eres Alumno?</a>
             </button>
           </div>
 
@@ -42,11 +45,11 @@ export function SelectRole() {
           <div className="flex justify-center">
             <button
               className={`bg-purple-500 hover:bg-purple-300  rounded-full  focus:outline-none focus:shadow-outline px-2${
-                selectedRole === "profesor" ? "bg-purple-300" : ""
+                selectRol === "profesor" ? "bg-purple-300" : ""
               }`}
-              onClick={() => setSelectedRole("profesor")}
+              onClick={() => setSelectRol("profesor")}
             >
-              <a href="/Register_2">¿Eres Profesor?</a>
+              <a>¿Eres Profesor?</a>
             </button>
           </div>
         </div>
