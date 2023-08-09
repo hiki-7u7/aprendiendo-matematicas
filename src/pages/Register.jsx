@@ -6,6 +6,8 @@ import { Alert } from "../components/Alert";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { BotonVolver } from "../components/BotonVolver";
+import imag1 from "../assets/img/ojo_cerrado.png";
+import imag2 from "../assets/img/ojo_abierto.png";
 
 //funcion que exporta el componente Register
 export function Register() {
@@ -13,6 +15,9 @@ export function Register() {
     email: "",
     password: "",
     rol: "alumno",
+    rut: "",
+    nombre: "",
+    apellido: "",
   });
 
   //funcion que permite registrar un usuario
@@ -28,6 +33,13 @@ export function Register() {
   const handlechange = ({ target: { name, value } }) =>
     setUser({ ...user, [name]: value });
 
+  //funcion que permite manejar el estado de la contraseña
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   //funcion que permite manejar el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +50,9 @@ export function Register() {
       const docRef = await addDoc(collection(db, "usuarios"), {
         email: user.email,
         rol: user.rol,
+        rut: user.rut,
+        nombre: user.nombre,
+        apellido: user.apellido,
       });
       console.log("Document written with ID: ", docRef.id);
       navegar("/");
@@ -69,6 +84,54 @@ export function Register() {
       >
         <div className="mb-4">
           <label
+            htmlFor="name"
+            className="block text-gray-700 mr-2 text-sm font-bold"
+          >
+            Nombre
+          </label>
+          <input
+            type="text"
+            name="nombre"
+            placeholder="Nombre"
+            onChange={handlechange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="apellido"
+            className="block text-gray-700 mr-2 text-sm font-bold"
+          >
+            Apellido
+          </label>
+          <input
+            type="text"
+            name="apellido"
+            placeholder="Apellido"
+            onChange={handlechange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="rut"
+            className="block text-gray-700 mr-2 text-sm font-bold"
+          >
+            Rut
+          </label>
+          <input
+            type="text"
+            name="rut"
+            placeholder="Rut"
+            onChange={handlechange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
             htmlFor="email"
             className="block text-gray-700 mr-2 text-sm font-bold"
           >
@@ -89,14 +152,28 @@ export function Register() {
           >
             Contraseña
           </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            onChange={handlechange}
-            placeholder="******"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-          />
+          <div>
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              id="password"
+              onChange={handlechange}
+              placeholder="******"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleShowPassword}
+            className="bg-gray-200 hover:bg-gray-300 rounded-full px-2 mt-2 focus:outline-none focus:shadow-outline ml-2"
+          >
+            {showPassword ? (
+              <img id="img1" src={imag1} alt="Ocultar contraseña" />
+            ) : (
+              <img id="img2" src={imag2} alt="Mostrar contraseña" />
+            )}
+          </button>
         </div>
 
         <button className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outline">
