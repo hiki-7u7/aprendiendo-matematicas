@@ -8,17 +8,23 @@ import { db } from "../firebase/firebase";
 import { BotonVolver } from "../components/BotonVolver";
 import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
+import { useLocation } from "react-router-dom";
+import { verificarEmail } from "../components/VerificarEmail";
 
 //funcion que exporta el componente Register
 export function Register() {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    rol: "alumno",
+    rol: "",
     rut: "",
     nombre: "",
     apellido: "",
   });
+
+  const [emailValido, setEmailValido] = useState(false);
+
+  const { state } = useLocation();
 
   //funcion que permite registrar un usuario
   const { Registrarse } = useAuth();
@@ -44,18 +50,31 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const emailValido = await verificarEmail(user.email);
+
+    if (!emailValido) {
+      setError("Email no válido");
+      return;
+    }
+
     //validacion de campos vacios
     try {
       await Registrarse(user.email, user.password);
       const docRef = await addDoc(collection(db, "usuarios"), {
         email: user.email,
-        rol: user.rol,
+        rol: state.rol,
         rut: user.rut,
         nombre: user.nombre,
         apellido: user.apellido,
       });
-      console.log("Document written with ID: ", docRef.id);
-      navegar("/");
+      console.log(docRef.rol);
+
+      if (state.rol === "alumno") {
+        navegar("/");
+      } else if (state.rol === "profesor") {
+        navegar("/JoinStudent");
+      }
     } catch (error) {
       console.log(error.code);
       if (error.code === "auth/email-already-in-use") {
@@ -74,6 +93,7 @@ export function Register() {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen ">
       {error && <Alert message={error} />}
+
       <BotonVolver direccion="/SelectRole" />
       <h1 className="text-center text-3xl font-bold py-2">
         Registro de Usuario
@@ -144,6 +164,10 @@ export function Register() {
             onChange={handlechange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
+
+          {error === "Email no válido" && (
+            <p className="text-red-500">Email no válido</p>
+          )}
         </div>
         <div className="mb-4">
           <label
