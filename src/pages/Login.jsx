@@ -55,6 +55,8 @@ export function Login() {
         setError("No se pudo crear el usuario");
       } else if (error.code === "auth/user-not-found") {
         setError("El usuario no existe");
+      } else if (error.code === "auth/wrong-password") {
+        setError("Contraseña incorrecta");
       } else if (error.code === "auth/too-many-requests") {
         setError(
           "Demasiados intentos de inicio de sesión fallidos. Intente nuevamente más tarde"
