@@ -10,6 +10,8 @@ export function Alumno() {
   const { user, CerrarSesion, cargando } = useAuth();
   const [usuarioRol, setUsuarioRol] = useState();
   const [usuarioNombre, setUsuarioNombre] = useState();
+  const [usuarioApellido, setUsuarioApellido] = useState();
+  const [usuarioRut, setUsuarioRut] = useState();
 
   //funcion que permite obtener los datos de la base de datos
   const obtenerDatos = async () => {
@@ -22,6 +24,8 @@ export function Alumno() {
     querySnapshot.forEach((doc) => {
       setUsuarioRol(doc.data().rol);
       setUsuarioNombre(doc.data().nombre);
+      setUsuarioApellido(doc.data().apellido);
+      setUsuarioRut(doc.data().rut);
     });
   };
 
@@ -42,6 +46,8 @@ export function Alumno() {
       <h1>Alumno</h1>
       <p>Bienvenido {usuarioNombre}</p>
       <p>Usted es: {usuarioRol}</p>
+      <p>Apellido: {usuarioApellido}</p>
+      <p>Rut: {usuarioRut}</p>
       <button
         className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
         onClick={handlelogout}
