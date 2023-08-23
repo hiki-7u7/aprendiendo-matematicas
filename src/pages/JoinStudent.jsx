@@ -26,7 +26,10 @@ export function JoinStudent() {
 
       const listaAlumnos = querySnapshot.docs.map((doc) => doc.data());
 
-      console.log("Lista de alumnos obtenida");
+      console.log(
+        "Estado actual de alumnos:",
+        alumnos.map((a) => a.nombre)
+      );
 
       const alumnoEncontrado = listaAlumnos.find(
         (alumno) => alumno.rut === rut
@@ -43,6 +46,11 @@ export function JoinStudent() {
       }
     }
   };
+
+  console.log(
+    "Estado actual de alumnos:",
+    alumnos.map((a) => a.nombre)
+  );
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-auto ">
