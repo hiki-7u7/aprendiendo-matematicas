@@ -9,7 +9,7 @@ export function Alumnos(props) {
   console.log("Props recibidos");
   return (
     <div className="h-auto w-auto justify-center mt-10">
-      <form>
+      <form className="">
         <p>
           {props.nombre} {props.apellido} - {props.rut}
         </p>
