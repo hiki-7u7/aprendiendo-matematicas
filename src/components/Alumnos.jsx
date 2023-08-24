@@ -8,11 +8,16 @@ import { useLocation } from "react-router-dom";
 export function Alumnos(props) {
   console.log("Props recibidos");
   return (
-    <div className="h-auto w-auto justify-center mt-10">
-      <form className="">
+    <div className="flex justify-center mt-10">
+      <form className="flex ">
         <p>
           {props.nombre} {props.apellido} - {props.rut}
         </p>
+        <img
+          className="h-5 w-5 ml-2 cursor-pointer mt-1"
+          src="https://cdn-icons-png.flaticon.com/128/1617/1617543.png"
+          alt="Borrar alumno"
+        />
       </form>
     </div>
   );
