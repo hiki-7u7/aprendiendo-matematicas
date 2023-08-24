@@ -29,7 +29,14 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/Register_2" element={<Register_2 />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
-          <Route path="/JoinStudent" element={<JoinStudent />} />
+          <Route
+            path="/JoinStudent"
+            element={
+              <RutaProtegida>
+                <JoinStudent />
+              </RutaProtegida>
+            }
+          />
         </Routes>
       </AuthProvider>
     </div>
