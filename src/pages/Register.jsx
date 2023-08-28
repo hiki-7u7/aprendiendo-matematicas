@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "../components/Alert";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, QuerySnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { BotonVolver } from "../components/BotonVolver";
 import imag1 from "../assets/img/ojo_cerrado.png";
@@ -22,8 +22,9 @@ export function Register() {
     apellido: "",
   });
 
-  const [emailValido, setEmailValido] = useState(false);
+  //const [emailValido, setEmailValido] = useState(false);
 
+  //funcion que permite obtener el rol del usuario
   const { state } = useLocation();
 
   //funcion que permite registrar un usuario
@@ -61,18 +62,21 @@ export function Register() {
     //validacion de campos vacios
     try {
       await Registrarse(user.email, user.password);
-      const docRef = await addDoc(collection(db, "usuarios"), {
+      const newUser = {
         email: user.email,
         rol: state.rol,
         rut: user.rut,
         nombre: user.nombre,
         apellido: user.apellido,
-      });
-      console.log(docRef.rol);
+      };
 
       if (state.rol === "alumno") {
+        await addDoc(collection(db, "Estudiante"), newUser);
+
         navegar("/");
       } else if (state.rol === "profesor") {
+        await addDoc(collection(db, "Profesor"), newUser);
+
         navegar("/JoinStudent");
       }
     } catch (error) {
