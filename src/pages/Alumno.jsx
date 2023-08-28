@@ -16,7 +16,7 @@ export function Alumno() {
   //funcion que permite obtener los datos de la base de datos
   const obtenerDatos = async () => {
     const q = query(
-      collection(db, "usuarios"),
+      collection(db, "Estudiante"),
       where("email", "==", user.email)
     );
     const querySnapshot = await getDocs(q);
