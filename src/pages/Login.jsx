@@ -1,10 +1,21 @@
 //importacion de librerias y hooks
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "../components/Alert";
 import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
+import {
+  collection,
+  getDocs,
+  where,
+  query,
+  addDoc,
+  updateDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 //funcion que exporta el componente Login
 export function Login() {
@@ -15,7 +26,7 @@ export function Login() {
   });
 
   //funcion que permite registrar un usuario
-  const { iniciarSesion } = useAuth();
+  const { iniciarSesion, userRole } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -41,8 +52,29 @@ export function Login() {
 
     //validacion de campos vacios
     try {
-      await iniciarSesion(user.email, user.password);
-      navegar("/");
+      const qEstudiante = query(
+        collection(db, "Estudiante"),
+        where("email", "==", user.email)
+      );
+      const qProfesor = query(
+        collection(db, "Profesor"),
+        where("email", "==", user.email)
+      );
+
+      const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
+        getDocs(qEstudiante),
+        getDocs(qProfesor),
+      ]);
+
+      if (!estudianteSnapshot.empty) {
+        // El email corresponde a un estudiante
+        await iniciarSesion(user.email, user.password);
+        navegar("/");
+      } else if (!profesorSnapshot.empty) {
+        // El email corresponde a un profesor
+        await iniciarSesion(user.email, user.password);
+        navegar("/JoinStudent");
+      }
     } catch (error) {
       console.log(error.code);
       if (error.code === "auth/email-already-in-use") {
