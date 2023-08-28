@@ -24,30 +24,47 @@ export function JoinStudent() {
   const [rut, setRut] = useState("");
   const [error, setError] = useState(false);
 
-  // codigo para obtener el ID del profesor
-  const [idProfesor, setIdProfesor] = useState("");
-  const obtenerIdProfesor = async () => {
-    const q = query(
-      collection(db, "usuarios"),
-      where("email", "==", user.email)
-    );
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      setIdProfesor(doc.data().rut);
+  const actualizarListaAlumnos = (rut) => {
+    const listaAlumnosActualizada = alumnos.filter((alumno) => {
+      return alumno.rut !== rut;
     });
+    setAlumnos(listaAlumnosActualizada);
   };
 
-  // codigo para obtener el ID del profesor
+  // codigo para almacenar el RUT del profesor
+  const [idProfesor, setIdProfesor] = useState("");
+
+  // codigo para obtener el RUT del profesor
+  const obtenerIdProfesor = async () => {
+    try {
+      const q = query(
+        collection(db, "Profesor"),
+        where("email", "==", user.email)
+      );
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        const docData = doc.data();
+        if (docData.email === user.email) {
+          setIdProfesor(docData.rut);
+        }
+      });
+    } catch (error) {
+      console.log("Error al obtener el ID del profesor", error);
+    }
+  };
+
+  // codigo para obtener el RUT del profesor
   useEffect(() => {
     obtenerIdProfesor();
   }, []);
 
+  // codigo para obtener el nombre y rut del alumno
   const obtenerAlumno = async () => {
     if (rut) {
       console.log("Realizando consulta...");
       const q = query(
-        collection(db, "usuarios"),
+        collection(db, "Estudiante"),
         where("rut", "==", rut),
         where("rol", "==", "alumno")
       );
@@ -73,10 +90,15 @@ export function JoinStudent() {
         };
         try {
           const docRef = await addDoc(
-            collection(db, "usuarios"),
+            collection(db, "Estudiante"),
             EstudianteConIdProfesor
           );
-          setAlumnos([...alumnos, EstudianteConIdProfesor]);
+          const estudianteId = docRef.id;
+
+          setAlumnos([
+            ...alumnos,
+            { id: estudianteId, ...EstudianteConIdProfesor },
+          ]);
           //console.log("Document written with ID: ", idProfesor);
           //console.log(docRef);
         } catch (e) {
@@ -86,6 +108,7 @@ export function JoinStudent() {
     }
   };
 
+  // codigo para almacenar el RUT del profesor en la coleccion de alumnos
   const registrarProfesorAsignado = async () => {
     const alumnosConIdProfesor = alumnos.map((alumno) => ({
       ...alumno,
@@ -96,7 +119,7 @@ export function JoinStudent() {
 
     for (const alumno of alumnosConIdProfesor) {
       try {
-        const docRef = doc(db, "usuarios", alumno.rut);
+        const docRef = doc(db, "Estudiante", alumno.id);
         await updateDoc(docRef, {
           ProfesorAsignado: alumno.ProfesorAsignado,
         });
@@ -107,14 +130,57 @@ export function JoinStudent() {
     }
   };
 
+  // codigo para almacenar la lista de alumnos en la coleccion de profesores
+  const RegistrarListaAlumnos = async () => {
+    try {
+      const q = query(
+        collection(db, "Profesor"),
+        where("rut", "==", idProfesor)
+      );
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        const docData = doc.data();
+        if (docData.rut === idProfesor) {
+          addDoc(collection(db, "Profesor"), {
+            ...docData,
+            alumnos: alumnos.map((alumno) => alumno.rut),
+          });
+        }
+      });
+
+      console.log("Lista de alumnos registrada");
+    } catch (error) {
+      console.log("Error al obtener el ID del profesor", error);
+    }
+  };
+
   /*console.log(
     "Estado actual de alumnos:",
     alumnos.map((a) => a.nombre)
   );*/
   //console.log("ID del profesor:", idProfesor);
 
+  // almacenar lista de alumnos en la base de datos como campo del profesor
+  /*const almacenarListaAlumnos = async () => {
+    try {
+      const docRef = doc(db, "Profesor", idProfesor);
+      await updateDoc(docRef, {
+        alumnos: alumnos,
+      });
+      console.log("Documento Actualizado");
+    } catch (e) {
+      console.error("Error en Actualizacion de Documento: ", e);
+    }
+  };*/
+
+  /*console.log(
+    "Lista de alumnos:",
+    alumnos.map((a) => a.rut)
+  );*/
+
   return (
-    <div className="flex flex-col items-center justify-center w-full h-auto ">
+    <div className="flex flex-col items-center justify-center   ">
       <BotonVolver direccion="/Register" />
       <h1 className="text-center text-3xl font-bold py-2 ">Ver Estudiantes</h1>
       <form className="flex flex-row">
@@ -140,7 +206,7 @@ export function JoinStudent() {
           <button
             onClick={(e) => {
               e.preventDefault();
-              obtenerAlumno(e);
+              obtenerAlumno();
             }}
             className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outline ml-2 mt-7"
           >
@@ -154,7 +220,9 @@ export function JoinStudent() {
       )}
 
       <button
-        onClick={registrarProfesorAsignado}
+        onClick={() => {
+          registrarProfesorAsignado(), RegistrarListaAlumnos();
+        }}
         className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
       >
         Registrar
@@ -162,10 +230,12 @@ export function JoinStudent() {
 
       {alumnos.map((alumno) => (
         <Alumnos
+          id={alumno.id}
           key={alumno.rut}
           nombre={alumno.nombre}
           apellido={alumno.apellido}
           rut={alumno.rut}
+          actualizarListaAlumnos={actualizarListaAlumnos}
         />
       ))}
     </div>
