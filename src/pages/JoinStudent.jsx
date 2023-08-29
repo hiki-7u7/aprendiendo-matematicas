@@ -10,6 +10,7 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { BotonVolver } from "../components/BotonVolver";
@@ -119,16 +120,52 @@ export function JoinStudent() {
     setAlumnos(alumnosConIdProfesor);
     console.log("Alumnos con id profesor:", alumnosConIdProfesor);
 
-    for (const alumno of alumnosConIdProfesor) {
-      try {
-        const docRef = doc(db, "Estudiante", alumno.id);
-        await updateDoc(docRef, {
-          ProfesorAsignado: alumno.ProfesorAsignado,
-        });
-        console.log("Documento Actualizado");
-      } catch (e) {
-        console.error("Error en Actualizacion de Documento: ", e);
+    try {
+      const estudianteColeccion = collection(db, "Estudiante");
+      const batch = writeBatch(db);
+
+      for (const alumno of alumnosConIdProfesor) {
+        const querySnapshot = await getDocs(
+          query(estudianteColeccion, where("rut", "==", alumno.rut))
+        );
+
+        if (!querySnapshot.empty) {
+          const estudianteDoc = querySnapshot.docs[0];
+          const estudianteDocRef = doc(db, "Estudiante", estudianteDoc.id);
+
+          const antiguoDatos = estudianteDoc.data();
+
+          if (!antiguoDatos.ProfesorAsignado) {
+            const nuevosDatos = {
+              ...antiguoDatos,
+              ProfesorAsignado: alumno.ProfesorAsignado,
+            };
+            batch.set(estudianteDocRef, nuevosDatos);
+          } else {
+            const nuevosDatos = {
+              ...antiguoDatos,
+              ProfesorAsignado: alumno.ProfesorAsignado,
+            };
+            batch.update(estudianteDocRef, nuevosDatos);
+          }
+
+          const oldDocQuery = query(
+            estudianteColeccion,
+            where("rut", "==", alumno.rut)
+          );
+          const oldQuerySnapshot = await getDocs(oldDocQuery);
+
+          oldQuerySnapshot.forEach(async (doc) => {
+            if (doc.id !== estudianteDoc.id) {
+              batch.delete(doc.ref);
+            }
+          });
+        }
       }
+      await batch.commit();
+      console.log("Profesor asignado a los alumnos");
+    } catch (error) {
+      console.log("Error al obtener el ID del alumno", error);
     }
   };
 
@@ -145,6 +182,8 @@ export function JoinStudent() {
         const profesorDoc = querySnapshot.docs[0]; // obtener el documento del profesor
         const profesorDocRef = doc(db, "Profesor", profesorDoc.id);
 
+        const batch = writeBatch(db);
+
         // obtener los datos antiguos del profesor
         const antiguoDatos = profesorDoc.data();
 
@@ -154,14 +193,14 @@ export function JoinStudent() {
             ...antiguoDatos,
             alumnos: alumnos.map((alumno) => alumno.rut),
           };
-          await setDoc(profesorDocRef, nuevosDatos);
+          batch.set(profesorDocRef, nuevosDatos);
         } else {
           // si el profesor ya tiene alumnos asignados, actualizar la lista de alumnos
           const nuevosDatos = {
             ...antiguoDatos,
             alumnos: alumnos.map((alumno) => alumno.rut),
           };
-          await updateDoc(profesorDocRef, nuevosDatos);
+          batch.update(profesorDocRef, nuevosDatos);
         }
 
         const oldDocQuery = query(
@@ -172,9 +211,11 @@ export function JoinStudent() {
 
         oldQuerySnapshot.forEach(async (doc) => {
           if (doc.id !== profesorDoc.id) {
-            await deleteDoc(doc.ref);
+            batch.delete(doc.ref);
           }
         });
+
+        await batch.commit();
 
         console.log("Lista de alumnos registrada");
       } else {
