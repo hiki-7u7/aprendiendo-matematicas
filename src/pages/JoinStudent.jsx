@@ -278,7 +278,13 @@ export function JoinStudent() {
             name="rut"
             id="rut"
             value={rut}
-            onChange={(e) => setRut(e.target.value)}
+            onChange={(e) => {
+              const inputRut = e.target.value;
+              // Limitar el largo del rut a 9 caracteres
+              if (inputRut.length <= 9) {
+                setRut(inputRut);
+              }
+            }}
             placeholder="xxx.xxx.xxx-x"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
