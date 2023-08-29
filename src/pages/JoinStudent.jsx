@@ -8,6 +8,8 @@ import {
   addDoc,
   updateDoc,
   doc,
+  setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { BotonVolver } from "../components/BotonVolver";
@@ -139,17 +141,54 @@ export function JoinStudent() {
       );
       const querySnapshot = await getDocs(q);
 
-      querySnapshot.forEach((doc) => {
-        const docData = doc.data();
-        if (docData.rut === idProfesor) {
-          addDoc(collection(db, "Profesor"), {
-            ...docData,
-            alumnos: alumnos.map((alumno) => alumno.rut),
-          });
-        }
-      });
+      if (!querySnapshot.empty) {
+        const profesorDoc = querySnapshot.docs[0]; // obtener el documento del profesor
+        const profesorDocRef = doc(db, "Profesor", profesorDoc.id);
 
-      console.log("Lista de alumnos registrada");
+        // obtener los datos antiguos del profesor
+        const antiguoDatos = profesorDoc.data();
+
+        // si el profesor no tiene alumnos asignados, agregar la lista de alumnos
+        if (!antiguoDatos.alumnos) {
+          const nuevosDatos = {
+            ...antiguoDatos,
+            alumnos: alumnos.map((alumno) => alumno.rut),
+          };
+          await setDoc(profesorDocRef, nuevosDatos);
+        } else {
+          // si el profesor ya tiene alumnos asignados, actualizar la lista de alumnos
+          const nuevosDatos = {
+            ...antiguoDatos,
+            alumnos: alumnos.map((alumno) => alumno.rut),
+          };
+          await updateDoc(profesorDocRef, nuevosDatos);
+        }
+
+        const oldDocQuery = query(
+          collection(db, "Profesor"),
+          where("rut", "==", idProfesor)
+        );
+        const oldQuerySnapshot = await getDocs(oldDocQuery);
+
+        oldQuerySnapshot.forEach(async (doc) => {
+          if (doc.id !== profesorDoc.id) {
+            await deleteDoc(doc.ref);
+          }
+        });
+
+        console.log("Lista de alumnos registrada");
+      } else {
+        console.log("No se encontró el profesor");
+        querySnapshot.forEach((doc) => {
+          const docData = doc.data();
+          if (docData.rut === idProfesor) {
+            addDoc(collection(db, "Profesor"), {
+              ...docData,
+              alumnos: alumnos.map((alumno) => alumno.rut),
+            });
+          }
+        });
+      }
     } catch (error) {
       console.log("Error al obtener el ID del profesor", error);
     }
@@ -178,6 +217,8 @@ export function JoinStudent() {
     "Lista de alumnos:",
     alumnos.map((a) => a.rut)
   );*/
+
+  console.log(user.email);
 
   return (
     <div className="flex flex-col items-center justify-center   ">
