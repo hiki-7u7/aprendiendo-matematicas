@@ -61,6 +61,7 @@ export function JoinStudent() {
 
   // codigo para obtener el nombre y rut del alumno
   const obtenerAlumno = async () => {
+    // Validar el rut
     if (rut) {
       console.log("Realizando consulta...");
       const q = query(
@@ -109,6 +110,8 @@ export function JoinStudent() {
           console.error("Error adding document: ", e);
         }
       }
+    } else {
+      setError("Debe ingresar un rut"); // Mostrar la alerta
     }
   };
 
@@ -230,29 +233,14 @@ export function JoinStudent() {
     }
   };
 
-  /*console.log(
-    "Estado actual de alumnos:",
-    alumnos.map((a) => a.nombre)
-  );*/
-  //console.log("ID del profesor:", idProfesor);
+  const handleRegistrar = async () => {
+    await registrarProfesorAsignado();
+    await RegistrarListaAlumnos();
 
-  // almacenar lista de alumnos en la base de datos como campo del profesor
-  /*const almacenarListaAlumnos = async () => {
-    try {
-      const docRef = doc(db, "Profesor", idProfesor);
-      await updateDoc(docRef, {
-        alumnos: alumnos,
-      });
-      console.log("Documento Actualizado");
-    } catch (e) {
-      console.error("Error en Actualizacion de Documento: ", e);
+    if (!error && alumnos.length > 0) {
+      navegar("/Profesor");
     }
-  };*/
-
-  /*console.log(
-    "Lista de alumnos:",
-    alumnos.map((a) => a.rut)
-  );*/
+  };
 
   console.log(user.email);
 
@@ -301,15 +289,21 @@ export function JoinStudent() {
       {error && (
         <Alert message={error} /> // Mostrar la alerta
       )}
+      <div>
+        <button
+          onClick={() => navegar("/Profesor")}
+          className="bg-blue-500 hover:bg-blue-300  rounded-full px-2 focus:outline-none focus:shadow-outline mr-8"
+        >
+          Omitir
+        </button>
 
-      <button
-        onClick={() => {
-          registrarProfesorAsignado(), RegistrarListaAlumnos();
-        }}
-        className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
-      >
-        Registrar
-      </button>
+        <button
+          onClick={handleRegistrar}
+          className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
+        >
+          Registrar
+        </button>
+      </div>
 
       {alumnos.map((alumno) => (
         <Alumnos
