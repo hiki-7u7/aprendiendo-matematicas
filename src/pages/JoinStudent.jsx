@@ -6,10 +6,7 @@ import {
   where,
   query,
   addDoc,
-  updateDoc,
   doc,
-  setDoc,
-  deleteDoc,
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
@@ -84,6 +81,10 @@ export function JoinStudent() {
         );
       } else if (alumnos.some((a) => a.rut === alumnoEncontrado.rut)) {
         setError("El alumno ya ha sido agregado");
+      } else if (alumnoEncontrado.ProfesorAsignado === idProfesor) {
+        setError("Este alumno ya está asignado por usted");
+      } else if (alumnoEncontrado.ProfesorAsignado) {
+        setError("El alumno ya tiene un profesor asignado");
       } else {
         setError("");
 
@@ -119,36 +120,29 @@ export function JoinStudent() {
     }));
     setAlumnos(alumnosConIdProfesor);
     console.log("Alumnos con id profesor:", alumnosConIdProfesor);
-
+    // actualizar los datos de los alumnos en la base de datos
     try {
       const estudianteColeccion = collection(db, "Estudiante");
       const batch = writeBatch(db);
-
+      // bucle para actualizar los datos de los alumnos
       for (const alumno of alumnosConIdProfesor) {
         const querySnapshot = await getDocs(
           query(estudianteColeccion, where("rut", "==", alumno.rut))
         );
-
+        // si el alumno existe, actualizar el campo ProfesorAsignado
         if (!querySnapshot.empty) {
           const estudianteDoc = querySnapshot.docs[0];
           const estudianteDocRef = doc(db, "Estudiante", estudianteDoc.id);
 
           const antiguoDatos = estudianteDoc.data();
-
+          // si el alumno no tiene profesor asignado, agregar el profesor
           if (!antiguoDatos.ProfesorAsignado) {
             const nuevosDatos = {
               ...antiguoDatos,
               ProfesorAsignado: alumno.ProfesorAsignado,
             };
             batch.set(estudianteDocRef, nuevosDatos);
-          } else {
-            const nuevosDatos = {
-              ...antiguoDatos,
-              ProfesorAsignado: alumno.ProfesorAsignado,
-            };
-            batch.update(estudianteDocRef, nuevosDatos);
           }
-
           const oldDocQuery = query(
             estudianteColeccion,
             where("rut", "==", alumno.rut)
@@ -178,6 +172,7 @@ export function JoinStudent() {
       );
       const querySnapshot = await getDocs(q);
 
+      // si el profesor existe, actualizar la lista de alumnos
       if (!querySnapshot.empty) {
         const profesorDoc = querySnapshot.docs[0]; // obtener el documento del profesor
         const profesorDocRef = doc(db, "Profesor", profesorDoc.id);
@@ -324,6 +319,7 @@ export function JoinStudent() {
           apellido={alumno.apellido}
           rut={alumno.rut}
           actualizarListaAlumnos={actualizarListaAlumnos}
+          profesorAsignado={alumno.ProfesorAsignado}
         />
       ))}
     </div>
