@@ -36,6 +36,18 @@ export function Register() {
   //funcion que permite manejar los errores
   const [error, setError] = useState();
 
+  // manejo de rut
+  const handleRutChange = (e) => {
+    let inputRut = e.target.value;
+
+    // Limitar la cantidad máxima de caracteres permitidos (por ejemplo, 9)
+    if (inputRut.length > 9) {
+      inputRut = inputRut.slice(0, 9); // Truncar el valor a 9 caracteres
+    }
+
+    setUser({ ...user, rut: inputRut });
+  };
+
   //funcion que permite manejar los cambios en el formulario
   const handlechange = ({ target: { name, value } }) =>
     setUser({ ...user, [name]: value });
@@ -56,7 +68,6 @@ export function Register() {
     if (
       user.email === "" ||
       user.password === "" ||
-      user.rol === "" ||
       user.rut === "" ||
       user.nombre === "" ||
       user.apellido === ""
@@ -130,6 +141,7 @@ export function Register() {
             type="text"
             name="nombre"
             placeholder="Nombre"
+            value={user.nombre}
             onChange={handlechange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
@@ -146,6 +158,7 @@ export function Register() {
             type="text"
             name="apellido"
             placeholder="Apellido"
+            value={user.apellido}
             onChange={handlechange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
@@ -161,8 +174,9 @@ export function Register() {
           <input
             type="text"
             name="rut"
-            placeholder="Rut"
-            onChange={handlechange}
+            placeholder="123456789"
+            value={user.rut}
+            onChange={handleRutChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
         </div>
@@ -178,6 +192,7 @@ export function Register() {
             type="email"
             name="email"
             placeholder="ejemplo@email.com"
+            value={user.email}
             onChange={handlechange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           />
@@ -198,6 +213,7 @@ export function Register() {
               type={showPassword ? "text" : "password"}
               name="password"
               id="password"
+              value={user.password}
               onChange={handlechange}
               placeholder="******"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
