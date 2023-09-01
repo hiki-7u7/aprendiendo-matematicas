@@ -52,6 +52,19 @@ export function Register() {
     e.preventDefault();
     setError("");
 
+    // Validar que ningún campo esté vacío
+    if (
+      user.email === "" ||
+      user.password === "" ||
+      user.rol === "" ||
+      user.rut === "" ||
+      user.nombre === "" ||
+      user.apellido === ""
+    ) {
+      setError("Por favor, complete todos los campos.");
+      return;
+    }
+
     const emailValido = await verificarEmail(user.email);
 
     if (!emailValido) {
