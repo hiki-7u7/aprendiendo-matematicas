@@ -5,16 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "../components/Alert";
 import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
-import {
-  collection,
-  getDocs,
-  where,
-  query,
-  addDoc,
-  updateDoc,
-  doc,
-  setDoc,
-} from "firebase/firestore";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 //funcion que exporta el componente Login
@@ -26,7 +17,7 @@ export function Login() {
   });
 
   //funcion que permite registrar un usuario
-  const { iniciarSesion, userRole } = useAuth();
+  const { iniciarSesion } = useAuth();
 
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -45,6 +36,34 @@ export function Login() {
     setShowPassword(!showPassword);
   };
 
+  //funcion que permite obtener los datos de la base de datos
+  const verificarUsuario = async (e) => {
+    e.preventDefault();
+    const qEstudiante = query(
+      collection(db, "Estudiante"),
+      where("email", "==", user.email.toLowerCase())
+    );
+    const qProfesor = query(
+      collection(db, "Profesor"),
+      where("email", "==", user.email.toLowerCase())
+    );
+
+    const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
+      getDocs(qEstudiante),
+      getDocs(qProfesor),
+    ]);
+
+    if (!estudianteSnapshot.empty) {
+      // El email corresponde a un estudiante
+      await iniciarSesion(user.email.toLowerCase(), user.password);
+      navegar("/");
+    } else if (!profesorSnapshot.empty) {
+      // El email corresponde a un profesor
+      await iniciarSesion(user.email.toLowerCase(), user.password);
+      navegar("/JoinStudent");
+    }
+  };
+
   //funcion que permite manejar el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,29 +71,8 @@ export function Login() {
 
     //validacion de campos vacios
     try {
-      const qEstudiante = query(
-        collection(db, "Estudiante"),
-        where("email", "==", user.email)
-      );
-      const qProfesor = query(
-        collection(db, "Profesor"),
-        where("email", "==", user.email)
-      );
-
-      const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
-        getDocs(qEstudiante),
-        getDocs(qProfesor),
-      ]);
-
-      if (!estudianteSnapshot.empty) {
-        // El email corresponde a un estudiante
-        await iniciarSesion(user.email, user.password);
-        navegar("/");
-      } else if (!profesorSnapshot.empty) {
-        // El email corresponde a un profesor
-        await iniciarSesion(user.email, user.password);
-        navegar("/JoinStudent");
-      }
+      await iniciarSesion(user.email, user.password); // Iniciar sesion con Firebase Auth
+      await verificarUsuario(e); // Verificar si el usuario es estudiante o profesor
     } catch (error) {
       console.log(error.code);
       if (error.code === "auth/email-already-in-use") {
@@ -93,6 +91,10 @@ export function Login() {
         setError(
           "Demasiados intentos de inicio de sesión fallidos. Intente nuevamente más tarde"
         );
+      } else if (error.code === "auth/network-request-failed") {
+        setError("Error de conexión. Intente nuevamente más tarde");
+      } else if (user.email === "" || user.password === "") {
+        setError("Debe completar todos los campos");
       }
     }
   };
