@@ -13,9 +13,9 @@ export function SelectRole() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectRol === "alumno") {
-      navegar("/Register", { state: { rol: "alumno" } });
+      navegar("/Registro", { state: { rol: "alumno" } });
     } else if (selectRol === "profesor") {
-      navegar("/Register", { state: { rol: "profesor" } });
+      navegar("/Registro", { state: { rol: "profesor" } });
     }
   };
 
