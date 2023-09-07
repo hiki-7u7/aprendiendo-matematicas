@@ -4,6 +4,7 @@ import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../firebase/firebase.js";
 import { useEffect, useState } from "react";
 
+let id = 0;
 //funcion que exporta el componente Home
 export function Profesor() {
   //funcion que permite manejar el contexto de autenticacion
@@ -12,6 +13,7 @@ export function Profesor() {
   const [usuarioNombre, setUsuarioNombre] = useState();
   const [usuarioApellido, setUsuarioApellido] = useState();
   const [usuarioRut, setUsuarioRut] = useState();
+  const [usuarioAlumnos, setUsuarioAlumnos] = useState([]);
 
   //funcion que permite obtener los datos de la base de datos
   const obtenerDatos = async () => {
@@ -26,6 +28,7 @@ export function Profesor() {
       setUsuarioNombre(doc.data().nombre);
       setUsuarioApellido(doc.data().apellido);
       setUsuarioRut(doc.data().rut);
+      setUsuarioAlumnos(doc.data().alumnos);
     });
   };
 
@@ -48,6 +51,14 @@ export function Profesor() {
       <p>Usted es: {usuarioRol}</p>
       <p>Apellido: {usuarioApellido}</p>
       <p>Rut: {usuarioRut}</p>
+      <p>Lista de Alumnos:</p>
+
+      <ul>
+        {usuarioAlumnos.map((alumno) => (
+          <li key={id++}>{alumno}</li>
+        ))}
+      </ul>
+
       <button
         className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
         onClick={handlelogout}
