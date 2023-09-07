@@ -17,7 +17,7 @@ export function Alumnos(props) {
         collection(db, "Profesor"),
         where("rut", "==", props.profesorAsignado)
       );
-      console.log("rut de profespr", props.profesorAsignado);
+      console.log("rut de profesor", props.profesorAsignado);
 
       // codigo para obtener datos
       const querySnapshotProfesor = await getDocs(profesorQuery);
