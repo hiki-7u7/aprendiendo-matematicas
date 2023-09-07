@@ -185,20 +185,34 @@ export function JoinStudent() {
         // obtener los datos antiguos del profesor
         const antiguoDatos = profesorDoc.data();
 
-        // si el profesor no tiene alumnos asignados, agregar la lista de alumnos
+        // si el profesor NO tiene alumnos asignados, agregar la lista de alumnos
         if (!antiguoDatos.alumnos) {
+          console.log("estoy en el IF");
           const nuevosDatos = {
             ...antiguoDatos,
             alumnos: alumnos.map((alumno) => alumno.rut),
           };
           batch.set(profesorDocRef, nuevosDatos);
+
+          // si el profesor YA tiene alumnos asignados , actualizar la lista de alumnos
         } else {
-          // si el profesor ya tiene alumnos asignados, actualizar la lista de alumnos
+          console.log("estoy en el Else");
+          console.log("lista de alumnos:", alumnos);
+
+          const totalAlumnos = antiguoDatos.alumnos.concat(
+            alumnos.map((alumno) => alumno.rut)
+          );
+          console.log("antiguosAlumnos:", totalAlumnos);
+
           const nuevosDatos = {
             ...antiguoDatos,
-            alumnos: alumnos.map((alumno) => alumno.rut),
+            alumnos: totalAlumnos,
           };
+          const prueba = alumnos.map((alumno) => alumno.rut);
+          console.log("alumnos.map2", prueba);
+
           batch.update(profesorDocRef, nuevosDatos);
+          console.log("nuevos Datos:", nuevosDatos);
         }
 
         const oldDocQuery = query(
@@ -246,7 +260,7 @@ export function JoinStudent() {
 
   return (
     <div className="flex flex-col items-center justify-center   ">
-      <BotonVolver direccion="/Register" />
+      <BotonVolver direccion="/Registro" />
       <h1 className="text-center text-3xl font-bold py-2 ">Ver Estudiantes</h1>
       <form className="flex flex-row">
         <div className="mb-4">
