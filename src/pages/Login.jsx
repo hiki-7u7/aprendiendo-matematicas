@@ -71,7 +71,7 @@ export function Login() {
 
     //validacion de campos vacios
     try {
-      await iniciarSesion(user.email, user.password); // Iniciar sesion con Firebase Auth
+      await iniciarSesion(user.email.toLowerCase(), user.password); // Iniciar sesion con Firebase Auth
       await verificarUsuario(e); // Verificar si el usuario es estudiante o profesor
     } catch (error) {
       console.log(error.code);
@@ -95,6 +95,8 @@ export function Login() {
         setError("Error de conexión. Intente nuevamente más tarde");
       } else if (user.email === "" || user.password === "") {
         setError("Debe completar todos los campos");
+      } else if (error.code === "auth/quota-exceeded") {
+        setError("Se ha superado el límite de solicitudes. Intente más tarde");
       }
     }
   };
