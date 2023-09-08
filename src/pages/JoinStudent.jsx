@@ -31,6 +31,21 @@ export function JoinStudent() {
     setAlumnos(listaAlumnosActualizada);
   };
 
+  // formatear rut
+  const formatearRut = (rut) => {
+    // Eliminar cualquier carácter que no sea número o 'k'
+    rut = rut.replace(/[^0-9kK]+/g, "");
+
+    // Si el rut tiene al menos 2 caracteres, agrega puntos y guión
+    if (rut.length > 1) {
+      rut = rut.replace(/^(\d{1,2})(\d{3})(\d{3})([\dkK])$/, "$1.$2.$3-$4");
+    } else if (rut.length === 1) {
+      rut = rut.replace(/^(\d)([\dkK])$/, "$1-$2");
+    }
+
+    return rut;
+  };
+
   // codigo para almacenar el RUT del profesor
   const [idProfesor, setIdProfesor] = useState("");
 
@@ -62,11 +77,11 @@ export function JoinStudent() {
   // codigo para obtener el nombre y rut del alumno
   const obtenerAlumno = async () => {
     // Validar el rut
-    if (rut) {
+    if (formatearRut(rut)) {
       console.log("Realizando consulta...");
       const q = query(
         collection(db, "Estudiante"),
-        where("rut", "==", rut),
+        where("rut", "==", formatearRut(rut)),
         where("rol", "==", "alumno")
       );
       const querySnapshot = await getDocs(q);
@@ -74,8 +89,9 @@ export function JoinStudent() {
       const listaAlumnos = querySnapshot.docs.map((doc) => doc.data());
 
       const alumnoEncontrado = listaAlumnos.find(
-        (alumno) => alumno.rut === rut
+        (alumno) => alumno.rut === formatearRut(rut)
       );
+      // Si el alumno no existe, mostrar la alerta
       if (!alumnoEncontrado) {
         setError(
           "El rut ingresado no corresponde a un alumno registrado o no es válido"
@@ -277,8 +293,8 @@ export function JoinStudent() {
             value={rut}
             onChange={(e) => {
               const inputRut = e.target.value;
-              // Limitar el largo del rut a 9 caracteres
-              if (inputRut.length <= 9) {
+              // Limitar el largo del rut a 12 caracteres
+              if (inputRut.length <= 12) {
                 setRut(inputRut);
               }
             }}
