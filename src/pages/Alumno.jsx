@@ -3,6 +3,7 @@ import { useAuth } from "../context/authContext.jsx";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../firebase/firebase.js";
 import { useEffect, useState } from "react";
+import { Cabecera } from "../components/Cabecera.jsx";
 
 //funcion que exporta el componente Home
 export function Alumno() {
@@ -43,6 +44,7 @@ export function Alumno() {
   //retorno del componente
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen ">
+      <Cabecera />
       <h1>Alumno</h1>
       <p>Bienvenido {usuarioNombre}</p>
       <p>Usted es: {usuarioRol}</p>
