@@ -9,6 +9,7 @@ import { SelectRole } from "./pages/SelectRole.jsx";
 import { ResetPassword } from "./pages/ResetPassword.jsx";
 import { JoinStudent } from "./pages/JoinStudent.jsx";
 import { Profesor } from "./pages/Profesor.jsx";
+import { SobrePagina } from "./pages/SobrePagina.jsx";
 
 //funcion que exporta el componente App
 function App() {
@@ -44,6 +45,7 @@ function App() {
               </RutaProtegida>
             }
           />
+          <Route path="/SobrePagina" element={<SobrePagina />} />
         </Routes>
       </AuthProvider>
     </div>
