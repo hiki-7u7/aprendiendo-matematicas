@@ -1,5 +1,5 @@
 //importacion de librerias y hooks
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "../components/Alert";
@@ -104,6 +104,10 @@ export function Login() {
   //retorno del componente
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen ">
+      <button className="absolute top-0 right-0 mt-3 mr-6 bg-amber-300 rounded-full p-2">
+        <Link to="/SobrePagina">Sobre la pagina</Link>
+      </button>
+
       {error && <Alert message={error} />}
       <h1 className="text-center text-3xl font-bold py-2">Iniciar Sesión</h1>
       <form
