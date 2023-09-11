@@ -8,6 +8,7 @@ import {
   addDoc,
   doc,
   writeBatch,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { BotonVolver } from "../components/BotonVolver";
@@ -74,16 +75,20 @@ export function JoinStudent() {
     obtenerIdProfesor();
   }, []);
 
-  // codigo para obtener el nombre y rut del alumno
+  /// código para obtener el nombre y rut del alumno
   const obtenerAlumno = async () => {
+    console.log("Estoy en obtener alumno");
+
     // Validar el rut
     if (formatearRut(rut)) {
       console.log("Realizando consulta...");
+
       const q = query(
         collection(db, "Estudiante"),
         where("rut", "==", formatearRut(rut)),
         where("rol", "==", "alumno")
       );
+
       const querySnapshot = await getDocs(q);
 
       const listaAlumnos = querySnapshot.docs.map((doc) => doc.data());
@@ -91,6 +96,7 @@ export function JoinStudent() {
       const alumnoEncontrado = listaAlumnos.find(
         (alumno) => alumno.rut === formatearRut(rut)
       );
+
       // Si el alumno no existe, mostrar la alerta
       if (!alumnoEncontrado) {
         setError(
@@ -105,25 +111,36 @@ export function JoinStudent() {
       } else {
         setError("");
 
-        const EstudianteConIdProfesor = {
-          ...alumnoEncontrado,
-          ProfesorAsignado: idProfesor,
-        };
+        // Agregar el id del profesor al alumno
+        console.log("Estoy en el ELSE de obtener alumno");
+
+        const estudianteId = querySnapshot.docs[0].id;
+        const estudianteRef = doc(db, "Estudiante", estudianteId);
+
+        console.log("el id del alumno es:", estudianteId);
+
         try {
-          const docRef = await addDoc(
-            collection(db, "Estudiante"),
-            EstudianteConIdProfesor
-          );
-          const estudianteId = docRef.id;
+          console.log("Estoy en el TRY de obtener alumno");
+          await updateDoc(estudianteRef, {
+            ProfesorAsignado: idProfesor,
+            // Agrega otros campos que desees actualizar aquí
+          });
 
           setAlumnos([
             ...alumnos,
-            { id: estudianteId, ...EstudianteConIdProfesor },
+            {
+              id: estudianteId,
+              ...alumnoEncontrado,
+              ProfesorAsignado: idProfesor,
+            },
           ]);
-          //console.log("Document written with ID: ", idProfesor);
-          //console.log(docRef);
+
+          console.log("Documento actualizado con éxito.");
         } catch (e) {
-          console.error("Error adding document: ", e);
+          console.log(
+            "Estoy en el CATCH de obtener alumno, se generó un error"
+          );
+          console.error("Error al actualizar el documento: ", e);
         }
       }
     } else {
@@ -152,6 +169,7 @@ export function JoinStudent() {
         if (!querySnapshot.empty) {
           const estudianteDoc = querySnapshot.docs[0];
           const estudianteDocRef = doc(db, "Estudiante", estudianteDoc.id);
+          console.log(" estoy en el 1er IF");
 
           const antiguoDatos = estudianteDoc.data();
           // si el alumno no tiene profesor asignado, agregar el profesor
@@ -160,19 +178,24 @@ export function JoinStudent() {
               ...antiguoDatos,
               ProfesorAsignado: alumno.ProfesorAsignado,
             };
-            batch.set(estudianteDocRef, nuevosDatos);
+            console.log(" estoy en el 2do IF");
+            console.log(" el id del alumno es:", estudianteDoc.id);
+            batch.update(estudianteDocRef, nuevosDatos);
           }
+          /*
+          // eliminar los documentos duplicados
           const oldDocQuery = query(
             estudianteColeccion,
             where("rut", "==", alumno.rut)
           );
-          const oldQuerySnapshot = await getDocs(oldDocQuery);
+          const oldQuerySnapshot = await getDocs(oldDocQuery); // obtener los documentos duplicados
 
+          // eliminar los documentos duplicados
           oldQuerySnapshot.forEach(async (doc) => {
             if (doc.id !== estudianteDoc.id) {
               batch.delete(doc.ref);
             }
-          });
+          });*/
         }
       }
       await batch.commit();
@@ -263,12 +286,14 @@ export function JoinStudent() {
     }
   };
 
+  // codigo para almacenar la lista de alumnos en la coleccion de profesores
   const handleRegistrar = async () => {
-    await registrarProfesorAsignado();
-    await RegistrarListaAlumnos();
+    await registrarProfesorAsignado(); // registrar el profesor asignado
+    await RegistrarListaAlumnos(); // registrar la lista de alumnos
 
+    // si no hay errores, navegar a la página de profesor
     if (!error && alumnos.length > 0) {
-      navegar("/Profesor");
+      //navegar("/Profesor");
     }
   };
 
