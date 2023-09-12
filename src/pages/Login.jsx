@@ -154,13 +154,13 @@ export function Login() {
             Iniciar
           </button>
           <p className="ml-9">
-            No tienes cuenta{" "}
+            No tienes cuenta
             <Link
               to="/SelectRole"
               className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
             >
               Registrada
-            </Link>{" "}
+            </Link>
           </p>
         </div>
         <a
