@@ -32,6 +32,7 @@ export function Login() {
   //funcion que permite manejar el estado de la contraseña
   const [showPassword, setShowPassword] = useState(false);
 
+  //funcion que permite manejar el estado de la contraseña
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -104,10 +105,6 @@ export function Login() {
   //retorno del componente
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen ">
-      <button className="absolute top-0 right-0 mt-3 mr-6 bg-amber-300 rounded-full p-2">
-        <Link to="/SobrePagina">Sobre la pagina</Link>
-      </button>
-
       {error && <Alert message={error} />}
       <h1 className="text-center text-3xl font-bold py-2">Iniciar Sesión</h1>
       <form
@@ -159,7 +156,7 @@ export function Login() {
               to="/SelectRole"
               className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
             >
-              Registrada
+              Registrate
             </Link>
           </p>
         </div>
