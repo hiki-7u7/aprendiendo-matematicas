@@ -8,17 +8,17 @@ export function BotonVolver({ direccion }) {
 
   return (
     <div>
-      <img
-        className="w-12 h-12 mt-3 ml-3 absolute left-0 top-0 cursor-pointer"
-        src={
-          error
-            ? imagen
-            : "https://cdn-icons-png.flaticon.com/128/4495/4495664.png"
-        }
-        alt="Volver"
-        onError={() => setError(true)}
-        onClick={() => navegar(direccion)}
-      />
+      <button onError={() => setError(true)} onClick={() => navegar(direccion)}>
+        <img
+          className="w-12 h-12 mt-3 ml-3 absolute left-0 top-0 cursor-pointer"
+          src={
+            error
+              ? imagen
+              : "https://cdn-icons-png.flaticon.com/128/4495/4495664.png"
+          }
+          alt="Volver"
+        />
+      </button>
     </div>
   );
 }
