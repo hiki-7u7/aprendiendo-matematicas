@@ -8,7 +8,6 @@ import { SelectRole } from "./pages/SelectRole.jsx";
 import { ResetPassword } from "./pages/ResetPassword.jsx";
 import { JoinStudent } from "./pages/JoinStudent.jsx";
 import { Profesor } from "./pages/Profesor.jsx";
-import { SobrePagina } from "./pages/SobrePagina.jsx";
 import { Unidad_1 } from "./pages/Unidad_1.jsx";
 import { Unidad_2 } from "./pages/Unidad_2.jsx";
 import { Unidad_3 } from "./pages/Unidad_3.jsx";
@@ -60,7 +59,6 @@ function App() {
             }
           />
 
-          <Route path="/SobrePagina" element={<SobrePagina />} />
           <Route
             path="/unidad/1"
             element={
