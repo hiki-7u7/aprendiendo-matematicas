@@ -10,6 +10,7 @@ import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
 import { useLocation } from "react-router-dom";
 import { verificarEmail } from "../components/VerificarEmail";
+import imag3 from "../assets/img/Fondo_Login2.png";
 
 //funcion que exporta el componente Registro
 export function Registro() {
@@ -48,11 +49,12 @@ export function Registro() {
     );
 
     const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
+      // esperar a que se resuelvan las dos promesas
       getDocs(qEstudiante),
       getDocs(qProfesor),
     ]);
 
-    return estudianteSnapshot.empty && profesorSnapshot.empty;
+    return estudianteSnapshot.empty && profesorSnapshot.empty; // si no hay documentos, el rut no se encuentra en la base de datos
   };
 
   // manejo de rut
@@ -115,24 +117,46 @@ export function Registro() {
       return;
     }
 
-    const emailValido = await verificarEmail(user.email);
+    // validar que el email no se encuentre en la base de datos
+    /*   const validarEmail = async (email) => {
+      const qEstudiante = query(
+        collection(db, "Estudiante"),
+        where("email", "==", email)
+      );
+      const qProfesor = query(
+        collection(db, "Profesor"),
+        where("email", "==", email)
+      );
+
+      const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
+        // esperar a que se resuelvan las dos promesas
+        getDocs(qEstudiante),
+        getDocs(qProfesor),
+      ]);
+
+      return estudianteSnapshot.empty && profesorSnapshot.empty; // si no hay documentos, el rut no se encuentra en la base de datos
+    };
+
+    const emailValido = await validarEmail(user.email); // verificar que el email no se encuentre en la base de datos
 
     if (!emailValido) {
+      // si no es valido, mostrar error y retornar
       setError("Email no válido");
       return;
-    }
+    } */
 
-    const rutValido = await validarRut(user.rut);
+    const rutValido = await validarRut(user.rut); // verificar que el rut no se encuentre en la base de datos
 
     if (!rutValido) {
+      // si no es valido, mostrar error y retornar
       setError("Rut no válido");
       return;
     }
 
-    //validacion de campos vacios
     try {
-      await Registrarse(user.email, user.password);
+      await Registrarse(user.email, user.password); // registrar usuario en firebase
       const newUser = {
+        // crear objeto con los datos del usuario
         email: user.email,
         rol: state.rol,
         rut: formatearRut(user.rut),
@@ -165,11 +189,14 @@ export function Registro() {
 
   //retorno del componente
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen ">
+    <div
+      className="flex flex-col items-center justify-center w-full h-screen bg-contain bg-no-repeat bg-center bg-blue-200 "
+      style={{ backgroundImage: `url(${imag3})` }}
+    >
       {error && <Alert message={error} />}
 
       <BotonVolver direccion="/SelectRole" />
-      <h1 className="text-center text-3xl font-bold py-2">
+      <h1 className="text-center text-3xl font-bold py-2 bg-slate-300 shadow-md rounded-full px-2 mb-2">
         Registro de Usuario
       </h1>
       <form
