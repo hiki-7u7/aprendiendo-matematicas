@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "../components/Alert";
 import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
+import imag3 from "../assets/img/Fondo_Login2.png";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
@@ -104,12 +105,17 @@ export function Login() {
 
   //retorno del componente
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen ">
+    <div
+      className="flex flex-col items-center justify-center w-full h-screen bg-blue-200 bg-center bg-no-repeat "
+      style={{ backgroundImage: `url(${imag3})` }}
+    >
       {error && <Alert message={error} />}
-      <h1 className="text-center text-3xl font-bold py-2">Iniciar Sesión</h1>
+      <h1 className="text-center text-3xl font-bold py-2 px-2 shadow-xl bg-slate-300 mb-3 rounded-full">
+        Iniciar Sesión
+      </h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-slate-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto sm:w-1/2 lg:w-1/3 xl:w-1/4"
+        className="bg-slate-300 shadow-xl rounded-xl px-8 pt-6 pb-8 mb-4 mx-auto sm:w-1/2 lg:w-1/3 xl:w-1/4"
       >
         <div className="mb-4">
           <label htmlFor="email" className="mr-2 font-fold">
