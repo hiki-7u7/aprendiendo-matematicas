@@ -9,8 +9,93 @@ import { BotonVolver } from "../components/BotonVolver";
 import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
 import { useLocation } from "react-router-dom";
-import { verificarEmail } from "../components/VerificarEmail";
+//import { verificarEmail } from "../components/VerificarEmail";
 import imag3 from "../assets/img/Fondo_Login2.png";
+
+//funcion que exporta el componente Login
+const generarId = () => {
+  // Generar un ID único
+  return Math.random().toString(36).substr(2, 9);
+};
+
+/* //funcion que exporta el componente Login
+const verificarIdUnico = async (coleccion, id) => {
+  // Verifica si el ID es único
+
+  const q = query(coleccion, where("id", "==", id)); // Busca el ID en la colección
+  const snapshot = await getDocs(q);
+  console.log("estoy en verificarIdUnico, es:", id);
+  return snapshot.empty; // Si no hay documentos, el ID es único
+};
+
+//funcion que exporta el componente Login
+const verificarEstudianteId = async (coleccion, estudianteId) => {
+  // Verifica si el ID del estudiante es único
+  const q = query(coleccion, where("estudianteId", "==", estudianteId)); // Busca el estudiante por su id
+  const snapshot = await getDocs(q);
+  console.log("estoy en verificarEstudianteId, es:", estudianteId);
+  return snapshot.empty; // Si no hay documentos, el ID del estudiante es único
+}; */
+
+// Datos de ejemplo para el progreso del estudiante
+// Función para generar la colección ProgresoEstudiante
+const generarColeccionProgresoEstudiante = async (userId) => {
+  const progresoEstudianteRef = collection(db, "ProgresoEstudiante");
+  const q = query(progresoEstudianteRef, where("estudianteId", "==", userId));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    // Si no hay documentos para el usuario, crea los datos de ejemplo
+    const progresoEstudianteData = {
+      id: generarId(), // ID único
+      estudianteId: userId,
+      unidadesDisponibles: [true, false, false, false, false], // Unidades disponibles
+      unidadesCompletadas: [false, false, false, false, false], // Unidades completadas
+      ejerciciosDisponibles: [
+        // Ejercicios disponibles (por unidad)
+        { unidad_1_disponible: [true, false, false, false, false] }, // Ejercicios de la unidad 1 disponibles
+        { unidad_2_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 2 disponibles
+        { unidad_3_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 3 disponibles
+        { unidad_4_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 4 disponibles
+        { unidad_5_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 5 disponibles
+      ],
+      ejerciciosCompletados: [
+        // Ejercicios completados (por unidad)
+        { unidad_1_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 1
+        { unidad_2_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 2
+        { unidad_3_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 3
+        { unidad_4_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 4
+        { unidad_5_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 5
+      ],
+    };
+
+    //------------------------------------------------------------------------------------------------------------------------------------------------------
+    /* id: generarId(), // ID único
+      estudianteId: userId, // Reemplaza con el ID real del estudiantes
+      unidadesDisponibles: [true, false, false, false, false], // Unidades disponibles
+      unidadesCompletadas: [false, false, false, false, false], // Unidades completadas
+      ejerciciosDisponibles: [
+        [true, false, false, false, false], // Ejercicios de la unidad 1 disponibles
+        [false, false, false, false, false], // Ejercicios de la unidad 2 disponibles
+        [false, false, false, false, false], // Ejercicios de la unidad 3 disponibles
+        [false, false, false, false, false], // Ejercicios de la unidad 4 disponibles
+        [false, false, false, false, false], // Ejercicios de la unidad 5 disponibles
+      ],
+      ejerciciosCompletados: [
+        [false, false, false, false, false], // Ejercicios de la unidad 1
+        [false, false, false, false, false], // Ejercicios de la unidad 2
+        [false, false, false, false, false], // Ejercicios de la unidad 3
+        [false, false, false, false, false], // Ejercicios de la unidad 4
+        [false, false, false, false, false], // Ejercicios de la unidad 5
+      ], */
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    await addDoc(progresoEstudianteRef, progresoEstudianteData);
+    console.log("La colección ProgresoEstudiante fue creada.");
+  } else {
+    console.log("La colección ProgresoEstudiante ya existe para este usuario.");
+  }
+};
 
 //funcion que exporta el componente Registro
 export function Registro() {
@@ -21,6 +106,7 @@ export function Registro() {
     rut: "",
     nombre: "",
     apellido: "",
+    id: "",
   });
 
   //const [emailValido, setEmailValido] = useState(false);
@@ -145,6 +231,14 @@ export function Registro() {
       return;
     } */
 
+    /* const crearColeccionProgresoEstudiante = async () => {
+    await crearColeccionEjercicios(); // Crea la colección "Ejercicios" antes de crear la colección "ProgresoEstudiante"
+
+ */
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     const rutValido = await validarRut(user.rut); // verificar que el rut no se encuentre en la base de datos
 
     if (!rutValido) {
@@ -154,27 +248,62 @@ export function Registro() {
     }
 
     try {
-      await Registrarse(user.email, user.password); // registrar usuario en firebase
-      const newUser = {
-        // crear objeto con los datos del usuario
-        email: user.email,
-        rol: state.rol,
-        rut: formatearRut(user.rut),
-        nombre: capitalizar(user.nombre),
-        apellido: capitalizar(user.apellido),
-      };
+      const { user: firebaseUser } = await Registrarse(
+        user.email,
+        user.password
+      ); // registrar usuario en firebase
 
-      if (state.rol === "alumno") {
+      if (firebaseUser) {
+        // si se registró correctamente, obtener el id del usuario
+        const userId = firebaseUser.uid;
+
+        if (state.rol === "alumno") {
+          const newUser = {
+            // crear objeto con los datos del usuario
+            id: userId,
+            email: user.email,
+            rol: state.rol,
+            rut: formatearRut(user.rut),
+            nombre: capitalizar(user.nombre),
+            apellido: capitalizar(user.apellido),
+            progreso: 0,
+          };
+
+          // crear la colección "Estudiante"
+          await addDoc(collection(db, "Estudiante"), newUser);
+
+          // crear la colección "ProgresoEstudiante"
+          await generarColeccionProgresoEstudiante(userId);
+
+          navegar("/");
+        } else if (state.rol === "profesor") {
+          const newUser_2 = {
+            // crear objeto con los datos del usuario
+            id: userId,
+            email: user.email,
+            rol: state.rol,
+            rut: formatearRut(user.rut),
+            nombre: capitalizar(user.nombre),
+            apellido: capitalizar(user.apellido),
+            alumnos: [],
+          };
+          await addDoc(collection(db, "Profesor"), newUser_2);
+
+          navegar("/JoinStudent");
+        }
+      }
+
+      /* if (state.rol === "alumno") {
         await addDoc(collection(db, "Estudiante"), newUser);
 
         navegar("/");
       } else if (state.rol === "profesor") {
-        await addDoc(collection(db, "Profesor"), newUser);
+        await addDoc(collection(db, "Profesor"), newUser_2);
 
         navegar("/JoinStudent");
-      }
+      } */
     } catch (error) {
-      console.log(error.code);
+      console.log("error: ", error.code);
       if (error.code === "auth/email-already-in-use") {
         setError("El email ya esta registrado");
       } else if (error.code === "auth/invalid-email") {
