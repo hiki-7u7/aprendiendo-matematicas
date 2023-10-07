@@ -7,47 +7,211 @@ import { MdPattern } from "react-icons/md";
 import { GoCircle } from "react-icons/go";
 import { PiRulerBold } from "react-icons/pi";
 import { BsDice6 } from "react-icons/bs";
+import { useAuth } from "../context/authContext";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { useEffect, useState } from "react";
+import candado from "../assets/img/icono_candado.png";
 
-const unidades = [
-  { id: 1, nombre: "Unidad 1: Números y operaciones", icono: <BiMath /> },
-  { id: 2, nombre: "Unidad 2: Patrones y álgebra", icono: <MdPattern /> },
-  { id: 3, nombre: "Unidad 3: Geometría", icono: <GoCircle /> },
-  { id: 4, nombre: "Unidad 4: Medición", icono: <PiRulerBold /> },
-  { id: 5, nombre: "Unidad 5: Datos y probabilidades", icono: <BsDice6 /> },
-];
+const img = candado;
 
 export function Alumno() {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Cabecera />
+  const { user } = useAuth(); //user.email para obtener el email del usuario
+  const [mensaje, setMensaje] = useState(""); //mensaje que se muestra si no se ha completado la unidad anterior
+  const [valor, setValor] = useState([]); //valor de unidadesCompletadas
+  const [unidadesCompletadas, setUnidadesCompletadas] = useState([]); //valor de unidadesCompletadas
+  const [unidadesDisponibles, setUnidadesDisponibles] = useState([]); //valor de unidadesDisponibles
+  const [cargando, setCargando] = useState(false); //valor de unidadesDisponibles
 
-      <div className="flex-1 flex items-center justify-center ">
-        <div className="max-w-screen-xl mx-auto ">
-          <div className="grid grid-rows-1 sm:grid-rows-2 md:grid-rows-3 lg:grid-rows-4 gap-4 mt-10 p-4 ">
-            {unidades.map((unidad) => (
-              <div
-                key={unidad.id}
-                className="flex flex-grow bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 text-center mb-5 "
-              >
-                <div className=" items-center justify-center mb-2">
-                  <Link to={`/unidad/${unidad.id}`}>
-                    <button className=" text-4xl mr-2 ">{unidad.icono}</button>
-                  </Link>
-                </div>
-                <Link to={`/unidad/${unidad.id}`}>
-                  <h2 className="text-2xl font-semibold">{unidad.nombre}</h2>
-                </Link>
+  const mostrarMensaje = () => {
+    return <span>No has completado la unidad anterior</span>;
+  };
+
+  const obtenerUnidades = async () => {
+    setCargando(true); // valor de cargando en true para mostrar pantalla de carga
+    const q = query(
+      collection(db, "Estudiante"),
+      where("email", "==", user.email)
+    );
+    const querySnapshot = await getDocs(q);
+
+    const estudiante = querySnapshot.docs.map((doc) => doc.data()); // obtengo el estudiante
+    const estudianteId = estudiante[0].id; // obtengo el id del estudiante
+    console.log("valor de estudianteId: ", estudianteId);
+
+    // Obtengo el progreso de las unidades del estudiante
+    const qUnidades = query(
+      collection(db, "ProgresoEstudiante"),
+      where("estudianteId", "==", estudianteId)
+    );
+    const queryUnidades = await getDocs(qUnidades);
+    const unidadesEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+    /* console.log(
+      "valor de unidades: ",
+      unidadesEstudiante.map((u) => u.unidadesCompletadas) // obtengo el progreso de las unidades del estudiante
+    ); */
+
+    const listaunidadesDisponibles = unidadesEstudiante.map(
+      (u) => u.unidadesDisponibles
+    );
+    const listaunidadesCompletadas = unidadesEstudiante.map(
+      (u) => u.unidadesCompletadas
+    );
+
+    setUnidadesCompletadas(listaunidadesCompletadas[0]); // obtengo el progreso de las unidades del estudiante
+
+    setUnidadesDisponibles(listaunidadesDisponibles[0]); // obtengo el progreso de las unidades del estudiante
+
+    setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
+  };
+
+  useEffect(() => {
+    obtenerUnidades();
+  }, []);
+
+  const unidades = [
+    {
+      id: 1,
+      nombre: "Unidad 1: Números y operaciones",
+      icono: (
+        <BiMath
+          className="h-14 w-14 rounded-md shadow-lg"
+          style={{ backgroundColor: "#F50000" }}
+        />
+      ),
+      color: "#FF5C5C",
+      disponible: unidadesDisponibles[0], // verdad
+    },
+    {
+      id: 2,
+      nombre: "Unidad 2: Patrones y álgebra",
+      icono: (
+        <MdPattern
+          className="h-14 w-14 rounded-md shadow-lg"
+          style={{ backgroundColor: "#FFA500" }}
+        />
+      ),
+      color: "#FFB833",
+      disponible: unidadesDisponibles[1], // falso
+      imagen: candado,
+    },
+    {
+      id: 3,
+      nombre: "Unidad 3: Geometría",
+      icono: (
+        <GoCircle
+          className="rounded-full h-14 w-14 shadow-lg"
+          style={{ backgroundColor: "#F5F500" }}
+        />
+      ),
+      color: "#FFFF70",
+      disponible: unidadesDisponibles[2], // falso
+      imagen: candado,
+    },
+    {
+      id: 4,
+      nombre: "Unidad 4: Medición",
+      icono: (
+        <PiRulerBold
+          className="h-14 w-14 rounded-md shadow-lg"
+          style={{ backgroundColor: "#8ff638" }}
+        />
+      ),
+      color: "#B1F977",
+      disponible: unidadesDisponibles[3], // falso
+      imagen: candado,
+    },
+    {
+      id: 5,
+      nombre: "Unidad 5: Datos y probabilidades",
+      icono: (
+        <BsDice6
+          className="h-14 w-14 rounded-md shadow-lg"
+          style={{ backgroundColor: "#66ffff" }}
+        />
+      ),
+      color: "#ADFFFF",
+      disponible: unidadesDisponibles[4], // falso
+      imagen: candado,
+    },
+  ];
+
+  console.log("valor de unidades: ", unidadesDisponibles[0]);
+
+  return (
+    <div className="flex flex-col min-h-screen bg-contain bg-no-repeat bg-center bg-blue-200">
+      <Cabecera />
+      {cargando ? (
+        // PANTALLA DE CARGA
+        <div className="flex-1 flex items-center justify-center ">
+          <p className=" text-xl ">Cargando...</p>
+        </div>
+      ) : (
+        // PANTALLA DE CONTENIDO
+        <div className="flex-1 flex items-center justify-center ">
+          <div className="max-w-screen-xl mx-auto ">
+            <div className="grid grid-rows-1 sm:grid-rows-2 md:grid-rows-3 lg:grid-rows-4 gap-4 mt-16 p-4 ">
+              {unidades.map((unidad, index) => (
                 <Link
-                  to={`/unidad/${unidad.id}`}
-                  className="text-blue-500 hover:underline mt-1 ml-2 block text-xl"
+                  to={unidad.disponible ? `/unidad/${unidad.id}` : "#"}
+                  key={unidad.id}
                 >
-                  Ver unidad
+                  <div
+                    className={`flex flex-grow bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 text-center mb-5 ${
+                      unidad.disponible
+                        ? "cursor-pointer"
+                        : "cursor-not-allowed"
+                    }`}
+                    style={{ backgroundColor: unidad.color }}
+                  >
+                    <div className=" items-center justify-center ">
+                      {unidad.disponible ? (
+                        <button className="text-4xl mr-2">
+                          {unidad.icono}
+                        </button>
+                      ) : (
+                        <button className="text-4xl mr-2 cursor-not-allowed">
+                          {unidad.icono}
+                        </button>
+                      )}{" "}
+                    </div>
+                    <h2 className="text-4xl font-semibold mt-2">
+                      {unidad.nombre}
+                    </h2>
+                    <div className="relative flex mb-4">
+                      {index > 0 && !unidades[index].disponible ? (
+                        <span></span>
+                      ) : (
+                        <div
+                          className={`text-blue-500 hover:underline mt-4 ml-2 block text-xl font-semibold bg-white rounded-full shadow-md px-4 py-1      ${
+                            unidad.disponible ? " " : "pointer-events-none"
+                          }`}
+                        >
+                          Ver unidad
+                        </div>
+                      )}
+
+                      <div>
+                        <img
+                          src={
+                            unidad.id === 1 && !unidad.disponible // lo inverso {!unidad.completado ? null : unidad.imagen} ---- original src={unidad.id === 1 && unidad.completado
+                              ? null
+                              : unidad.imagen
+                          }
+                          className={`h-10 w-10 relative ml-2 top-2 ${
+                            unidad.disponible ? "hidden" : ""
+                          }`} // lo inverso {!unidad.completado ? "hidden" : ""}  ---- original className={`h-10 w-10 relative ml-2 top-2 ${unidad.bloqueada ? "" : "hidden"}`}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </Link>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <PieDePagina />
     </div>
