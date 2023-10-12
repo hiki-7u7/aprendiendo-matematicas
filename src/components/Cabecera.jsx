@@ -10,11 +10,11 @@ export function Cabecera() {
   const [perfilMenuVisible, setPerfilMenuVisible] = useState(false); // Agregar estado para el menú de perfil
 
   const unidades = [
-    { id: 1, nombre: "Unidad 1: Números y operaciones" },
-    { id: 2, nombre: "Unidad 2: Patrones y álgebra" },
-    { id: 3, nombre: "Unidad 3: Geometría" },
-    { id: 4, nombre: "Unidad 4: Medición" },
-    { id: 5, nombre: "Unidad 5: Datos y probabilidades" },
+    { id: 1, nombre: "Unidad 1: Números y operaciones", bloqueada: false },
+    { id: 2, nombre: "Unidad 2: Patrones y álgebra", bloqueada: true },
+    { id: 3, nombre: "Unidad 3: Geometría", bloqueada: true },
+    { id: 4, nombre: "Unidad 4: Medición", bloqueada: true },
+    { id: 5, nombre: "Unidad 5: Datos y probabilidades", bloqueada: true },
   ];
 
   // Funciones para mostrar y ocultar el menú principal
@@ -45,7 +45,9 @@ export function Cabecera() {
     <header className="bg-slate-300 fixed top-0 left-0 w-full h-16 flex items-center justify-between px-4 shadow-md">
       <div className="flex items-center">
         {/* Logo o nombre de la plataforma */}
-        <h1 className="text-2xl font-bold">Nombre de la Plataforma</h1>
+        <h1 className="text-4xl font-bold text-green-600">
+          AprendeMatemáticas
+        </h1>
       </div>
       <nav className="hidden md:flex items-center space-x-4">
         {/* Enlaces de navegación */}
@@ -55,12 +57,12 @@ export function Cabecera() {
         >
           Inicio
         </Link>
-        <Link
+        {/* <Link
           to="/recursos-mineduc"
           className="bg-green-500 hover:bg-green-300 px-4 py-2 rounded-full transition duration-300"
         >
           Recursos del Mineduc
-        </Link>
+        </Link> */}
         {/* Menú de unidades */}
         <div className="relative inline-block text-left">
           <button
@@ -75,7 +77,7 @@ export function Cabecera() {
                 {unidades.map((unidad) => (
                   <Link
                     key={unidad.id}
-                    to={`/unidad/${unidad.id}`}
+                    to={unidad.bloqueada ? "#" : `/unidad/${unidad.id}`}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     {unidad.nombre}
@@ -131,12 +133,12 @@ export function Cabecera() {
               >
                 Inicio
               </Link>
-              <Link
+              {/* <Link
                 to="/recursos-mineduc"
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Recursos del Mineduc
-              </Link>
+              </Link> */}
               {/* Menú de unidades en versión móvil */}
               <div className="relative inline-block text-left">
                 <button
@@ -151,7 +153,7 @@ export function Cabecera() {
                       {unidades.map((unidad) => (
                         <Link
                           key={unidad.id}
-                          to={`/unidad/${unidad.id}`}
+                          to={unidad.bloqueada ? "#" : `/unidad/${unidad.id}`}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           {unidad.nombre}
