@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
   //funcion que permite cerrar sesion
   const CerrarSesion = () => signOut(auth);
 
-  //funcion que permite resetear la contraseña
+  //funcion que permite resetear la contraseña desde el correo
   const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 
   //funcion que permite manejar el estado del usuario
