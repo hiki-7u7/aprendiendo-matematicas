@@ -12,7 +12,7 @@ import { db } from "../firebase/firebase.js";
 export function Alumnos(props) {
   const eliminarAlumno = async () => {
     try {
-      // Eliminar alumno
+      /*  // Eliminar alumno
       const profesorQuery = query(
         collection(db, "Profesor"),
         where("rut", "==", props.profesorAsignado)
@@ -53,22 +53,22 @@ export function Alumnos(props) {
         // actualizar datos
         await updateDoc(estudianteRef, {
           ProfesorAsignado: "",
-        });
+        }); */
 
-        // Actualizar lista de alumnos
-        props.actualizarListaAlumnos(props.rut);
-      } else {
+      // Actualizar lista de alumnos
+      props.actualizarListaAlumnos(props.rut);
+      /* } else {
         console.log("No se encontro el alumno");
-      }
+      } */
     } catch (error) {
       console.log(" Error al eliminar el alumno: ", error);
     }
   };
 
   return (
-    <div className=" justify-center mt-10 ">
+    <div className=" items-center justify-center">
       <form className="flex  items-center">
-        <p className="border-2 border-black rounded-2xl  p-1 m-1">
+        <p className="border-2 border-black rounded-2xl  p-2 m-2 bg-white">
           {props.nombre} {props.apellido} - {props.rut}
         </p>
         <img
