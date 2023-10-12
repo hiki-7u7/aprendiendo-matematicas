@@ -14,7 +14,16 @@ import { Unidad_3 } from "./pages/Unidad_3.jsx";
 import { Unidad_4 } from "./pages/Unidad_4.jsx";
 import { Unidad_5 } from "./pages/Unidad_5.jsx";
 import { Ejercicio_1_1 } from "./pages/Ejercicio_1_1.jsx";
+import { Ejercicio_1_2 } from "./pages/Ejercicio_1_2.jsx";
+import { Ejercicio_1_3 } from "./pages/Ejercicio_1_3.jsx";
+import { Ejercicio_1_4 } from "./pages/Ejercicio_1_4.jsx";
+import { Ejercicio_1_5 } from "./pages/Ejercicio_1_5.jsx";
+import { Ejercicio_1_6 } from "./pages/Ejercicio_1_6.jsx";
+import { Ejercicio_1_7 } from "./pages/Ejercicio_1_7.jsx";
+import { Ejercicio_1_8 } from "./pages/Ejercicio_1_8.jsx";
 import { Perfil } from "./pages/Perfil.jsx";
+import { DetalleAlumno } from "./pages/DetalleAlumno.jsx";
+import { ListaEjercicios } from "./pages/ListaEjercicios.jsx";
 
 //funcion que exporta el componente App
 function App() {
@@ -100,10 +109,91 @@ function App() {
             }
           />
           <Route
-            path="/unidad/1/ejercicio 1"
+            path="/unidad/1/listaEjercicios"
+            element={
+              <RutaProtegida>
+                <ListaEjercicios />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_1"
             element={
               <RutaProtegida>
                 <Ejercicio_1_1 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_2"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_2 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_3"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_3 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_4"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_4 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_5"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_5 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_6"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_6 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_7"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_7 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_8"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_8 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/Profesor/DetalleAlumno"
+            element={
+              <RutaProtegida>
+                <DetalleAlumno />
               </RutaProtegida>
             }
           />
