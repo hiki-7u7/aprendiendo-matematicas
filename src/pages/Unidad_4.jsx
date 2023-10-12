@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Cabecera } from "../components/Cabecera";
 import { PieDePagina } from "../components/PieDePagina";
 import { PiRulerBold } from "react-icons/pi"; // Icono de operaciones matemáticas
-import { AiOutlineAudio } from "react-icons/ai"; // Icono de audio
+import { GiBugleCall } from "react-icons/gi"; // Icono de audio
 import { IoVideocam } from "react-icons/io5"; // Icono de video
 import { Link } from "react-router-dom"; // Para el botón de ir a ejercicios
 import { BotonVolver } from "../components/BotonVolver";
@@ -47,19 +47,24 @@ export function Unidad_4() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col bg-blue-200 ">
       <Cabecera />
-
       {/* Botón para volver a la página anterior */}
-      <div className="relative left-10 top-24">
+      <div className="relative left-10 top-6">
         <BotonVolver direccion={"/"} />
       </div>
 
       {/* Contenido de la Unidad */}
       <div className="flex-grow container mx-auto mt-8 p-4">
-        <div className=" bg-green-500 text-white py-6 text-center shadow-md">
+        <div
+          className=" text-gray-900  font-semibold py-6 text-center shadow-md"
+          style={{ backgroundColor: "#B1F977" }}
+        >
           <div className="flex items-center justify-center">
-            <PiRulerBold className="text-6xl mx-5" />
+            <PiRulerBold
+              className="text-6xl mx-5"
+              style={{ backgroundColor: "#8ff638" }}
+            />
             <h1 className="text-3xl font-bold">Unidad 4: Medición</h1>
           </div>
         </div>
@@ -79,7 +84,7 @@ export function Unidad_4() {
             audioPlaying ? "bg-red-500" : "bg-blue-500"
           } text-white py-2 px-4 rounded-full mt-4 flex items-center space-x-2`}
         >
-          <AiOutlineAudio className="text-xl" />
+          <GiBugleCall className="text-xl" />
           <span>{audioPlaying ? "Detener Audio" : "Reproducir Audio"}</span>
         </button>
 
@@ -92,8 +97,8 @@ export function Unidad_4() {
             <iframe
               className="w-full aspect-video "
               src=""
-              title="Video explicativo de la Unidad 4"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture, fullscreen "
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
             ></iframe>
           </div>
         </div>
