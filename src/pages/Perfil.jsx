@@ -10,7 +10,7 @@ import imag2 from "../assets/img/ojo_abierto.png";
 import { db } from "../firebase/firebase";
 
 export function Perfil() {
-  const { user } = useAuth();
+  const { user, cargando } = useAuth();
   const [userData, setUserData] = useState({
     nombre: "",
     apellido: "",
@@ -19,9 +19,10 @@ export function Perfil() {
     contraseñaAntigua: "",
     nuevaContraseña: "",
   });
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorContraseña, setErrorContraseña] = useState(null);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false); // estado para mostrar u ocultar el formulario de cambio de contraseña
+  const [showPassword, setShowPassword] = useState(false); // estado para mostrar u ocultar la contraseña
+  const [errorContraseña, setErrorContraseña] = useState(null); // estado para manejar errores de contraseña
+  const [cargandoUsuario, setCargandoUsuario] = useState(true); // estado para saber si se está cargando el usuario
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -30,6 +31,7 @@ export function Perfil() {
   useEffect(() => {
     const obtenerDatosUsuario = async () => {
       if (user) {
+        // si el usuario está autenticado
         const estudianteQuery = query(
           collection(db, "Estudiante"),
           where("email", "==", user.email)
@@ -38,24 +40,38 @@ export function Perfil() {
           collection(db, "Profesor"),
           where("email", "==", user.email)
         );
+        try {
+          const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
+            getDocs(estudianteQuery),
+            getDocs(profesorQuery),
+          ]);
 
-        const [estudianteSnapshot, profesorSnapshot] = await Promise.all([
-          getDocs(estudianteQuery),
-          getDocs(profesorQuery),
-        ]);
+          if (!estudianteSnapshot.empty) {
+            // si no está vacío
+            const estudianteDoc = estudianteSnapshot.docs[0];
+            setUserData(estudianteDoc.data()); // establecer los datos del estudiante
+          } else if (!profesorSnapshot.empty) {
+            const profesorDoc = profesorSnapshot.docs[0];
+            setUserData(profesorDoc.data()); // establecer los datos del profesor
+          }
 
-        if (!estudianteSnapshot.empty) {
-          const estudianteDoc = estudianteSnapshot.docs[0];
-          setUserData(estudianteDoc.data());
-        } else if (!profesorSnapshot.empty) {
-          const profesorDoc = profesorSnapshot.docs[0];
-          setUserData(profesorDoc.data());
+          setCargandoUsuario(false); // ya se cargó el usuario
+        } catch (error) {
+          console.error("Error al obtener los datos del usuario:", error);
+          setCargandoUsuario(false); // ya se cargó el usuario
         }
       }
     };
 
     obtenerDatosUsuario();
   }, [user]);
+  if (cargandoUsuario || cargando) {
+    return (
+      <h1 className="flex min-h-screen items-center justify-center">
+        Cargando...
+      </h1>
+    );
+  }
 
   const handleContraseñaChange = (e) => {
     setUserData({ ...userData, contraseñaAntigua: e.target.value });
@@ -100,16 +116,40 @@ export function Perfil() {
     }
   };
 
+  if (userData.rol === "alumno") {
+    var direccion = "/";
+  } else if (userData.rol === "profesor") {
+    var direccion = "/Profesor";
+  }
+
   return (
-    <div className="flex flex-col items-center w-full h-screen">
-      <BotonVolver direccion={"/"} />
-      <BsPersonCircle className="text-9xl mt-10" />
+    <div className="flex flex-col items-center w-full h-screen bg-blue-200">
+      <BotonVolver direccion={direccion} />
+      <BsPersonCircle className="text-9xl mt-10 text-black" />
       <h1 className="text-5xl mt-6">Perfil</h1>
-      <h3 className="text-2xl mt-6">
-        Nombre y Apellido: {userData.nombre} {userData.apellido}
-      </h3>
-      <h3 className="text-2xl mt-6">Rut: {userData.rut}</h3>
-      <h3 className="text-2xl mt-6">Correo: {userData.email}</h3>
+
+      <div className="flex ">
+        <h3 className="text-2xl mt-7">Nombre y Apellido:</h3>
+        <h3 className="text-2xl mt-6 ml-2 bg-gray-50 shadow-md p-1 rounded-md">
+          {userData.nombre} {userData.apellido}
+        </h3>
+      </div>
+
+      <div className="flex ">
+        <h3 className="text-2xl mt-7">Rut:</h3>
+        <h3 className="text-2xl mt-6 ml-2 bg-gray-50 shadow-md p-1 rounded-md">
+          {" "}
+          {userData.rut}
+        </h3>
+      </div>
+
+      <div className="flex ">
+        <h3 className="text-2xl mt-7 ">Correo:</h3>
+        <h3 className="text-2xl mt-6 ml-2 bg-gray-50 shadow-md p-1 rounded-md">
+          {" "}
+          {userData.email}
+        </h3>
+      </div>
 
       <button
         onClick={toggleMostrarFormulario}
@@ -127,7 +167,7 @@ export function Perfil() {
               type={showPassword ? "text" : "password"}
               value={userData.contraseñaAntigua}
               onChange={handleContraseñaChange}
-              className="ml-2 border-b-2 border-gray-400"
+              className="ml-2 border-b-2 border-gray-400 rounded-md shadow-md"
             />
           </div>
           <div className="mt-6">
@@ -138,7 +178,7 @@ export function Perfil() {
               onChange={(e) =>
                 setUserData({ ...userData, nuevaContraseña: e.target.value })
               }
-              className="ml-2 border-b-2 border-gray-400"
+              className="ml-2 border-b-2 border-gray-400 rounded-md shadow-md"
             />
           </div>
           {errorContraseña && (
