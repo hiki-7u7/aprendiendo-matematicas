@@ -37,7 +37,9 @@ export function Cabecera_2() {
     <header className="bg-slate-300 fixed top-0 left-0 w-full h-16 flex items-center justify-between px-4 shadow-md">
       <div className="flex items-center">
         {/* Logo o nombre de la plataforma */}
-        <h1 className="text-2xl font-bold">Nombre de la Plataforma</h1>
+        <h1 className="text-4xl font-bold text-green-600">
+          AprendeMatemáticas{" "}
+        </h1>
       </div>
       <nav className="hidden md:flex items-center space-x-4">
         {/* Enlaces de navegación */}
@@ -46,6 +48,13 @@ export function Cabecera_2() {
           className="bg-green-500 hover:bg-green-300 px-4 py-2 rounded-full transition duration-300"
         >
           Inicio
+        </Link>
+
+        <Link
+          to="/JoinStudent"
+          className="bg-green-500 hover:bg-green-300 px-4 py-2 rounded-full transition duration-300"
+        >
+          Vincular Estudiante
         </Link>
 
         {/* Menú de perfil */}
