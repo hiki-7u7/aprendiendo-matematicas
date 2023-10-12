@@ -15,17 +15,24 @@ import { BotonVolver } from "../components/BotonVolver";
 import { Alumnos } from "../components/Alumnos";
 import { Alert } from "../components/Alert";
 import { useAuth } from "../context/authContext";
+import imag1 from "../assets/img/Fondo_Login2.png";
 
 export function JoinStudent() {
+  //funcion que permite navegar entre paginas
   const navegar = useNavigate();
 
   // codigo para obtener el nombre y rut del alumno
-  const { user } = useAuth();
-  const [alumnos, setAlumnos] = useState([]);
-  const [rut, setRut] = useState("");
-  const [error, setError] = useState(false);
+  const { user } = useAuth(); // obtener el usuario actual
+  const [alumnos, setAlumnos] = useState([]); // lista de alumnos
+  const [rut, setRut] = useState(""); // rut del alumno a agregar
+  const [error, setError] = useState(false); // manejo de errores
+  const [message, setMessage] = useState(null); // Nuevo estado para el mensaje
+  const [messageColor, setMessageColor] = useState(null); // Nueva variable de estado para el color del mensaje
+  const [showMessage, setShowMessage] = useState(false); // Nuevo estado para mostrar el mensaje
 
+  // codigo para eliminar un alumno de la lista
   const actualizarListaAlumnos = (rut) => {
+    // rut del alumno a eliminar
     const listaAlumnosActualizada = alumnos.filter((alumno) => {
       return alumno.rut !== rut;
     });
@@ -103,23 +110,42 @@ export function JoinStudent() {
           "El rut ingresado no corresponde a un alumno registrado o no es válido"
         );
       } else if (alumnos.some((a) => a.rut === alumnoEncontrado.rut)) {
+        // Si el alumno ya está en la lista, mostrar la alerta
         setError("El alumno ya ha sido agregado");
+        setTimeout(() => {
+          setError("");
+        }, 3000);
       } else if (alumnoEncontrado.ProfesorAsignado === idProfesor) {
+        // Si el alumno ya está asignado por el profesor, mostrar la alerta
         setError("Este alumno ya está asignado por usted");
+        setTimeout(() => {
+          setError("");
+        }, 3000);
       } else if (alumnoEncontrado.ProfesorAsignado) {
-        setError("El alumno ya tiene un profesor asignado");
+        setError("El alumno ya tiene un profesor asignado"); // Si el alumno ya tiene un profesor asignado, mostrar la alerta
+        setTimeout(() => {
+          setError("");
+        }, 3000);
       } else {
         setError("");
 
         // Agregar el id del profesor al alumno
+
         console.log("Estoy en el ELSE de obtener alumno");
 
         const estudianteId = querySnapshot.docs[0].id;
-        const estudianteRef = doc(db, "Estudiante", estudianteId);
+        //const estudianteRef = doc(db, "Estudiante", estudianteId);
+        setAlumnos([
+          ...alumnos,
+          {
+            id: estudianteId,
+            ...alumnoEncontrado,
+          },
+        ]);
 
         console.log("el id del alumno es:", estudianteId);
 
-        try {
+        /* try {
           console.log("Estoy en el TRY de obtener alumno");
           await updateDoc(estudianteRef, {
             ProfesorAsignado: idProfesor,
@@ -141,7 +167,7 @@ export function JoinStudent() {
             "Estoy en el CATCH de obtener alumno, se generó un error"
           );
           console.error("Error al actualizar el documento: ", e);
-        }
+        } */
       }
     } else {
       setError("Debe ingresar un rut"); // Mostrar la alerta
@@ -269,6 +295,12 @@ export function JoinStudent() {
         await batch.commit();
 
         console.log("Lista de alumnos registrada");
+        setMessage("Lista de alumnos registrada"); // Cambiar el mensaje
+        setMessageColor("text-green-500"); // Cambiar el color del mensaje
+        setShowMessage(true); // Mostrar el mensaje
+        setTimeout(() => {
+          setShowMessage(false); // Ocultar el mensaje
+        }, 3000);
       } else {
         console.log("No se encontró el profesor");
         querySnapshot.forEach((doc) => {
@@ -293,17 +325,22 @@ export function JoinStudent() {
 
     // si no hay errores, navegar a la página de profesor
     if (!error && alumnos.length > 0) {
-      //navegar("/Profesor");
+      navegar("/Profesor");
     }
   };
 
   console.log(user.email);
 
   return (
-    <div className="flex flex-col items-center justify-center   ">
+    <div
+      className="flex flex-col items-center justify-center h-screen bg-contain bg-no-repeat bg-center bg-blue-200 "
+      /* style={{ backgroundImage: `url(${imag1})` }} */
+    >
       <BotonVolver direccion="/Registro" />
-      <h1 className="text-center text-3xl font-bold py-2 ">Ver Estudiantes</h1>
-      <form className="flex flex-row">
+      <h1 className="text-center text-3xl font-bold py-2 absolute top-2">
+        Vincular Estudiantes
+      </h1>
+      <form className="flex flex-row absolute top-16">
         <div className="mb-4">
           <label
             htmlFor="rut"
@@ -336,7 +373,7 @@ export function JoinStudent() {
             }}
             className="bg-green-500 hover:bg-green-300  rounded-full px-2 focus:outline-none focus:shadow-outline ml-2 mt-7"
           >
-            +
+            Consultar
           </button>
         </div>
       </form>
@@ -344,19 +381,16 @@ export function JoinStudent() {
       {error && (
         <Alert message={error} /> // Mostrar la alerta
       )}
+
+      {showMessage && (
+        <Alert message={message} color={messageColor} /> // Mostrar la alerta
+      )}
       <div>
         <button
-          onClick={() => navegar("/Profesor")}
-          className="bg-blue-500 hover:bg-blue-300  rounded-full px-2 focus:outline-none focus:shadow-outline mr-8"
-        >
-          Omitir
-        </button>
-
-        <button
           onClick={handleRegistrar}
-          className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
+          className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline  absolute top-40 items-center justify-center"
         >
-          Registrar
+          Agregar a lista
         </button>
       </div>
 
@@ -368,7 +402,7 @@ export function JoinStudent() {
           apellido={alumno.apellido}
           rut={alumno.rut}
           actualizarListaAlumnos={actualizarListaAlumnos}
-          profesorAsignado={alumno.ProfesorAsignado}
+          /* profesorAsignado={alumno.ProfesorAsignado} */
         />
       ))}
     </div>
