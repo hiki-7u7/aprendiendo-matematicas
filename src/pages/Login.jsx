@@ -8,6 +8,7 @@ import imag2 from "../assets/img/ojo_abierto.png";
 import imag3 from "../assets/img/Fondo_Login2.png";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { CrearColecciones } from "../components/CrearColecciones";
 
 //funcion que exporta el componente Login
 export function Login() {
@@ -62,7 +63,7 @@ export function Login() {
     } else if (!profesorSnapshot.empty) {
       // El email corresponde a un profesor
       await iniciarSesion(user.email.toLowerCase(), user.password);
-      navegar("/JoinStudent");
+      navegar("/Profesor");
     }
   };
 
@@ -109,6 +110,11 @@ export function Login() {
       className="flex flex-col items-center justify-center w-full h-screen bg-blue-200 bg-center bg-no-repeat "
       style={{ backgroundImage: `url(${imag3})` }}
     >
+      {/* boton de creacion de colecciones : unidades y ejercicios  */}
+      {/* <div className="bg-white px-2 rounded-full mb-4">
+        <CrearColecciones />
+      </div> */}
+
       {error && <Alert message={error} />}
       <h1 className="text-center text-3xl font-bold py-2 px-2 shadow-xl bg-slate-300 mb-3 rounded-full">
         Iniciar Sesión
@@ -160,7 +166,7 @@ export function Login() {
             No tienes cuenta
             <Link
               to="/SelectRole"
-              className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline"
+              className="bg-orange-500 hover:bg-orange-300  rounded-full px-2 focus:outline-none focus:shadow-outline ml-2"
             >
               Registrate
             </Link>
