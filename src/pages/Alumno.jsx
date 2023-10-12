@@ -13,55 +13,42 @@ import { db } from "../firebase/firebase";
 import { useEffect, useState } from "react";
 import candado from "../assets/img/icono_candado.png";
 
-const img = candado;
+var VALOR = 0;
 
 export function Alumno() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
-  const [mensaje, setMensaje] = useState(""); //mensaje que se muestra si no se ha completado la unidad anterior
-  const [valor, setValor] = useState([]); //valor de unidadesCompletadas
-  const [unidadesCompletadas, setUnidadesCompletadas] = useState([]); //valor de unidadesCompletadas
-  const [unidadesDisponibles, setUnidadesDisponibles] = useState([]); //valor de unidadesDisponibles
-  const [cargando, setCargando] = useState(false); //valor de unidadesDisponibles
 
-  const mostrarMensaje = () => {
-    return <span>No has completado la unidad anterior</span>;
-  };
+  const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de unidades
+  const [cargando, setCargando] = useState(true); //valor de unidadesDisponibles
 
   const obtenerUnidades = async () => {
-    setCargando(true); // valor de cargando en true para mostrar pantalla de carga
-    const q = query(
-      collection(db, "Estudiante"),
-      where("email", "==", user.email)
-    );
-    const querySnapshot = await getDocs(q);
-
-    const estudiante = querySnapshot.docs.map((doc) => doc.data()); // obtengo el estudiante
-    const estudianteId = estudiante[0].id; // obtengo el id del estudiante
-    console.log("valor de estudianteId: ", estudianteId);
+    /* setCargando(true); // valor de cargando en true para mostrar pantalla de carga */
+    // Obtengo el id del estudiante
 
     // Obtengo el progreso de las unidades del estudiante
     const qUnidades = query(
       collection(db, "ProgresoEstudiante"),
-      where("estudianteId", "==", estudianteId)
+      where("estudianteId", "==", user.uid)
     );
     const queryUnidades = await getDocs(qUnidades);
     const unidadesEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
 
-    /* console.log(
+    console.log("id de alumno", user.uid);
+
+    console.log(
       "valor de unidades: ",
-      unidadesEstudiante.map((u) => u.unidadesCompletadas) // obtengo el progreso de las unidades del estudiante
-    ); */
-
-    const listaunidadesDisponibles = unidadesEstudiante.map(
-      (u) => u.unidadesDisponibles
+      unidadesEstudiante.map((u) => u.idEjercicios[0]) // obtengo el progreso de las unidades del estudiante
     );
-    const listaunidadesCompletadas = unidadesEstudiante.map(
-      (u) => u.unidadesCompletadas
-    );
+    let valor = unidadesEstudiante.map((u) => u.idEjercicios[0]); // obtengo array de idEjercicios del estudiante
 
-    setUnidadesCompletadas(listaunidadesCompletadas[0]); // obtengo el progreso de las unidades del estudiante
+    setEjerciciosRegistrados(valor); // asigno el array de idEjercicios del estudiante a la variable ejerciciosRegistrados
 
-    setUnidadesDisponibles(listaunidadesDisponibles[0]); // obtengo el progreso de las unidades del estudiante
+    console.log("valor es: ", ejerciciosRegistrados); // obtengo el valor de ejerciciosRegistrados
+
+    console.log(
+      "valor de ejerciciosRegistrados: ",
+      ejerciciosRegistrados.length
+    ); // obtengo el valor de ejerciciosRegistrados
 
     setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
   };
@@ -70,6 +57,18 @@ export function Alumno() {
     obtenerUnidades();
   }, []);
 
+  //agregar mas elementos al array de ejerciciosRegistrados - Prueba de control de conteo de ejercicios
+  /* 
+  ejerciciosRegistrados.push(1);
+  ejerciciosRegistrados.push(2);
+  ejerciciosRegistrados.push(3);
+  ejerciciosRegistrados.push(4);
+  ejerciciosRegistrados.push(5);
+  ejerciciosRegistrados.push(6); */
+
+  VALOR = ejerciciosRegistrados.length;
+
+  console.log("valor de VALOR: ", VALOR);
   const unidades = [
     {
       id: 1,
@@ -81,7 +80,7 @@ export function Alumno() {
         />
       ),
       color: "#FF5C5C",
-      disponible: unidadesDisponibles[0], // verdad
+      disponible: VALOR >= 0 ? true : false, // verdad
     },
     {
       id: 2,
@@ -93,7 +92,7 @@ export function Alumno() {
         />
       ),
       color: "#FFB833",
-      disponible: unidadesDisponibles[1], // falso
+      disponible: VALOR >= 5 ? true : false, // falso
       imagen: candado,
     },
     {
@@ -106,7 +105,7 @@ export function Alumno() {
         />
       ),
       color: "#FFFF70",
-      disponible: unidadesDisponibles[2], // falso
+      disponible: VALOR >= 10 ? true : false, // falso
       imagen: candado,
     },
     {
@@ -119,7 +118,7 @@ export function Alumno() {
         />
       ),
       color: "#B1F977",
-      disponible: unidadesDisponibles[3], // falso
+      disponible: VALOR >= 15 ? true : false, // falso
       imagen: candado,
     },
     {
@@ -132,12 +131,10 @@ export function Alumno() {
         />
       ),
       color: "#ADFFFF",
-      disponible: unidadesDisponibles[4], // falso
+      disponible: VALOR >= 20 ? true : false, // falso
       imagen: candado,
     },
   ];
-
-  console.log("valor de unidades: ", unidadesDisponibles[0]);
 
   return (
     <div className="flex flex-col min-h-screen bg-contain bg-no-repeat bg-center bg-blue-200">
