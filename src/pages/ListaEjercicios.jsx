@@ -8,6 +8,18 @@ import { useAuth } from "../context/authContext";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { useEffect, useState } from "react";
+import { GiBugleCall } from "react-icons/gi"; // Icono de audio
+
+function speakText(text, rate = 1) {
+  const synth = window.speechSynthesis; // Obtener la síntesis de voz
+  const utterance = new SpeechSynthesisUtterance(text); // Crear un nuevo objeto de síntesis de voz
+  utterance.rate = rate; // Establecer la velocidad de la voz
+
+  // Detener cualquier síntesis de voz anterior
+  synth.cancel();
+
+  synth.speak(utterance); // Reproducir el texto
+}
 
 export function ListaEjercicios() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
@@ -29,7 +41,7 @@ export function ListaEjercicios() {
 
     console.log("id de alumno", user.uid);
 
-    console.log("unidadesEstudiante", unidadesEstudiante[0].idEjercicios);
+    console.log("unidadesEstudiante", unidadesEstudiante[0]);
 
     const listaEjerReg = unidadesEstudiante[0].idEjercicios; // obtengo el progreso de las unidades del estudiante
 
@@ -80,18 +92,18 @@ export function ListaEjercicios() {
   const ejercicios = [
     {
       id: 1,
-      nombre: "Ejercicio 1: Contado imagenes hasta 10",
+      nombre: "Ejercicio 1: Contar imagenes entre 1 al 10",
       disponible: VALOR >= 0 ? true : false, //true,
     },
     {
       id: 2,
-      nombre: "Ejercicio 2: Suma de números enteros",
+      nombre: "Ejercicio 2: Contar y Marcar las Imágenes del 1 al 10",
       disponible: VALOR >= 1 ? true : false, //false,
       imagen: candado,
-    },
+    } /* ,
     {
       id: 3,
-      nombre: "Ejercicio 3: Resta de números enteros",
+      nombre: "Ejercicio 3: Contar imagenes entre 1 al 20",
       disponible: VALOR >= 2 ? true : false, //false
       imagen: candado,
     },
@@ -106,7 +118,7 @@ export function ListaEjercicios() {
       nombre: "Ejercicio 5: División de números enteros",
       disponible: VALOR >= 4 ? true : false, //false
       imagen: candado,
-    },
+    }, */,
   ];
 
   return (
@@ -116,8 +128,11 @@ export function ListaEjercicios() {
         <BotonVolver direccion={"/unidad/1"} />
       </div>
 
-      <h1 className="text-4xl font-semibold mb-4">
-        Lista de Ejercicios - Unidad 1: Números y Operaciones
+      <h1
+        className="text-4xl font-semibold mb-4 rounded-xl p-2 text-center w-96"
+        style={{ backgroundColor: "#FF5C5C" }}
+      >
+        Lista de Ejercicios
       </h1>
 
       {cargando ? (
@@ -128,7 +143,7 @@ export function ListaEjercicios() {
       ) : (
         // PANTALLA DE CONTENIDO
 
-        <div className=" bg-white rounded-lg p-10 shadow-md w-96 items-center justify-center align-middle">
+        <div className=" bg-gray-200  rounded-lg p-10 shadow-md w-96 items-center justify-center align-middle">
           <ul className=" flex flex-col list-disc list-inside">
             {ejercicios.map((ejercicio, index) => (
               <Link
@@ -144,7 +159,7 @@ export function ListaEjercicios() {
               >
                 <button
                   key={index}
-                  className={`text-lg mt-4 mb-4 border-2 rounded-lg p-1 hover:bg-blue-500  hover:text-white transition duration-300 ${
+                  className={`text-lg mt-4 mb-4 border-2 rounded-lg p-1 bg-white hover:bg-blue-500  hover:text-white transition duration-300 ${
                     ejercicio.disponible
                       ? "cursor-pointer"
                       : "cursor-not-allowed" // inverso  "cursor-not-allowed" : "cursor-pointer"
@@ -157,7 +172,7 @@ export function ListaEjercicios() {
                     <span></span>
                   ) : (
                     <div
-                      className={` text-blue-500 hover:underline mt-8 ml-2 container text-sm font-semibold bg-white rounded-full shadow-md w-24 h-10 px-0 py-2 text-center border-2 align-top ${
+                      className={` text-blue-500 hover:underline mt-8 ml-2 container text-sm font-semibold bg-white hover:bg-blue-500 hover:text-white rounded-full shadow-md w-24 h-10 px-0 py-2 text-center border-2 align-top ${
                         ejercicio.disponible ? "" : "pointer-events-none"
                       }`}
                     >
