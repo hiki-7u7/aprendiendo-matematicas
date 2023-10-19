@@ -19,6 +19,7 @@ export function Profesor() {
   const [cargandoDatos, setCargandoDatos] = useState(true);
   const [alumnoBuscado, setAlumnoBuscado] = useState(null);
   const [rutSeleccionado, setRutSeleccionado] = useState("");
+  const [alumnoID, setAlumnoID] = useState("");
   const navigate = useNavigate();
 
   const handleAlumnoClick = (rutAlumno) => {
@@ -57,11 +58,14 @@ export function Profesor() {
 
               if (!alumnoSnapshot.empty) {
                 const alumnoDoc = alumnoSnapshot.docs[0].data();
+
+                console.log(alumnoID);
                 return {
                   rut: alumnoDoc.rut,
                   nombre: alumnoDoc.nombre,
                   apellido: alumnoDoc.apellido,
                   progreso: alumnoDoc.progreso || 0,
+                  id: alumnoDoc.id,
                 };
               }
             }
@@ -171,7 +175,7 @@ export function Profesor() {
                 key={index}
                 className="flex mt-4 px-2 py-2 space-x-4 space-y-4 items-center justify-center border-2 border-black hover:bg-slate-100 rounded-lg shadow-md"
               >
-                <button onClick={() => handleAlumnoClick(alumnoData.rut)}>
+                <button onClick={() => handleAlumnoClick(alumnoData.id)}>
                   <div className="flex flex-col items-center bg-white hover:bg-slate-100 rounded-lg shadow-md p-4">
                     <BsPersonCircle className="text-4xl text-blue-600" />
                     <h4 className="text-lg font-semibold">{alumnoData.rut}</h4>
@@ -180,9 +184,14 @@ export function Profesor() {
                       {alumnoData.nombre} {alumnoData.apellido}
                     </h3>
                     <p className="text-gray-800">
-                      Progreso: {alumnoData.progreso}
+                      Progreso:{" "}
+                      {alumnoData.progreso ? alumnoData.progreso : "0%"}
                     </p>
-                    <BarraProgreso progress={alumnoData.progreso} />
+                    <BarraProgreso
+                      progress={
+                        alumnoData.progreso ? alumnoData.progreso : "0%"
+                      }
+                    />
                   </div>
                 </button>
               </div>
