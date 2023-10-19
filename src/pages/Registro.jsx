@@ -11,6 +11,8 @@ import imag2 from "../assets/img/ojo_abierto.png";
 import { useLocation } from "react-router-dom";
 //import { verificarEmail } from "../components/VerificarEmail";
 import imag3 from "../assets/img/Fondo_Login2.png";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //funcion que exporta el componente Login
 const generarId = () => {
@@ -40,6 +42,10 @@ const verificarEstudianteId = async (coleccion, estudianteId) => {
 // Datos de ejemplo para el progreso del estudiante
 // Función para generar la colección ProgresoEstudiante
 const generarColeccionProgresoEstudiante = async (userId) => {
+  // si existe la coleccion ProgresoEstudiante, agregar el usuario a la coleccion, crea el codigo
+
+  // si no existe, crear la coleccion y agregar el usuario a la coleccion
+
   const progresoEstudianteRef = collection(db, "ProgresoEstudiante");
   const q = query(progresoEstudianteRef, where("estudianteId", "==", userId));
   const snapshot = await getDocs(q);
@@ -49,25 +55,11 @@ const generarColeccionProgresoEstudiante = async (userId) => {
     const progresoEstudianteData = {
       id: generarId(), // ID único
       estudianteId: userId,
-      unidadesDisponibles: [true, false, false, false, false], // Unidades disponibles
-      unidadesCompletadas: [false, false, false, false, false], // Unidades completadas
-      ejerciciosDisponibles: [
-        // Ejercicios disponibles (por unidad)
-        { unidad_1_disponible: [true, false, false, false, false] }, // Ejercicios de la unidad 1 disponibles
-        { unidad_2_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 2 disponibles
-        { unidad_3_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 3 disponibles
-        { unidad_4_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 4 disponibles
-        { unidad_5_disponible: [false, false, false, false, false] }, // Ejercicios de la unidad 5 disponibles
-      ],
-      ejerciciosCompletados: [
-        // Ejercicios completados (por unidad)
-        { unidad_1_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 1
-        { unidad_2_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 2
-        { unidad_3_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 3
-        { unidad_4_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 4
-        { unidad_5_completado: [false, false, false, false, false] }, // Ejercicios de la unidad 5
-      ],
+      idEjercicios: [],
     };
+
+    // agregar el usuario a la coleccion
+    await addDoc(progresoEstudianteRef, progresoEstudianteData);
 
     //------------------------------------------------------------------------------------------------------------------------------------------------------
     /* id: generarId(), // ID único
@@ -90,10 +82,17 @@ const generarColeccionProgresoEstudiante = async (userId) => {
       ], */
     //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    await addDoc(progresoEstudianteRef, progresoEstudianteData);
     console.log("La colección ProgresoEstudiante fue creada.");
   } else {
     console.log("La colección ProgresoEstudiante ya existe para este usuario.");
+    // Agregar un nuevo documento a la colección existente
+    const progresoEstudianteData = {
+      id: generarId(), // ID único
+      estudianteId: userId,
+      idEjercicios: [],
+    };
+
+    await addDoc(progresoEstudianteRef, progresoEstudianteData);
   }
 };
 
@@ -200,6 +199,15 @@ export function Registro() {
       user.apellido === ""
     ) {
       setError("Por favor, complete todos los campos.");
+      toast.error(error, {
+        style: {
+          backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+          color: "#EF5350",
+        },
+        position: "top-center",
+        autoClose: 4000,
+        pauseOnHover: true,
+      });
       return;
     }
 
@@ -244,6 +252,15 @@ export function Registro() {
     if (!rutValido) {
       // si no es valido, mostrar error y retornar
       setError("Rut no válido");
+      toast.error(error, {
+        style: {
+          backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+          color: "#EF5350",
+        },
+        position: "top-center",
+        autoClose: 4000,
+        pauseOnHover: true,
+      });
       return;
     }
 
@@ -271,6 +288,15 @@ export function Registro() {
 
           // crear la colección "Estudiante"
           await addDoc(collection(db, "Estudiante"), newUser);
+          toast.success("Usuario registrado correctamente", {
+            style: {
+              backgroundColor: "#E8F5E9", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+              color: "#66BB6A",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          });
 
           // crear la colección "ProgresoEstudiante"
           await generarColeccionProgresoEstudiante(userId);
@@ -288,6 +314,15 @@ export function Registro() {
             alumnos: [],
           };
           await addDoc(collection(db, "Profesor"), newUser_2);
+          toast.success("Usuario registrado correctamente", {
+            style: {
+              backgroundColor: "#E8F5E9", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+              color: "#66BB6A",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          });
 
           navegar("/JoinStudent");
         }
@@ -306,12 +341,48 @@ export function Registro() {
       console.log("error: ", error.code);
       if (error.code === "auth/email-already-in-use") {
         setError("El email ya esta registrado");
+        toast.error("El email ya esta registrado", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/invalid-email") {
         setError("El email no es válido");
+        toast.error("El email no es válido", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/weak-password") {
         setError("La contraseña debe tener al menos 6 caracteres");
+        toast.error("La contraseña debe tener al menos 6 caracteres", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/operation-not-allowed") {
         setError("No se pudo crear el usuario");
+        toast.error("No se pudo crear el usuario", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       }
     }
   };
@@ -322,7 +393,7 @@ export function Registro() {
       className="flex flex-col items-center justify-center w-full h-screen bg-contain bg-no-repeat bg-center bg-blue-200 "
       style={{ backgroundImage: `url(${imag3})` }}
     >
-      {error && <Alert message={error} />}
+      {/* {error && <Alert message={error} />} */}
 
       <BotonVolver direccion="/SelectRole" />
       <h1 className="text-center text-3xl font-bold py-2 bg-slate-300 shadow-md rounded-full px-2 mb-2">
