@@ -80,7 +80,7 @@ export function Alumno() {
         />
       ),
       color: "#FF5C5C",
-      disponible: VALOR >= 0 ? true : false, // verdad
+      disponible: true,
     },
     {
       id: 2,
@@ -92,7 +92,7 @@ export function Alumno() {
         />
       ),
       color: "#FFB833",
-      disponible: VALOR >= 5 ? true : false, // falso
+      disponible: true,
       imagen: candado,
     },
     {
@@ -105,7 +105,7 @@ export function Alumno() {
         />
       ),
       color: "#FFFF70",
-      disponible: VALOR >= 10 ? true : false, // falso
+      disponible: true,
       imagen: candado,
     },
     {
@@ -118,7 +118,7 @@ export function Alumno() {
         />
       ),
       color: "#B1F977",
-      disponible: VALOR >= 15 ? true : false, // falso
+      disponible: true,
       imagen: candado,
     },
     {
@@ -131,7 +131,7 @@ export function Alumno() {
         />
       ),
       color: "#ADFFFF",
-      disponible: VALOR >= 20 ? true : false, // falso
+      disponible: true,
       imagen: candado,
     },
   ];
