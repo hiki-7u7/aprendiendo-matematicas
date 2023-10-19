@@ -16,7 +16,7 @@ import { Alumnos } from "../components/Alumnos";
 import { Alert } from "../components/Alert";
 import { useAuth } from "../context/authContext";
 import imag1 from "../assets/img/Fondo_Login2.png";
-
+import { toast } from "react-toastify";
 export function JoinStudent() {
   //funcion que permite navegar entre paginas
   const navegar = useNavigate();
@@ -109,20 +109,62 @@ export function JoinStudent() {
         setError(
           "El rut ingresado no corresponde a un alumno registrado o no es válido"
         );
+        toast.error(
+          "El rut ingresado no corresponde a un alumno registrado o no es válido",
+          {
+            style: {
+              backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+              color: "#EF5350",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          }
+        );
       } else if (alumnos.some((a) => a.rut === alumnoEncontrado.rut)) {
         // Si el alumno ya está en la lista, mostrar la alerta
-        setError("El alumno ya ha sido agregado");
+        // Si el alumno ya está en la lista, mostrar la alerta
+        setError("Este estudiante ya ha sido consultado");
+        toast.error("Este estudiante ya ha sido consultado", {
+          style: {
+            backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
         setTimeout(() => {
           setError("");
         }, 3000);
       } else if (alumnoEncontrado.ProfesorAsignado === idProfesor) {
         // Si el alumno ya está asignado por el profesor, mostrar la alerta
         setError("Este alumno ya está asignado por usted");
+        toast.error("Este alumno ya está asignado por usted", {
+          style: {
+            backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
         setTimeout(() => {
           setError("");
         }, 3000);
       } else if (alumnoEncontrado.ProfesorAsignado) {
         setError("El alumno ya tiene un profesor asignado"); // Si el alumno ya tiene un profesor asignado, mostrar la alerta
+
+        toast.error("El alumno ya tiene un profesor asignado", {
+          style: {
+            backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
+
         setTimeout(() => {
           setError("");
         }, 3000);
@@ -133,7 +175,7 @@ export function JoinStudent() {
 
         console.log("Estoy en el ELSE de obtener alumno");
 
-        const estudianteId = querySnapshot.docs[0].id;
+        const estudianteId = querySnapshot.docs[0].id; // obtener el id del alumno
         //const estudianteRef = doc(db, "Estudiante", estudianteId);
         setAlumnos([
           ...alumnos,
@@ -171,6 +213,15 @@ export function JoinStudent() {
       }
     } else {
       setError("Debe ingresar un rut"); // Mostrar la alerta
+      toast.error("Debe ingresar un rut", {
+        style: {
+          backgroundColor: "#FFCDD2", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+          color: "#EF5350",
+        },
+        position: "top-center",
+        autoClose: 4000,
+        pauseOnHover: true,
+      });
     }
   };
 
@@ -301,6 +352,16 @@ export function JoinStudent() {
         setTimeout(() => {
           setShowMessage(false); // Ocultar el mensaje
         }, 3000);
+
+        toast.success("Estudiante agregado a la lista", {
+          style: {
+            backgroundColor: "#C8E6C9", //  rojo claro #FFCDD2 //rojo oscuro #EF5350  // verde mas claro #C8E6C9 // verde mas oscuro #66BB6A // rojo #E53E3E
+            color: "#66BB6A",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else {
         console.log("No se encontró el profesor");
         querySnapshot.forEach((doc) => {
@@ -378,13 +439,13 @@ export function JoinStudent() {
         </div>
       </form>
 
-      {error && (
+      {/* {error && (
         <Alert message={error} /> // Mostrar la alerta
-      )}
+      )} */}
 
-      {showMessage && (
+      {/* {showMessage && (
         <Alert message={message} color={messageColor} /> // Mostrar la alerta
-      )}
+      )} */}
       <div>
         <button
           onClick={handleRegistrar}
@@ -393,18 +454,20 @@ export function JoinStudent() {
           Agregar a lista
         </button>
       </div>
+      <div className=" fixed top-52 ">
+        {alumnos.map((alumno) => (
+          <Alumnos
+            id={alumno.id}
+            key={alumno.rut}
+            nombre={alumno.nombre}
+            apellido={alumno.apellido}
+            rut={alumno.rut}
+            actualizarListaAlumnos={actualizarListaAlumnos}
 
-      {alumnos.map((alumno) => (
-        <Alumnos
-          id={alumno.id}
-          key={alumno.rut}
-          nombre={alumno.nombre}
-          apellido={alumno.apellido}
-          rut={alumno.rut}
-          actualizarListaAlumnos={actualizarListaAlumnos}
-          /* profesorAsignado={alumno.ProfesorAsignado} */
-        />
-      ))}
+            /* profesorAsignado={alumno.ProfesorAsignado} */
+          />
+        ))}
+      </div>
     </div>
   );
 }
