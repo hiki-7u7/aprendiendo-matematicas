@@ -10,7 +10,7 @@ export function BotonVolver({ direccion }) {
     <div>
       <button onError={() => setError(true)} onClick={() => navegar(direccion)}>
         <img
-          className="w-12 h-12 mt-3 ml-3 absolute left-10 top-16 bg-white rounded-full"
+          className="w-12 h-12 mt-3 ml-3 fixed left-10 top-16 bg-white rounded-full"
           onError={() => setError(true)}
           onClick={() => navegar(direccion)}
           src={
