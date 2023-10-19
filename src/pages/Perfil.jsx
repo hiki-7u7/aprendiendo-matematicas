@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import imag1 from "../assets/img/ojo_cerrado.png";
 import imag2 from "../assets/img/ojo_abierto.png";
 import { db } from "../firebase/firebase";
+import { toast } from "react-toastify";
 
 export function Perfil() {
   const { user, cargando } = useAuth();
@@ -26,6 +27,13 @@ export function Perfil() {
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+  const limpairCampos = () => {
+    setUserData({
+      ...userData,
+      contraseñaAntigua: "",
+      nuevaContraseña: "",
+    });
   };
 
   useEffect(() => {
@@ -80,6 +88,20 @@ export function Perfil() {
   const actualizarContraseña = async () => {
     setErrorContraseña(null);
 
+    if (!userData.contraseñaAntigua || !userData.nuevaContraseña) {
+      setErrorContraseña("Por favor, complete los campos de contraseña");
+      toast.error("Por favor, complete los campos de contraseña", {
+        style: {
+          backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+          color: "#EF5350",
+        },
+        position: "top-center",
+        autoClose: 4000,
+        pauseOnHover: true,
+      });
+      return;
+    }
+
     try {
       if (user) {
         const email = user.email;
@@ -88,8 +110,19 @@ export function Perfil() {
         try {
           await signInWithEmailAndPassword(auth, email, contraseñaAntigua);
           await updatePassword(auth.currentUser, userData.nuevaContraseña);
+          toast.success("Contraseña actualizada con éxito", {
+            style: {
+              backgroundColor: "#E8F5E9", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+              color: "#66BB6A",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          });
 
-          alert("Contraseña actualizada con éxito.");
+          limpairCampos();
+
+          /*  alert("Contraseña actualizada con éxito."); */ // otra forma de mostrar el mensaje de éxito
         } catch (error) {
           console.error(
             "Error de autenticación o al actualizar la contraseña:",
@@ -98,10 +131,28 @@ export function Perfil() {
           setErrorContraseña(
             "Contraseña antigua incorrecta o error al actualizar"
           );
+          toast.error("Contraseña antigua incorrecta o error al actualizar", {
+            style: {
+              backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+              color: "#EF5350",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          });
         }
       }
     } catch (error) {
       console.error("Error al actualizar la contraseña:", error);
+      toast.error("Error al actualizar la contraseña", {
+        style: {
+          backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+          color: "#EF5350",
+        },
+        position: "top-center",
+        autoClose: 4000,
+        pauseOnHover: true,
+      });
     }
   };
 
@@ -181,9 +232,9 @@ export function Perfil() {
               className="ml-2 border-b-2 border-gray-400 rounded-md shadow-md"
             />
           </div>
-          {errorContraseña && (
+          {/*  {errorContraseña && (
             <div className="text-red-500 mt-2">{errorContraseña}</div>
-          )}
+          )} */}
           <div className="flex justify-center mt-4">
             <button
               onClick={actualizarContraseña}
