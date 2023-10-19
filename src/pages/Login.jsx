@@ -9,6 +9,8 @@ import imag3 from "../assets/img/Fondo_Login2.png";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { CrearColecciones } from "../components/CrearColecciones";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //funcion que exporta el componente Login
 export function Login() {
@@ -80,26 +82,122 @@ export function Login() {
       console.log(error.code);
       if (error.code === "auth/email-already-in-use") {
         setError("El email ya esta registrado");
+        toast.error("El email ya esta registrado", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
+      } else if (user.email === "" && user.password === "") {
+        setError("Debe completar todos los campos");
+        toast.error("Debe completar todos los campos", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/invalid-email") {
         setError("El email no es válido");
+        toast.error("El email no es válido", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/weak-password") {
         setError("La contraseña debe tener al menos 6 caracteres");
+        toast.error("La contraseña debe tener al menos 6 caracteres", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/operation-not-allowed") {
         setError("No se pudo crear el usuario");
+        toast.error("No se pudo crear el usuario", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/user-not-found") {
         setError("El usuario no existe");
+        toast.error("El usuario no existe", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/wrong-password") {
         setError("Contraseña incorrecta");
+        toast.error("Contraseña incorrecta", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/too-many-requests") {
         setError(
           "Demasiados intentos de inicio de sesión fallidos. Intente nuevamente más tarde"
         );
+        toast.error(
+          "Demasiados intentos de inicio de sesión fallidos. Intente nuevamente más tarde",
+          {
+            style: {
+              backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+              color: "#EF5350",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          }
+        );
       } else if (error.code === "auth/network-request-failed") {
         setError("Error de conexión. Intente nuevamente más tarde");
-      } else if (user.email === "" || user.password === "") {
-        setError("Debe completar todos los campos");
+        toast.error("Error de conexión. Intente nuevamente más tarde", {
+          style: {
+            backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+            color: "#EF5350",
+          },
+          position: "top-center",
+          autoClose: 4000,
+          pauseOnHover: true,
+        });
       } else if (error.code === "auth/quota-exceeded") {
         setError("Se ha superado el límite de solicitudes. Intente más tarde");
+        toast.error(
+          "Se ha superado el límite de solicitudes. Intente más tarde",
+          {
+            style: {
+              backgroundColor: "#FFCDD2", // verde mas claro #14B8A6 // verde mas oscuro #047857 // rojo #E53E3E
+              color: "#EF5350",
+            },
+            position: "top-center",
+            autoClose: 4000,
+            pauseOnHover: true,
+          }
+        );
       }
     }
   };
@@ -115,7 +213,7 @@ export function Login() {
         <CrearColecciones />
       </div> */}
 
-      {error && <Alert message={error} />}
+      {/* {error && <Alert message={error} />} */}
       <h1 className="text-center text-3xl font-bold py-2 px-2 shadow-xl bg-slate-300 mb-3 rounded-full">
         Iniciar Sesión
       </h1>
