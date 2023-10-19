@@ -1,7 +1,7 @@
 import React from "react";
 
 export function BarraProgreso({ progress }) {
-  const progressPercentage = `${progress}%`;
+  const progressPercentage = `${progress}`;
 
   return (
     <div className="mt-2">
