@@ -128,7 +128,7 @@ export function Ejercicio_1_1() {
 
       setMessage("🎊👍¡Ejercicio completado!🎉✨");
       speakText("¡Ejercicio completado!");
-      setMessageColor("text-green-500");
+      setMessageColor("text-blue-500");
       obtenerEjercicios();
       setTimeout(() => {
         navegar("/unidad/1/listaEjercicios");
@@ -159,7 +159,7 @@ export function Ejercicio_1_1() {
     }
   }, [showMessage]);
 
-  //FUNCIONES PARA OBTENER LOS EJERCICIOS
+  //FUNCIONES PARA OBTENER LOS EJERCICIOS Y ACTUALIZAR EL PROGRESO DEL ESTUDIANTE
   const obtenerEjercicios = async () => {
     //setCargando(true); // valor de cargando en true para mostrar pantalla de carga
     //  Obtengo el progreso de las unidades del estudiante
@@ -171,6 +171,7 @@ export function Ejercicio_1_1() {
     const unidadesEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
 
     console.log("id de alumno", user.uid); // obtengo el id del estudiante
+    console.log("Parte 1"); // obtengo el progreso del estudiante
     const EstudianteID = user.uid; // obtengo el id del estudiante
 
     const listaEjerReg = unidadesEstudiante[0].idEjercicios; // obtengo el progreso de las unidades del estudiante
@@ -181,19 +182,20 @@ export function Ejercicio_1_1() {
 
     const qUnidades = query(
       collection(db, "Unidades"),
-      where("Orden", "==", 1)
+      where("orden", "==", 1)
     );
     const queryUnidades2 = await getDocs(qUnidades);
-    /* const unidades = queryUnidades2.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante */
+    const unidades = queryUnidades2.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
     const unidadesId = queryUnidades2.docs.map((doc) => doc.id); // obtengo el id del progreso del estudiante
 
-    const idUnidad = unidadesId[0]; // obtengo el id de la unidad
+    const idUnidad = unidades[0].id; // obtengo el id de la unidad
 
     console.log("id de la unidad", idUnidad);
+    console.log("Parte 2"); // obtengo el progreso del estudiante
 
     const qEjercicios = query(
       collection(db, "Ejercicios"),
-      where("Orden", "==", 1),
+      where("orden", "==", 1),
       where("unidadesId", "==", idUnidad)
     );
 
@@ -204,24 +206,7 @@ export function Ejercicio_1_1() {
     const idEjercicio = ejerciciosDoc[0].id; // obtengo el id del ejercicio
 
     console.log("id del ejercicio", ejerciciosDoc[0].id);
-
-    // Actualizar el progreso del estudiante
-
-    /* const listaEjerDisp = unidadesEstudiante.map(
-      (u) => u.ejerciciosDisponibles[0].unidad_1_disponible
-    ); // obtengo el progreso de las unidades del estudiante
-
-    const listaEjerCom = unidadesEstudiante.map(
-      (u) => u.ejerciciosCompletados[0].unidad_1_completado
-    ); // obtengo el progreso de las unidades del estudiante
-
-    setEjerciciosDisponibles(listaEjerDisp[0]); // obtengo el progreso de los ejercicios del estudiante
-    setEjerciciosCompletados(listaEjerCom[0]); // obtengo el progreso de los ejercicios del estudiante
-
-    console.log("ejercicios disponibles", ejerciciosDisponibles);
-    console.log("ejercicios completados", ejerciciosCompletados); */
-
-    //setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
+    console.log("Parte 3"); // obtengo el progreso del estudiante
 
     // Actualizar el progreso del estudiante
     const progresoEstudianteRef = collection(db, "ProgresoEstudiante");
@@ -237,59 +222,68 @@ export function Ejercicio_1_1() {
       progresoEstudianteId[0]
     );
 
-    ejerciciosRegistrados.push(idEjercicio);
+    if (!ejerciciosRegistrados.includes(idEjercicio)) {
+      /* var lista = [];
+    lista = lista.concat; */
+      ejerciciosRegistrados.push(idEjercicio);
 
-    console.log("ejercicios registrados", ejerciciosRegistrados);
+      console.log("ejercicios registrados", ejerciciosRegistrados);
+      console.log("Parte 4");
 
-    await updateDoc(progresoEstudianteRefId, {
-      idEjercicios: [...ejerciciosRegistrados],
-    });
+      await updateDoc(progresoEstudianteRefId, {
+        idEjercicios: [...ejerciciosRegistrados],
+      });
 
-    console.log("ejercicios registrados", ejerciciosRegistrados);
-    console.log("ejercicio registrado correctamente");
+      console.log("ejercicios registrados", ejerciciosRegistrados);
+      console.log("ejercicio registrado correctamente");
 
-    const q2 = query(collection(db, "Ejercicios"));
-    const querySnapshot2 = await getDocs(q2);
-    const ejercicios = querySnapshot2.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
+      const q2 = query(collection(db, "Ejercicios"));
+      const querySnapshot2 = await getDocs(q2);
+      const ejercicios = querySnapshot2.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
 
-    console.log("Total de ejercicios:", ejercicios.length); // obtengo el progreso del estudiante
+      console.log("Total de ejercicios:", ejercicios.length); // obtengo el progreso del estudiante
 
-    //
-    console.log("id del estudiante MIRAR:", user.uid);
-    const q3 = query(collection(db, "Estudiante"), where("id", "==", user.uid));
+      //
+      console.log("id del estudiante MIRAR:", user.uid);
+      const q3 = query(
+        collection(db, "Estudiante"),
+        where("id", "==", user.uid)
+      );
 
-    const querySnapshot3 = await getDocs(q3);
-    const estudiantes = querySnapshot3.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
-    console.log("estudiantes", estudiantes);
+      const querySnapshot3 = await getDocs(q3);
+      const estudiantes = querySnapshot3.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
+      console.log("estudiantes", estudiantes);
 
-    const estudiantesId = querySnapshot3.docs[0].id; // obtengo el id del progreso del estudiante
-    console.log("estudiantesId", estudiantesId);
+      const estudiantesId = querySnapshot3.docs[0].id; // obtengo el id del progreso del estudiante
+      console.log("estudiantesId", estudiantesId);
 
-    const estudiantesRefId = doc(collection(db, "Estudiante"), estudiantesId);
+      const estudiantesRefId = doc(collection(db, "Estudiante"), estudiantesId);
 
-    console.log("progreso", ejerciciosRegistrados.length);
-    console.log("totalEjercicios", ejercicios.length);
+      console.log("progreso", ejerciciosRegistrados.length);
+      console.log("totalEjercicios", ejercicios.length);
 
-    var progreso = ejerciciosRegistrados.length / ejercicios.length;
-    console.log("progreso", progreso);
-    progreso = progreso * 100;
-    progreso = Math.round(progreso * 100) / 100;
-    progreso = progreso.toFixed(0);
+      var progreso = ejerciciosRegistrados.length / ejercicios.length;
+      console.log("progreso", progreso);
+      progreso = progreso * 100;
+      progreso = Math.round(progreso * 100) / 100;
+      progreso = progreso.toFixed(0);
 
-    console.log("progreso", progreso);
-    var nuevoProgreso = progreso.toString();
-    var nuevoProgreso1 = nuevoProgreso + "%";
-    var nuevoProgreso2 = nuevoProgreso1.toString();
-    await updateDoc(estudiantesRefId, {
-      progreso: nuevoProgreso2, // actualizo el progreso del estudiante
-    });
+      console.log("progreso", progreso);
 
-    console.log("progreso actualizado correctamente", nuevoProgreso2);
+      var nuevoProgreso = progreso.toString();
+      var nuevoProgreso1 = nuevoProgreso + "%";
+      var nuevoProgreso2 = nuevoProgreso1.toString();
+      await updateDoc(estudiantesRefId, {
+        progreso: nuevoProgreso2, // actualizo el progreso del estudiante
+      });
+
+      console.log("progreso actualizado correctamente", nuevoProgreso2);
+      console.log("Ejercicio registrado correctamente.");
+    } else {
+      console.log("El ejercicio ya ha sido registrado");
+      console.log("progreso actual ", nuevoProgreso2);
+    }
   };
-
-  useEffect(() => {
-    obtenerEjercicios();
-  }, []);
 
   return (
     <div className="bg-blue-200">
@@ -307,6 +301,8 @@ export function Ejercicio_1_1() {
 
         <div className="relative">
           <BotonVolver direccion="/unidad/1/listaEjercicios" />
+        </div>
+        <div className="relative mr-52">
           <ContRespCorrectas contador={respuestasCorrectasSeguidas} />
         </div>
 
