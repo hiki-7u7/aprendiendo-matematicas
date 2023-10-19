@@ -11,6 +11,17 @@ import { useAuth } from "../context/authContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/firebase.js";
 
+function speakText(text, rate = 1) {
+  const synth = window.speechSynthesis; // Obtener la síntesis de voz
+  const utterance = new SpeechSynthesisUtterance(text); // Crear un nuevo objeto de síntesis de voz
+  utterance.rate = rate; // Establecer la velocidad de la voz
+
+  // Detener cualquier síntesis de voz anterior
+  synth.cancel();
+
+  synth.speak(utterance); // Reproducir el texto
+}
+
 export function Unidad_1() {
   const { CerrarSesion, cargando } = useAuth();
   const [mostrarPagina, setMostrarPagina] = useState(false);
@@ -41,11 +52,7 @@ export function Unidad_1() {
 
   // Texto que se leerá en voz alta
   const audioText = `
-    En esta unidad, aprenderás los conceptos fundamentales de números y
-    operaciones matemáticas. Comenzaremos explorando los números
-    naturales, enteros, fraccionarios y decimales. Luego,
-    profundizaremos en diversas operaciones como la suma, resta,
-    multiplicación y división.
+  En esta unidad, aprenderemos sobre los números y cómo usarlos para sumar, restar y resolver problemas divertidos. ¡Prepárate para un emocionante viaje matemático!.
   `;
 
   const synth = window.speechSynthesis; // API para sintetizar voz
@@ -102,11 +109,9 @@ export function Unidad_1() {
 
         <h2 className="text-2xl font-semibold mt-4">Contenido de la Unidad</h2>
         <p>
-          En esta unidad, aprenderás los conceptos fundamentales de números y
-          operaciones matemáticas. Comenzaremos explorando los números
-          naturales, enteros, fraccionarios y decimales. Luego, profundizaremos
-          en diversas operaciones como la suma, resta, multiplicación y
-          división.
+          En esta unidad, aprenderemos sobre los números y cómo usarlos para
+          sumar, restar y resolver problemas divertidos. ¡Prepárate para un
+          emocionante viaje matemático!
         </p>
 
         {/* Botón para convertir el texto en audio */}
@@ -122,7 +127,9 @@ export function Unidad_1() {
 
         {/* Sección de Video */}
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold">Video Explicativo</h2>
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Contar del 1 al 10
+          </h2>
           <div className="bg-gray-200 p-4 rounded-lg">
             {/* Aquí puedes agregar tu componente de video */}
 
@@ -131,21 +138,484 @@ export function Unidad_1() {
               src="https://www.youtube-nocookie.com/embed/WhXZaxeZ5sg?si=56x3yYGVSvBJpgrw"
               title="Video explicativo de la Unidad 1"
               allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
             ></iframe>
           </div>
         </div>
 
         {/* Botón para ir a Ejercicios */}
-        <div className="mt-8">
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
           <h2 className="text-2xl font-semibold">Ejercicios</h2>
           <button>
             <Link
               to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
-              className="bg-green-500 text-white py-2 px-4 rounded-full mt-4 block text-center"
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
             >
               Ir a Ejercicios
             </Link>
           </button>
+          {/*  <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Contar del 1 al 20
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/zzbinU2UKqs?si=qdbYQfDQ_CSHZfS4"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Ordenar numeros
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/v413G3OvLow?si=r3r80HVcJ4bquK18"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/*  <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Comparar numeros
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/EZOw3vk8-h4?si=2wdiK4xvzf7n-8fj"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/*  <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Componer numeros
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/MCv52Le4bGc?si=KTX03kButwmom96T"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/*  <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Descomponer numeros
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/_3XF_UUBcj0?si=YXzB4EnlgVJJ1mqg"
+              https:title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Unidades y Decenas parte 1
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/xbb-qh8ijkU?si=jVUYvOtvsHP7HTat"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Unidades y Decenas parte 2
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/nYp2mhoCySk?si=bf_4cQkkSs6UDeYh"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: sumas del 1 al 5
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/lgTHXU0AS-w?si=sx-XRywfCTqzQnco"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Sumar del 1 al 10
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/Fji4COgvK4w?si=bQTnXTc6hOPe6PKl"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Sumar del 1 al 20
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/6m7BLiblhQI?si=YgkHAtZlIp9YhMlg"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: restar del 1 al 5
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/HvuMleYdhG0?si=T4ptuSicJMwgwvck"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Restar entre 1 al 10
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/dxBUiU0J9sg?si=q0NUOrbkfKrOTD9o"
+              https:title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
+        </div>
+
+        {/* Sección de Video */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold">
+            Video Explicativo: Restar entre 1 al 20
+          </h2>
+          <div className="bg-gray-200 p-4 rounded-lg">
+            {/* Aquí puedes agregar tu componente de video */}
+
+            <iframe
+              className="w-full aspect-video "
+              src="https://www.youtube-nocookie.com/embed/uqwq9UGh5Bs?si=BnE3Scbvn8QTpVkD"
+              title="Video explicativo de la Unidad 1"
+              allow=" fullscreen "
+              sandbox="allow-same-origin allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Botón para ir a Ejercicios */}
+        <div className="mt-8 flex  items-center justify-center bg-gray-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold">Ejercicios</h2>
+          <button>
+            <Link
+              to="/unidad/1/listaEjercicios" // Reemplaza con la ruta correcta para los ejercicios de la Unidad 1
+              className="bg-green-500 text-white text-xl hover:bg-green-300 hover:text-black py-2 px-4 rounded-full ml-3 mt-1 block text-center"
+            >
+              Ir a Ejercicios
+            </Link>
+          </button>
+          {/* <button
+            className="bg-blue-500 rounded-full  ml-3 p-1 hover:bg-blue-300"
+            onClick={() => speakText("Ir a Ejercicios")}
+          >
+            <GiBugleCall className="text-xl ml-3  h-10 w-10" />
+          </button> */}
         </div>
       </div>
 
