@@ -11,10 +11,10 @@ export function Cabecera() {
 
   const unidades = [
     { id: 1, nombre: "Unidad 1: Números y operaciones", bloqueada: false },
-    { id: 2, nombre: "Unidad 2: Patrones y álgebra", bloqueada: true },
-    { id: 3, nombre: "Unidad 3: Geometría", bloqueada: true },
-    { id: 4, nombre: "Unidad 4: Medición", bloqueada: true },
-    { id: 5, nombre: "Unidad 5: Datos y probabilidades", bloqueada: true },
+    { id: 2, nombre: "Unidad 2: Patrones y álgebra", bloqueada: false },
+    { id: 3, nombre: "Unidad 3: Geometría", bloqueada: false },
+    { id: 4, nombre: "Unidad 4: Medición", bloqueada: false },
+    { id: 5, nombre: "Unidad 5: Datos y probabilidades", bloqueada: false },
   ];
 
   // Funciones para mostrar y ocultar el menú principal
@@ -27,6 +27,9 @@ export function Cabecera() {
   const handleUnidadesClick = () => {
     setMenuUnidadesVisible(!menuUnidadesVisible);
     setMenuVisible(true); // Asegurarse de que el menú principal esté oculto
+    setTimeout(() => {
+      setMenuUnidadesVisible(false);
+    }, 6000); // Ocultar el menú de unidades después de 5 segundos
   };
 
   // Funciones para mostrar y ocultar el menú de perfil
@@ -34,6 +37,9 @@ export function Cabecera() {
     setPerfilMenuVisible(!perfilMenuVisible);
     setMenuVisible(true); // Asegurarse de que el menú principal esté oculto
     setMenuUnidadesVisible(false); // Asegurarse de que el menú de unidades esté oculto
+    setTimeout(() => {
+      setPerfilMenuVisible(false);
+    }, 5000); // Ocultar el menú de perfil después de 5 segundos
   };
 
   // Función para cerrar sesión
@@ -42,7 +48,7 @@ export function Cabecera() {
   };
 
   return (
-    <header className="bg-slate-300 fixed top-0 left-0 w-full h-16 flex items-center justify-between px-4 shadow-md">
+    <header className=" bg-slate-300 fixed top-0 left-0 w-full h-16 flex items-center justify-between px-4 shadow-md">
       <div className="flex items-center">
         {/* Logo o nombre de la plataforma */}
         <h1 className="text-4xl font-bold text-green-600">
@@ -78,7 +84,7 @@ export function Cabecera() {
                   <Link
                     key={unidad.id}
                     to={unidad.bloqueada ? "#" : `/unidad/${unidad.id}`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block px-5 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     {unidad.nombre}
                   </Link>
