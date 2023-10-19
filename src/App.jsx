@@ -21,6 +21,33 @@ import { Ejercicio_1_5 } from "./pages/Ejercicio_1_5.jsx";
 import { Ejercicio_1_6 } from "./pages/Ejercicio_1_6.jsx";
 import { Ejercicio_1_7 } from "./pages/Ejercicio_1_7.jsx";
 import { Ejercicio_1_8 } from "./pages/Ejercicio_1_8.jsx";
+import { Ejercicio_1_9 } from "./pages/Ejercicio_1_9.jsx";
+import { Ejercicio_1_10 } from "./pages/Ejercicio_1_10.jsx";
+import { Ejercicio_1_11 } from "./pages/Ejercicio_1_11.jsx";
+import { Ejercicio_1_12 } from "./pages/Ejercicio_1_12.jsx";
+import { Ejercicio_1_13 } from "./pages/Ejercicio_1_13.jsx";
+import { Ejercicio_1_14 } from "./pages/Ejercicio_1_14.jsx";
+import { Ejercicio_1_15 } from "./pages/Ejercicio_1_15.jsx";
+import { Ejercicio_1_16 } from "./pages/Ejercicio_1_16.jsx";
+import { Ejercicio_1_17 } from "./pages/Ejercicio_1_17.jsx";
+import { Ejercicio_1_18 } from "./pages/Ejercicio_1_18.jsx";
+import { Ejercicio_1_19 } from "./pages/Ejercicio_1_19.jsx";
+import { Ejercicio_1_20 } from "./pages/Ejercicio_1_20.jsx";
+import { Ejercicio_1_21 } from "./pages/Ejercicio_1_21.jsx";
+import { Ejercicio_1_22 } from "./pages/Ejercicio_1_22.jsx";
+import { Ejercicio_1_23 } from "./pages/Ejercicio_1_23.jsx";
+import { Ejercicio_1_24 } from "./pages/Ejercicio_1_24.jsx";
+import { Ejercicio_1_25 } from "./pages/Ejercicio_1_25.jsx";
+import { Ejercicio_1_26 } from "./pages/Ejercicio_1_26.jsx";
+import { Ejercicio_1_27 } from "./pages/Ejercicio_1_27.jsx";
+import { Ejercicio_1_28 } from "./pages/Ejercicio_1_28.jsx";
+import { Ejercicio_1_29 } from "./pages/Ejercicio_1_29.jsx";
+import { Ejercicio_1_30 } from "./pages/Ejercicio_1_30.jsx";
+import { Ejercicio_1_31 } from "./pages/Ejercicio_1_31.jsx";
+import { Ejercicio_1_32 } from "./pages/Ejercicio_1_32.jsx";
+
+import { ListaEjercicios_2 } from "./pages/ListaEjercicios_2.jsx";
+import { ListaEjercicios_3 } from "./pages/ListaEjercicios_3.jsx";
 import { Perfil } from "./pages/Perfil.jsx";
 import { DetalleAlumno } from "./pages/DetalleAlumno.jsx";
 import { ListaEjercicios } from "./pages/ListaEjercicios.jsx";
@@ -118,6 +145,24 @@ function App() {
           />
 
           <Route
+            path="/unidad/1/listaEjercicios_2"
+            element={
+              <RutaProtegida>
+                <ListaEjercicios_2 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios_3"
+            element={
+              <RutaProtegida>
+                <ListaEjercicios_3 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
             path="/unidad/1/listaEjercicios/ejercicio_1"
             element={
               <RutaProtegida>
@@ -180,11 +225,249 @@ function App() {
             }
           />
 
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_8"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_8 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_9"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_9 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_10"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_10 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_11"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_11 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_12"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_12 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_13"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_13 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_14"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_14 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_15"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_15 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_16"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_16 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_17"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_17 />
+                </RutaProtegida>
+              }
+            />
+          }
+
+          {
+            <Route
+              path="/unidad/1/listaEjercicios/ejercicio_18"
+              element={
+                <RutaProtegida>
+                  <Ejercicio_1_18 />
+                </RutaProtegida>
+              }
+            />
+          }
+
           <Route
-            path="/unidad/1/listaEjercicios/ejercicio_8"
+            path="/unidad/1/listaEjercicios/ejercicio_19"
             element={
               <RutaProtegida>
-                <Ejercicio_1_8 />
+                <Ejercicio_1_19 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_20"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_20 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_21"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_21 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_22"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_22 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_23"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_23 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_24"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_24 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_25"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_25 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_26"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_26 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_27"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_27 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_28"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_28 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_29"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_29 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_30"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_30 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_31"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_31 />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/unidad/1/listaEjercicios/ejercicio_32"
+            element={
+              <RutaProtegida>
+                <Ejercicio_1_32 />
               </RutaProtegida>
             }
           />
