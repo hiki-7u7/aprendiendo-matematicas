@@ -28,6 +28,27 @@ import img17 from "../assets/img/manzana_17.png";
 import img18 from "../assets/img/manzana_18.png";
 import img19 from "../assets/img/manzana_19.png";
 import img20 from "../assets/img/manzana_20.png";
+import num0 from "../assets/img/icono_0.png";
+import num1 from "../assets/img/icono_1.png";
+import num2 from "../assets/img/icono_2.png";
+import num3 from "../assets/img/icono_3.png";
+import num4 from "../assets/img/icono_4.png";
+import num5 from "../assets/img/icono_5.png";
+import num6 from "../assets/img/icono_6.png";
+import num7 from "../assets/img/icono_7.png";
+import num8 from "../assets/img/icono_8.png";
+import num9 from "../assets/img/icono_9.png";
+import num10 from "../assets/img/icono_10.png";
+import num11 from "../assets/img/icono_11.png";
+import num12 from "../assets/img/icono_12.png";
+import num13 from "../assets/img/icono_13.png";
+import num14 from "../assets/img/icono_14.png";
+import num15 from "../assets/img/icono_15.png";
+import num16 from "../assets/img/icono_16.png";
+import num17 from "../assets/img/icono_17.png";
+import num18 from "../assets/img/icono_18.png";
+import num19 from "../assets/img/icono_19.png";
+import num20 from "../assets/img/icono_20.png";
 
 const n = [
   img1,
@@ -52,6 +73,30 @@ const n = [
   img20,
 ]; // Arreglo de imágenes
 
+const numeros = [
+  num0,
+  num1,
+  num2,
+  num3,
+  num4,
+  num5,
+  num6,
+  num7,
+  num8,
+  num9,
+  num10,
+  num11,
+  num12,
+  num13,
+  num14,
+  num15,
+  num16,
+  num17,
+  num18,
+  num19,
+  num20,
+]; // Arreglo de números
+
 // Función para sintetizar voz
 function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
@@ -65,13 +110,13 @@ function speakText(text, rate = 1) {
 
 // Función para generar un número aleatorio entre 1 y 10
 function generateRandomNumber() {
-  const num1 = Math.floor(Math.random() * 20) + 1; // Número aleatorio entre 1 y 20
-  const num2 = Math.floor(Math.random() * (20 - num1)) + 1; // Número aleatorio entre 1 y 20 - num1
+  const num1 = Math.floor(Math.random() * 20); // Número aleatorio entre 1 y 20
+  const num2 = Math.floor(Math.random() * (20 - num1)); // Número aleatorio entre 1 y 20 - num1
   const result = num1 + num2;
 
   const options = [result];
   while (options.length < 4) {
-    const randomOption = Math.floor(Math.random() * 20) + 1;
+    const randomOption = Math.floor(Math.random() * 20);
     if (options.indexOf(randomOption) === -1) {
       options.push(randomOption);
     }
@@ -168,12 +213,14 @@ export function Ejercicio_1_6() {
           style={{ backgroundColor: "#FF5C5C" }}
         >
           <h1 className="text-3xl font-semibold">
-            Ejercicio de Suma (Máximo 20)
+            Ejercicio 14: Suma (Máximo 20)
           </h1>
         </div>
 
         <div className="relative">
           <BotonVolver direccion="/unidad/1/listaEjercicios" />
+        </div>
+        <div className="relative mr-52">
           <ContRespCorrectas contador={respuestasCorrectasSeguidas} />
         </div>
 
@@ -197,17 +244,29 @@ export function Ejercicio_1_6() {
           </h3>
 
           <div className="flex justify-center items-center">
-            <img
-              src={n[numbers.num1 - 1]}
-              alt={`Número ${numbers.num1}`}
-              className="mx-2 h-40 w-64"
-            />
+            {numbers.num1 === 0 ? (
+              ""
+            ) : (
+              <img
+                src={n[numbers.num1 - 1]}
+                alt={`Número ${numbers.num1}`}
+                className="mx-2 h-40 w-64"
+              />
+            )}
             <span className="text-8xl"> + </span>
-            <img
-              src={n[numbers.num2 - 1]}
-              alt={`Número ${numbers.num2}`}
-              className="mx-2 h-40 w-64"
-            />
+            {numbers.num2 === 0 ? (
+              ""
+            ) : (
+              <img
+                src={n[numbers.num2 - 1]}
+                alt={
+                  `Número ${numbers.num2}` === "Número 0"
+                    ? ""
+                    : `Número ${numbers.num2}`
+                }
+                className="mx-2 h-40 w-64"
+              />
+            )}
           </div>
 
           <div className="mb-6">
@@ -219,10 +278,14 @@ export function Ejercicio_1_6() {
                   speakText(option.toString());
                 }}
                 className={`bg-blue-500 text-white text-7xl py-2 px-4 rounded-full mb-2 mr-1 ml-2 mt-4 ${
-                  selectedOption === option ? "bg-blue-800" : ""
+                  selectedOption === option ? " bg-white text-black" : ""
                 }`}
               >
-                {option}
+                <img
+                  src={numeros[option]}
+                  alt={`${option}`}
+                  className="h-16 w-20"
+                />
               </button>
             ))}
           </div>

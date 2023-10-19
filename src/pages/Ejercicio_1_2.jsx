@@ -333,12 +333,14 @@ export function Ejercicio_1_2() {
           style={{ backgroundColor: "#FF5C5C" }}
         >
           <h1 className="text-3xl font-semibold">
-            Ejercicio 1: Contar entre 1 al 20
+            Ejercicio 3: Contar entre 1 al 20
           </h1>
         </div>
 
-        <div className="relative">
+        <div className="relative ">
           <BotonVolver direccion="/unidad/1/listaEjercicios" />
+        </div>
+        <div className="relative mr-52">
           <ContRespCorrectas contador={respuestasCorrectasSeguidas} />
         </div>
 

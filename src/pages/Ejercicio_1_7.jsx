@@ -18,28 +18,22 @@ import img7 from "../assets/img/manzana_7.png";
 import img8 from "../assets/img/manzana_8.png";
 import img9 from "../assets/img/manzana_9.png";
 import img10 from "../assets/img/manzana_10.png";
-import img11 from "../assets/img/manzana_11.png";
-import img12 from "../assets/img/manzana_12.png";
-import img13 from "../assets/img/manzana_13.png";
-import img14 from "../assets/img/manzana_14.png";
-import img15 from "../assets/img/manzana_15.png";
-import img16 from "../assets/img/manzana_16.png";
-import img17 from "../assets/img/manzana_17.png";
-import img18 from "../assets/img/manzana_18.png";
-import img19 from "../assets/img/manzana_19.png";
-import img20 from "../assets/img/manzana_20.png";
+import img0 from "../assets/img/icono_0.png";
+import img11 from "../assets/img/icono_1.png";
+import img12 from "../assets/img/icono_2.png";
+import img13 from "../assets/img/icono_3.png";
+import img14 from "../assets/img/icono_4.png";
+import img15 from "../assets/img/icono_5.png";
+import img16 from "../assets/img/icono_6.png";
+import img17 from "../assets/img/icono_7.png";
+import img18 from "../assets/img/icono_8.png";
+import img19 from "../assets/img/icono_9.png";
+import img20 from "../assets/img/icono_10.png";
 
-const n = [
-  img1,
-  img2,
-  img3,
-  img4,
-  img5,
-  img6,
-  img7,
-  img8,
-  img9,
-  img10,
+const n = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]; // Arreglo de imágenes
+
+const numeros = [
+  img0,
   img11,
   img12,
   img13,
@@ -101,10 +95,15 @@ export function Ejercicio_1_7() {
 
   const RevisarRespuesta = () => {
     if (selectedOption === numbers.result && respuestasCorrectasSeguidas < 3) {
+      setShowMessage(true);
       setRespuestaCorrecta(true);
+
       setMessage("¡Correcto!");
       setMessageColor("text-green-500");
       speakText("¡Correcto!");
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
 
       setRespuestasCorrectasSeguidas(respuestasCorrectasSeguidas + 1);
 
@@ -114,10 +113,15 @@ export function Ejercicio_1_7() {
         }, 2000);
       }
     } else {
+      setShowMessage(true);
       setRespuestaCorrecta(false);
+
       setMessage("Vuelve a intentarlo.");
       setMessageColor("text-red-500");
       speakText("Vuelve a intentarlo.");
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
 
       setRespuestasCorrectasSeguidas(respuestasCorrectasSeguidas);
 
@@ -126,16 +130,10 @@ export function Ejercicio_1_7() {
       }, 2000);
     }
 
-    setShowMessage(true);
-
-    setTimeout(() => {
-      setShowMessage(false);
-    }, 2000);
-
     if (selectedOption === numbers.result && respuestasCorrectasSeguidas >= 2) {
-      setMessage("¡Ejercicio completado!");
+      setMessage("🎊👍¡Ejercicio completado!🎉✨");
       speakText("¡Ejercicio completado!");
-      setMessageColor("text-green-500");
+      setMessageColor("text-blue-500");
 
       setTimeout(() => {
         // Agrega la lógica para registrar el progreso del estudiante y navegar a la siguiente actividad.
@@ -152,11 +150,11 @@ export function Ejercicio_1_7() {
     setRespuestaCorrecta(null);
   }, [respuestaCorrecta]);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (showMessage) {
       setShowMessage(false);
     }
-  }, [showMessage]);
+  }, [showMessage]); */
 
   return (
     <div className="bg-blue-200">
@@ -168,12 +166,14 @@ export function Ejercicio_1_7() {
           style={{ backgroundColor: "#FF5C5C" }}
         >
           <h1 className="text-3xl font-semibold">
-            Ejercicio de Resta (Números menores o iguales a 10)
+            Ejercicio 16: Resta (Números menores o iguales a 10)
           </h1>
         </div>
 
         <div className="relative">
           <BotonVolver direccion="/unidad/1/listaEjercicios" />
+        </div>
+        <div className="relative mr-52">
           <ContRespCorrectas contador={respuestasCorrectasSeguidas} />
         </div>
 
@@ -199,13 +199,13 @@ export function Ejercicio_1_7() {
           <div className="flex justify-center items-center">
             <img
               src={n[numbers.num1 - 1]}
-              alt={`Número ${numbers.num1}`}
+              alt={`Número ${numbers.num1} `}
               className="mx-2 h-40 w-64"
             />
             <span className="text-8xl"> - </span>
             <img
               src={n[numbers.num2 - 1]}
-              alt={`Número ${numbers.num2}`}
+              alt={numbers.num2 === "Número 0" ? "" : `Número ${numbers.num2}`}
               className="mx-2 h-40 w-64"
             />
           </div>
@@ -218,11 +218,17 @@ export function Ejercicio_1_7() {
                   setSelectedOption(option);
                   speakText(option.toString());
                 }}
-                className={`bg-blue-500 text-white text-7xl py-2 px-4 rounded-full mb-2 mr-1 ml-2 mt-4 ${
-                  selectedOption === option ? "bg-blue-800" : ""
+                className={`bg-white text-7xl py-2 px-4 rounded-full mb-2 mr-1 ml-2 mt-4 hover:to-blue-500 ${
+                  selectedOption === option
+                    ? "hover:bg-blue-500 text-black "
+                    : ""
                 }`}
               >
-                {option}
+                <img
+                  src={numeros[option]}
+                  alt={` ${option}`}
+                  className="h-16 w-20 hover:bg-blue-500 rounded-xl"
+                />
               </button>
             ))}
           </div>
