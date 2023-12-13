@@ -62,24 +62,7 @@ const generarColeccionProgresoEstudiante = async (userId) => {
     await addDoc(progresoEstudianteRef, progresoEstudianteData);
 
     //------------------------------------------------------------------------------------------------------------------------------------------------------
-    /* id: generarId(), // ID único
-      estudianteId: userId, // Reemplaza con el ID real del estudiantes
-      unidadesDisponibles: [true, false, false, false, false], // Unidades disponibles
-      unidadesCompletadas: [false, false, false, false, false], // Unidades completadas
-      ejerciciosDisponibles: [
-        [true, false, false, false, false], // Ejercicios de la unidad 1 disponibles
-        [false, false, false, false, false], // Ejercicios de la unidad 2 disponibles
-        [false, false, false, false, false], // Ejercicios de la unidad 3 disponibles
-        [false, false, false, false, false], // Ejercicios de la unidad 4 disponibles
-        [false, false, false, false, false], // Ejercicios de la unidad 5 disponibles
-      ],
-      ejerciciosCompletados: [
-        [false, false, false, false, false], // Ejercicios de la unidad 1
-        [false, false, false, false, false], // Ejercicios de la unidad 2
-        [false, false, false, false, false], // Ejercicios de la unidad 3
-        [false, false, false, false, false], // Ejercicios de la unidad 4
-        [false, false, false, false, false], // Ejercicios de la unidad 5
-      ], */
+
     //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
     console.log("La colección ProgresoEstudiante fue creada.");
@@ -284,6 +267,7 @@ export function Registro() {
             nombre: capitalizar(user.nombre),
             apellido: capitalizar(user.apellido),
             progreso: 0,
+            ProfesorAsignado: "",
           };
 
           // crear la colección "Estudiante"

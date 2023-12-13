@@ -21,7 +21,7 @@ function speakText(text, rate = 1) {
   synth.speak(utterance); // Reproducir el texto
 }
 
-export function ListaEjercicios_3() {
+export function ListaEjercicios_16() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
   const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
   const [cargando, setCargando] = useState(true); // valor de cargando en true para mostrar pantalla de carga
@@ -59,7 +59,7 @@ export function ListaEjercicios_3() {
       //---------
       const qUnidad = query(
         collection(db, "Unidades"),
-        where("orden", "==", 1)
+        where("orden", "==", 2)
       );
       const queryUnidad = await getDocs(qUnidad);
       const DocUnidad = queryUnidad.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
@@ -68,11 +68,10 @@ export function ListaEjercicios_3() {
       var idUnidad = DocUnidad[0].id; // almaceno el id de la unidad 1
 
       //---------
-
-      // id del ejercicio 3
+      // id del ejercicio 2
       const qEjercicios = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 3),
+        where("orden", "==", 2),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios = await getDocs(qEjercicios);
@@ -80,10 +79,10 @@ export function ListaEjercicios_3() {
 
       console.log("DocEjercicios", DocEjercicios[0].id);
 
-      // id del ejercicio 4
+      // id del ejercicio 3
       const qEjercicios2 = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 4),
+        where("orden", "==", 3),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios2 = await getDocs(qEjercicios2);
@@ -91,26 +90,42 @@ export function ListaEjercicios_3() {
 
       console.log("DocEjercicios2: ->", DocEjercicios2[0].id);
 
-      var listaEjercicios = [];
-      listaEjercicios.push(DocEjercicios[0].id);
-      listaEjercicios.push(DocEjercicios2[0].id);
-
-      setIdEjercicio(listaEjercicios); // almaceno el id del ejercicio 1
-
-      // id del ejercicio 5
+      // id del ejercicio 4
       const qEjercicios3 = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 5),
+        where("orden", "==", 4),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios3 = await getDocs(qEjercicios3);
       const DocEjercicios3 = queryEjercicios3.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
 
-      var nombreEjercicios = [];
-      nombreEjercicios.push(DocEjercicios2[0].nombre);
-      nombreEjercicios.push(DocEjercicios3[0].nombre);
+      console.log("DocEjercicios2: ->", DocEjercicios3[0].id);
 
-      setNombresEjercicios(nombreEjercicios); // almaceno los nombres de los ejercicios
+      // id del ejercicio 5
+      const qEjercicios4 = query(
+        collection(db, "Ejercicios"),
+        where("orden", "==", 5),
+        where("unidadesId", "==", idUnidad)
+      );
+
+      const queryEjercicios4 = await getDocs(qEjercicios4);
+      const DocEjercicios4 = queryEjercicios4.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("DocEjercicios2: ->", DocEjercicios4[0].id);
+
+      var listaEjercicios = [];
+      listaEjercicios.push(DocEjercicios[0].id);
+      listaEjercicios.push(DocEjercicios2[0].id);
+      listaEjercicios.push(DocEjercicios3[0].id);
+
+      setIdEjercicio(listaEjercicios); // almaceno el id del ejercicio 1
+
+      var listaNombresEjercicios = [];
+      listaNombresEjercicios.push(DocEjercicios2[0].nombre);
+      listaNombresEjercicios.push(DocEjercicios3[0].nombre);
+      listaNombresEjercicios.push(DocEjercicios4[0].nombre);
+
+      setNombresEjercicios(listaNombresEjercicios); // almaceno los nombres de los ejercicios
 
       //---------
       console.log("ejerciciosRegistrados[0]: ", ejerciciosRegistrados[0]);
@@ -165,14 +180,20 @@ export function ListaEjercicios_3() {
   const ejercicios = [
     {
       id: 1,
-      nombre: NombresEjercicios[0], //"Ejercicio 4:  Ordena de menor a mayor (del 1 al 10)",
+      nombre: NombresEjercicios[0], //"Ejercicio 3: Patrones con Números",
       disponible: ejerciciosRegistrados.includes(idEjercicio[0]), //false,
       imagen: candado,
     },
     {
       id: 2,
-      nombre: NombresEjercicios[1], // "Ejercicio 5: Ordena de menor a mayor (del 11 al 20)",
-      disponible: ejerciciosRegistrados.includes(idEjercicio[1]), //false
+      nombre: NombresEjercicios[1], //"Ejercicio 4: Patrones del 1 al 10",
+      disponible: ejerciciosRegistrados.includes(idEjercicio[1]), //false,
+      imagen: candado,
+    },
+    {
+      id: 3,
+      nombre: NombresEjercicios[2], //"Ejercicio 5: Patrones del 1 al 20",
+      disponible: ejerciciosRegistrados.includes(idEjercicio[2]), //false
       imagen: candado,
     },
   ];
@@ -210,7 +231,7 @@ export function ListaEjercicios_3() {
 
       <h1
         className="text-4xl font-semibold mb-4 rounded-xl p-2 text-center w-96"
-        style={{ backgroundColor: "#FF5C5C" }}
+        style={{ backgroundColor: "#FFB833" }}
       >
         Lista de Ejercicios
       </h1>
@@ -229,7 +250,7 @@ export function ListaEjercicios_3() {
               <Link
                 to={
                   ejercicio.disponible
-                    ? `/unidad/1/listaEjercicios/ejercicio_${ejercicio.id}`
+                    ? `/unidad/2/listaEjercicios/ejercicio_${ejercicio.id + 2}`
                     : "#"
                 }
                 key={ejercicio.id}
@@ -262,11 +283,11 @@ export function ListaEjercicios_3() {
                   <div>
                     <img
                       src={
-                        ejercicio.id === 3 && !ejercicio.disponible
+                        ejercicio.id === 4 && !ejercicio.disponible
                           ? null
                           : ejercicio.imagen
                       }
-                      className={`container h-10 w-10 relative ml-2 top-7  ${
+                      className={`container h-10 w-10 relative ml-2 top-4  ${
                         ejercicio.disponible ? "hidden" : ""
                       }`}
                     />

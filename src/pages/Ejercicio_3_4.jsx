@@ -24,11 +24,11 @@ import {
 import { db } from "../firebase/firebase";
 
 const figuras = [
-  { imagen: triangulo, nombre: "Triángulo", color: "#52BE80 " },
+  { imagen: circulo, nombre: "Círculo", color: "#3498DB" },
   { imagen: cuadrado, nombre: "Cuadrado", color: "#A569BD" },
   { imagen: rectangulo, nombre: "Rectángulo", color: "#F4D03F" },
   { imagen: rombo, nombre: "Rombo", color: "#E74C3C" },
-  { imagen: circulo, nombre: "Círculo", color: "#3498DB" },
+  { imagen: triangulo, nombre: "Triángulo", color: "#52BE80" },
   { imagen: ovalo, nombre: "Óvalo", color: "#E67E22" },
 ];
 
@@ -36,7 +36,7 @@ function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = rate;
-  //synth.cancel();
+  synth.cancel();
   synth.speak(utterance);
 }
 
@@ -44,7 +44,7 @@ function generateRandomNumber() {
   return Math.floor(Math.random() * figuras.length);
 }
 
-export function Ejercicio_3_3() {
+export function Ejercicio_3_4() {
   const [randomFiguraIndex, setRandomFiguraIndex] = useState(
     generateRandomNumber()
   );
@@ -52,24 +52,22 @@ export function Ejercicio_3_3() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [message, setMessage] = useState(null);
   const [messageColor, setMessageColor] = useState(null);
+  const [hoveredOption, setHoveredOption] = useState(null);
   const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
 
   const navegar = useNavigate();
   const { user } = useAuth();
 
   const figuraActual = figuras[randomFiguraIndex];
-  const opcionesActuales = figuras.map((figura) => figura.nombre);
-  const respuestaCorrecta = figuraActual.nombre;
+  const opcionesActuales = figuras.map((figura) => figura.imagen);
+  const respuestaCorrecta = figuraActual.imagen;
 
   useEffect(() => {
-    /* speakText(
-      `Selecciona el nombre de la figura mostrada: ${figuraActual.nombre}.`
-    ); */
+    /* speakText(`¿Cuál es la imagen del "${figuraActual.nombre}"?`); */
   }, [randomFiguraIndex, figuraActual]);
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option, color) => {
     setSelectedOption(option);
-    speakText(figuras.find((figura) => figura.nombre === option).nombre);
 
     if (option === respuestaCorrecta && respuestasCorrectas < 2) {
       setRandomFiguraIndex(generateRandomNumber());
@@ -83,17 +81,20 @@ export function Ejercicio_3_3() {
       speakText("¡Ejercicio completado!");
       obtenerEjercicios();
       setRespuestasCorrectas(respuestasCorrectas + 1);
-      // Agrega la lógica para registrar el progreso del estudiante y navegar a la siguiente actividad.
+
       setTimeout(() => {
-        navegar("/unidad/3/listaEjercicios_19"); // Reemplaza con la ruta correcta
+        navegar("/unidad/3/listaEjercicios_19"); // Reemplaza con la ruta correcta  /unidad/3/listaEjercicios_19
       }, 2000);
     } else {
-      speakText("Vuelve a intentarlo");
       setMessage("Vuelve a intentarlo.");
       setMessageColor("text-red-500");
+      speakText("Vuelve a intentarlo");
     }
 
     // Espera 2 segundos y luego cambia la figura y el mensaje
+
+    // Agrega la lógica para registrar el progreso del estudiante y navegar a la siguiente actividad.
+
     setTimeout(() => {
       setMessage(null);
       setSelectedOption(null);
@@ -137,7 +138,7 @@ export function Ejercicio_3_3() {
 
     const qEjercicios = query(
       collection(db, "Ejercicios"),
-      where("orden", "==", 3),
+      where("orden", "==", 4),
       where("unidadesId", "==", idUnidad)
     );
 
@@ -227,6 +228,8 @@ export function Ejercicio_3_3() {
     }
   };
 
+  // speakText(`¿Cuál es la imagen del "${figuraActual.nombre}"?`);
+
   return (
     <div className="bg-blue-200">
       <Cabecera />
@@ -242,44 +245,54 @@ export function Ejercicio_3_3() {
           style={{ backgroundColor: "#FFFF70" }}
         >
           <h1 className="text-3xl font-semibold">
-            Ejercicio 3: Reconocer nombre de las Figuras Geométricas 2D
+            Ejercicio 4: Reconocer imagen de las Figuras Geométricas 2D
           </h1>
         </div>
         <div className="container mx-auto mt-8 p-4 text-center">
           <div className="flex justify-center items-center">
             <button
               onClick={() => {
-                speakText(`Selecciona el nombre de la figura mostrada.`);
+                speakText(`¿Cuál es la imagen del "${figuraActual.nombre}"?`);
               }}
               className="bg-blue-500 hover:bg-white hover:text-black text-white py-2 px-4 rounded-full mb-2 mr-1 flex items-center"
             >
               <GiBugleCall className="text-xl" />
             </button>
-
             <h2 className="text-2xl font-semibold mb-4">Instrucciones</h2>
           </div>
-          <h3 className="text-xl">
-            Selecciona el nombre de la figura mostrada.
+
+          <h3 className="text-3xl mb-4">
+            ¿Cuál es la imagen del{" "}
+            <span className="text-4xl mb-4 font-semibold bg-white rounded-lg">
+              "{figuraActual.nombre}"
+            </span>
+            ?
           </h3>
-          <img
-            src={figuraActual.imagen}
-            alt="Figura Geométrica"
-            style={{
-              backgroundColor: figuraActual.color,
-              height: "192px",
-              width: figuraActual.nombre === "Rectángulo" ? "240px" : "192px",
-            }}
-            className="mx-auto my-4 h-48 w-48 "
-          />
-          {opcionesActuales.map((opcion, index) => (
-            <button
-              key={index}
-              className={`bg-blue-500 text-white hover:bg-white hover:text-black py-2 px-4 rounded-full my-2 mx-1`}
-              onClick={() => handleOptionClick(opcion)}
-            >
-              {opcion}
-            </button>
-          ))}
+          <div className="options">
+            {opcionesActuales.map((opcion, index) => (
+              <button
+                key={index}
+                onClick={() => handleOptionClick(opcion, figuras[index].color)}
+                onMouseEnter={() => setHoveredOption(opcion)} // Agrega el evento onMouseEnter
+                onMouseLeave={() => setHoveredOption(null)} // Agrega el evento onMouseLeave
+                className="px-4 rounded-lg"
+              >
+                <img
+                  src={opcion}
+                  alt="Opción"
+                  style={{
+                    width: "100px",
+                    backgroundColor: figuras[index].color,
+                    background:
+                      hoveredOption === opcion
+                        ? "transparent linear-gradient(180deg, #FFFFFF 0%, #FFFFFF00 100%)"
+                        : `${figuras[index].color}`, // Agrega la lógica para cambiar el color de fondo cuando el mouse está sobre la opción
+                  }}
+                  className="rounded-lg"
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       {message && (

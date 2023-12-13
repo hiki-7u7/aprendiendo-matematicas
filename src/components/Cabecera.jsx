@@ -48,7 +48,7 @@ export function Cabecera() {
   };
 
   return (
-    <header className=" bg-slate-300 fixed top-0 left-0 w-full h-16 flex items-center justify-between px-4 shadow-md">
+    <header className="fixed bg-slate-300  top-0 left-0 w-full h-16 flex items-center justify-between px-4 shadow-md">
       <div className="flex items-center">
         {/* Logo o nombre de la plataforma */}
         <h1 className="text-4xl font-bold text-green-600">

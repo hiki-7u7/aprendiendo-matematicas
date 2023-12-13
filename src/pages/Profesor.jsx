@@ -22,11 +22,45 @@ export function Profesor() {
   const [alumnoID, setAlumnoID] = useState("");
   const navigate = useNavigate();
 
+  const obtenerID = async () => {
+    try {
+      const ConsultaAlumno = query(
+        collection(db, "Estudiante"),
+        where("rut", "==", rutSeleccionado)
+      );
+
+      const ConsultaAlumnoSnapshot = await getDocs(ConsultaAlumno);
+
+      if (!ConsultaAlumnoSnapshot.empty) {
+        const ConsultaAlumnoDoc = ConsultaAlumnoSnapshot.docs[0].data();
+        console.log("ConsultaAlumnoDoc", ConsultaAlumnoDoc);
+
+        setAlumnoID(ConsultaAlumnoDoc.id);
+        console.log("ID obtenido:", alumnoID);
+        /* navigate("/Profesor/DetalleAlumno", {
+          state: { rutAlumno },
+          state2: { alumnoID },
+        }); */
+      } else {
+        console.log("No se encontró el alumno");
+      }
+    } catch (error) {
+      console.error("Error al obtener el ID del alumno:", error);
+    }
+
+    // Navegar a la página de detalle del alumno
+    //navigate("/Profesor/DetalleAlumno", { state: { rutAlumno } });
+  };
+
   const handleAlumnoClick = (rutAlumno) => {
     // Guardar el rut del alumno seleccionado en el estado global
     setRutSeleccionado(rutAlumno);
+    //console.log("rutAlumno", rutSeleccionado);
+    //obtenerID();
     // Navegar a la página de detalle del alumno
-    navigate("/Profesor/DetalleAlumno", { state: { rutAlumno } });
+    navigate("/Profesor/DetalleAlumno", {
+      state: { rutAlumno },
+    });
   };
 
   // Función para obtener los datos de los alumnos del profesor
@@ -59,7 +93,6 @@ export function Profesor() {
               if (!alumnoSnapshot.empty) {
                 const alumnoDoc = alumnoSnapshot.docs[0].data();
 
-                console.log(alumnoID);
                 return {
                   rut: alumnoDoc.rut,
                   nombre: alumnoDoc.nombre,
@@ -175,7 +208,7 @@ export function Profesor() {
                 key={index}
                 className="flex mt-4 px-2 py-2 space-x-4 space-y-4 items-center justify-center border-2 border-black hover:bg-slate-100 rounded-lg shadow-md"
               >
-                <button onClick={() => handleAlumnoClick(alumnoData.id)}>
+                <button onClick={() => handleAlumnoClick(alumnoData.rut)}>
                   <div className="flex flex-col items-center bg-white hover:bg-slate-100 rounded-lg shadow-md p-4">
                     <BsPersonCircle className="text-4xl text-blue-600" />
                     <h4 className="text-lg font-semibold">{alumnoData.rut}</h4>

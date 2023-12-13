@@ -106,25 +106,19 @@ export function CrearColecciones() {
     const datoUnidad_2 = unidad2.docs[0].data();
     const idUnidad_2 = datoUnidad_2.id;
 
-    const q3 = query(
-      unidadesRef,
-      where("nombre", "==", "Unidad 3: Geometría y medida")
-    );
+    const q3 = query(unidadesRef, where("nombre", "==", "Unidad 3: Geometría"));
     const unidad3 = await getDocs(q3);
     const datoUnidad_3 = unidad3.docs[0].data();
     const idUnidad_3 = datoUnidad_3.id;
 
-    const q4 = query(
-      unidadesRef,
-      where("nombre", "==", "Unidad 4: Estadística y probabilidad")
-    );
+    const q4 = query(unidadesRef, where("nombre", "==", "Unidad 4: Medición"));
     const unidad4 = await getDocs(q4);
     const datoUnidad_4 = unidad4.docs[0].data();
     const idUnidad_4 = datoUnidad_4.id;
 
     const q5 = query(
       unidadesRef,
-      where("nombre", "==", "Unidad 5: Números y operaciones")
+      where("nombre", "==", "Unidad 5: Datos y probabilidades")
     );
     const unidad5 = await getDocs(q5);
     const datoUnidad_5 = unidad5.docs[0].data();
@@ -147,84 +141,243 @@ export function CrearColecciones() {
       {
         unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 1
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 1: contar imagenes entre 1 al 10",
-        descripcion: "Descripción del Ejercicio 1",
-        imagenes: ["imagen1.jpg", "imagen2.jpg"],
+        nombre: "Ejercicio 1: Contar imagenes entre 1 al 10",
+        //descripcion: "Descripción del Ejercicio 1",
+        //imagenes: ["imagen1.jpg", "imagen2.jpg"],
         orden: 1,
       },
       // 2
       {
         unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 1
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 2: Suma de números",
-        descripcion: "Descripción del Ejercicio 2",
-        imagenes: ["imagen3.jpg", "imagen4.jpg"],
+        nombre: "Ejercicio 2: Contar y Marcar las Imágenes del 1 al 10",
+        //descripcion: "Descripción del Ejercicio 2",
+        //imagenes: ["imagen3.jpg", "imagen4.jpg"],
         orden: 2,
       },
       // 3
       {
         unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 1
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 3: Resta de números",
-        descripcion: "Descripción del Ejercicio 3",
-        imagenes: ["imagen4.jpg", "imagen5.jpg"],
+        nombre: "Ejercicio 3: Contar entre 1 al 20",
+        //descripcion: "Descripción del Ejercicio 3",
+        //imagenes: ["imagen4.jpg", "imagen5.jpg"],
         orden: 3,
       },
       // 4
       {
-        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 2
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 2
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 4: Suma de números",
-        descripcion: "Descripción del Ejercicio 4",
-        imagenes: ["imagen6.jpg", "imagen7.jpg"],
-        orden: 1,
+        nombre: "Ejercicio 4: Ordena de menor a mayor (del 1 al 10)",
+        //descripcion: "Descripción del Ejercicio 4",
+        //imagenes: ["imagen6.jpg", "imagen7.jpg"],
+        orden: 4,
       },
       // 5
       {
-        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 2
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 2
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 5: Resta de números",
-        descripcion: "Descripción del Ejercicio 5",
-        imagenes: ["imagen8.jpg", "imagen9.jpg"],
-        orden: 2,
+        nombre: "Ejercicio 5: Ordena de menor a mayor (del 11 al 20)",
+        //descripcion: "Descripción del Ejercicio 5",
+        //imagenes: ["imagen8.jpg", "imagen9.jpg"],
+        orden: 5,
       },
       // 6
       {
-        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 3
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 3
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 6: Suma de números",
-        descripcion: "Descripción del Ejercicio 6",
-        imagenes: ["imagen10.jpg", "imagen11.jpg"],
-        orden: 1,
+        nombre: "Ejercicio 6: Ordena de menor a mayor (del 11 al 20)",
+        //descripcion: "Descripción del Ejercicio 6",
+        //imagenes: ["imagen10.jpg", "imagen11.jpg"],
+        orden: 6,
       },
       // 7
       {
-        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 3
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 3
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 7: Resta de números",
-        descripcion: "Descripción del Ejercicio 7",
-        imagenes: ["imagen12.jpg", "imagen13.jpg"],
-        orden: 2,
+        nombre: "Ejercicio 7: Componer Números utilizando cubos",
+        //descripcion: "Descripción del Ejercicio 7",
+        //imagenes: ["imagen12.jpg", "imagen13.jpg"],
+        orden: 7,
       },
       // 8
       {
-        unidadesId: idUnidad_4, // Reemplaza con el ID real de la unidad 4
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 4
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 8: Suma de números",
-        descripcion: "Descripción del Ejercicio 8",
-        imagenes: ["imagen14.jpg", "imagen15.jpg"],
-        orden: 1,
+        nombre: "Ejercicio 8: Componer Números utilizando manzanas",
+        //descripcion: "Descripción del Ejercicio 8",
+        //imagenes: ["imagen14.jpg", "imagen15.jpg"],
+        orden: 8,
       },
       // 9
       {
-        unidadesId: idUnidad_5, // Reemplaza con el ID real de la unidad 5
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
         id: generarId(), // Generar un ID único
-        nombre: "Ejercicio 9: Resta de números",
-        descripcion: "Descripción del Ejercicio 9",
-        imagenes: ["imagen16.jpg", "imagen17.jpg"],
+        nombre: "Ejercicio 9: Descomponer Números",
+        //descripcion: "Descripción del Ejercicio 9",
+        //imagenes: ["imagen16.jpg", "imagen17.jpg"],
+        orden: 9,
+      },
+      // 10
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 10: Descomponer Números utilizando manzanas",
+        //descripcion: "Descripción del Ejercicio 10",
+        orden: 10,
+      },
+      // 11
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 11: Identificar Unidades y Decenas entre 1 a 20",
+        //descripcion: "Descripción del Ejercicio 11",
+        orden: 11,
+      },
+      // 12
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 12: Suma del 0 al 5",
+        // descripcion: "Descripción del Ejercicio 12",
+        orden: 12,
+      },
+      // 13
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 13: Suma (Máximo 10)",
+        //descripcion: "Descripción del Ejercicio 9",
+        orden: 13,
+      },
+      // 14
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 14: Suma (Máximo 20)",
+        //descripcion: "Descripción del Ejercicio 9",
+        orden: 14,
+      },
+      // 15
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 15: Resta (Números menores o iguales a 5)",
+        orden: 15,
+      },
+      // 16
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 16: Resta (Números menores o iguales a 10)",
+        orden: 16,
+      },
+      // 17
+      {
+        unidadesId: idUnidad_1, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 17: Resta (Números menores o iguales a 20)",
+        orden: 17,
+      },
+      // 1
+      {
+        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 1: Patrones con Figuras",
         orden: 1,
       },
-
+      // 2
+      {
+        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 2: Patrones con Animales",
+        orden: 2,
+      },
+      // 3
+      {
+        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 3: Patrones con Números",
+        orden: 3,
+      },
+      // 4
+      {
+        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 4: Patrones del 1 al 10",
+        orden: 4,
+      },
+      // 5
+      {
+        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 5: Patrones del 1 al 20",
+        orden: 5,
+      },
+      // 6
+      {
+        unidadesId: idUnidad_2, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 6: Patrones del 1 al 20",
+        orden: 6,
+      },
+      // 1
+      {
+        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 1: izquierda o derecha",
+        orden: 1,
+      },
+      // 2
+      {
+        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre:
+          "Ejercicio 2: ¿izquierda o derecha? Ubica el Árbol con Respecto a la Casa",
+        orden: 2,
+      },
+      // 3
+      {
+        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 3: Reconocer nombre de las Figuras Geométricas 2D",
+        orden: 3,
+      },
+      // 4
+      {
+        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 4: Reconocer imagen de las Figuras Geométricas 2D",
+        orden: 4,
+      },
+      // 5
+      {
+        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 5: Reconocer nombre Figuras 3D",
+        orden: 5,
+      },
+      // 6
+      {
+        unidadesId: idUnidad_3, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 6: Reconocer imagen de Figuras 3D",
+        orden: 6,
+      },
+      // 1
+      {
+        unidadesId: idUnidad_4, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 1: Identificar y comparar la longitud de objetos",
+        orden: 1,
+      },
+      // 1
+      {
+        unidadesId: idUnidad_5, // Reemplaza con el ID real de la unidad 5
+        id: generarId(), // Generar un ID único
+        nombre: "Ejercicio 1: Tabla pictórica comprensión de datos",
+        orden: 1,
+      },
       // Agrega más ejercicios según sea necesario
     ];
 

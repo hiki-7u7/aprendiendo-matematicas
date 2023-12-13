@@ -155,7 +155,7 @@ export function Alumno() {
                   key={unidad.id}
                 >
                   <div
-                    className={`flex flex-grow bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 text-center mb-5 ${
+                    className={`flex flex-grow bg-white p-6 rounded-lg shadow-md hover:shadow-2xl transition duration-300 text-center mb-5 ${
                       unidad.disponible
                         ? "cursor-pointer"
                         : "cursor-not-allowed"
@@ -176,12 +176,12 @@ export function Alumno() {
                     <h2 className="text-4xl font-semibold mt-2">
                       {unidad.nombre}
                     </h2>
-                    <div className="relative flex mb-4">
+                    <div className=" flex mb-4">
                       {index > 0 && !unidades[index].disponible ? (
                         <span></span>
                       ) : (
                         <div
-                          className={`text-blue-500 hover:underline mt-4 ml-2 block text-xl font-semibold bg-white rounded-full shadow-md px-4 py-1      ${
+                          className={`relative text-blue-500 hover:underline mt-4 ml-2 block text-xl font-semibold bg-white rounded-full shadow-md px-4 py-1 hover:bg-blue-500 hover:text-white      ${
                             unidad.disponible ? " " : "pointer-events-none"
                           }`}
                         >

@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Cabecera } from "../components/Cabecera";
 import { PieDePagina } from "../components/PieDePagina";
+import { BotonVolver } from "../components/BotonVolver";
+import { GiBugleCall } from "react-icons/gi";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import { BotonVolver } from "../components/BotonVolver";
+import pelotaFutbol from "../assets/img/icono_pelotaFutbol.png";
 import { ContRespCorrectas } from "../components/ContRespCorrectas";
-import circulo from "../assets/img/icono_circulo.png";
-import cuadrado from "../assets/img/icono_cuadrado.png";
-import rectangulo from "../assets/img/icono_rectangulo.png";
-import rombo from "../assets/img/icono_rombo.png";
-import triangulo from "../assets/img/icono_triangulo.png";
-import ovalo from "../assets/img/icono_ovalo.png";
-import { GiBugleCall } from "react-icons/gi";
 import {
   collection,
   query,
@@ -23,79 +18,113 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
-const figuras = [
-  { imagen: triangulo, nombre: "Triángulo", color: "#52BE80 " },
-  { imagen: cuadrado, nombre: "Cuadrado", color: "#A569BD" },
-  { imagen: rectangulo, nombre: "Rectángulo", color: "#F4D03F" },
-  { imagen: rombo, nombre: "Rombo", color: "#E74C3C" },
-  { imagen: circulo, nombre: "Círculo", color: "#3498DB" },
-  { imagen: ovalo, nombre: "Óvalo", color: "#E67E22" },
-];
-
 function speakText(text, rate = 1) {
-  const synth = window.speechSynthesis;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = rate;
-  //synth.cancel();
-  synth.speak(utterance);
+  const synth = window.speechSynthesis; // Obtener la síntesis de voz
+  const utterance = new SpeechSynthesisUtterance(text); // Crear un nuevo objeto de síntesis de voz
+  utterance.rate = rate; // Establecer la velocidad de la voz
+
+  // Detener cualquier síntesis de voz anterior
+  synth.cancel();
+
+  synth.speak(utterance); // Reproducir el texto
 }
 
-function generateRandomNumber() {
-  return Math.floor(Math.random() * figuras.length);
-}
-
-export function Ejercicio_3_3() {
-  const [randomFiguraIndex, setRandomFiguraIndex] = useState(
-    generateRandomNumber()
-  );
-  const [respuestasCorrectas, setRespuestasCorrectas] = useState(0);
+export function Ejercicio_5_1() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [message, setMessage] = useState(null);
   const [messageColor, setMessageColor] = useState(null);
+  const [showMessage, setShowMessage] = useState(false);
+  const [tablaDatos, setTablaDatos] = useState([]);
+  const [pregunta, setPregunta] = useState("");
+  const [respuestaCorrecta, setRespuestaCorrecta] = useState(null);
+  const [
+    contadorrespuestasCorrectasSeguidas,
+    setContadorRespuestasCorrectasSeguidas,
+  ] = useState(0);
   const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
 
   const navegar = useNavigate();
   const { user } = useAuth();
 
-  const figuraActual = figuras[randomFiguraIndex];
-  const opcionesActuales = figuras.map((figura) => figura.nombre);
-  const respuestaCorrecta = figuraActual.nombre;
-
   useEffect(() => {
-    /* speakText(
-      `Selecciona el nombre de la figura mostrada: ${figuraActual.nombre}.`
-    ); */
-  }, [randomFiguraIndex, figuraActual]);
+    // Generar datos aleatorios para la tabla
+    const datosAleatorios = generateUniqueRandomOptions(0, 6, 5); // Limitar a 6 goles como máximo
 
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    speakText(figuras.find((figura) => figura.nombre === option).nombre);
+    // Encontrar el valor más grande para la respuesta correcta
+    const respuestaCorrecta = Math.max(...datosAleatorios);
 
-    if (option === respuestaCorrecta && respuestasCorrectas < 2) {
-      setRandomFiguraIndex(generateRandomNumber());
-      setRespuestasCorrectas(respuestasCorrectas + 1);
-      setMessage("Correcto");
+    setTablaDatos(
+      datosAleatorios.map((valor, index) => ({
+        partido: `Partido ${index + 1}`,
+        goles: valor,
+      }))
+    );
+
+    // Ajusta la pregunta en base a los partidos con más goles
+    const pregunta = `¿En cuál de los partidos se anotaron más goles?`;
+
+    setPregunta(pregunta);
+    setRespuestaCorrecta(respuestaCorrecta);
+  }, []);
+
+  const handleOptionClick = (opcion) => {
+    setSelectedOption(opcion);
+
+    if (
+      opcion === respuestaCorrecta &&
+      contadorrespuestasCorrectasSeguidas < 2
+    ) {
+      setMessage("¡Correcto!");
       setMessageColor("text-green-500");
-      speakText("Correcto");
-    } else if (option === respuestaCorrecta && respuestasCorrectas >= 2) {
+      speakText("¡Correcto!");
+      setContadorRespuestasCorrectasSeguidas(
+        contadorrespuestasCorrectasSeguidas + 1
+      );
+
+      // Generar nuevos datos aleatorios para la tabla
+      const nuevosDatosAleatorios = generateUniqueRandomOptions(0, 6, 5);
+
+      setTablaDatos(
+        nuevosDatosAleatorios.map((valor, index) => ({
+          partido: `Partido ${index + 1}`,
+          goles: valor,
+        }))
+      );
+
+      // Actualiza la respuesta correcta para la nueva configuración
+      const nuevaRespuestaCorrecta = Math.max(...nuevosDatosAleatorios);
+      setRespuestaCorrecta(nuevaRespuestaCorrecta);
+    } else if (
+      opcion === respuestaCorrecta &&
+      contadorrespuestasCorrectasSeguidas >= 2
+    ) {
+      speakText("Ejercicio completado");
+      setShowMessage(true);
       setMessage("🎊👍¡Ejercicio completado!🎉✨");
       setMessageColor("text-blue-500");
-      speakText("¡Ejercicio completado!");
       obtenerEjercicios();
-      setRespuestasCorrectas(respuestasCorrectas + 1);
-      // Agrega la lógica para registrar el progreso del estudiante y navegar a la siguiente actividad.
-      setTimeout(() => {
-        navegar("/unidad/3/listaEjercicios_19"); // Reemplaza con la ruta correcta
-      }, 2000);
+      if (contadorrespuestasCorrectasSeguidas == 2) {
+        setContadorRespuestasCorrectasSeguidas(
+          contadorrespuestasCorrectasSeguidas + 1
+        );
+        setTimeout(() => {
+          navegar("/unidad/5/listaEjercicios_22");
+          speakText("");
+        }, 2000);
+      }
     } else {
-      speakText("Vuelve a intentarlo");
       setMessage("Vuelve a intentarlo.");
       setMessageColor("text-red-500");
+      speakText("Vuelve a intentarlo.");
+      setContadorRespuestasCorrectasSeguidas(
+        contadorrespuestasCorrectasSeguidas
+      );
     }
 
-    // Espera 2 segundos y luego cambia la figura y el mensaje
+    setShowMessage(true);
+
     setTimeout(() => {
-      setMessage(null);
+      setShowMessage(false);
       setSelectedOption(null);
     }, 2000);
   };
@@ -124,7 +153,7 @@ export function Ejercicio_3_3() {
 
     const qUnidades = query(
       collection(db, "Unidades"),
-      where("orden", "==", 3)
+      where("orden", "==", 5)
     );
     const queryUnidades2 = await getDocs(qUnidades);
     const unidades = queryUnidades2.docs.map((doc) => doc.data()); // obtengo el progreso del estudiante
@@ -137,7 +166,7 @@ export function Ejercicio_3_3() {
 
     const qEjercicios = query(
       collection(db, "Ejercicios"),
-      where("orden", "==", 3),
+      where("orden", "==", 1),
       where("unidadesId", "==", idUnidad)
     );
 
@@ -230,26 +259,29 @@ export function Ejercicio_3_3() {
   return (
     <div className="bg-blue-200">
       <Cabecera />
-      <div className="relative top-32">
-        <BotonVolver direccion="/unidad/3/listaEjercicios_19" />
-      </div>
-      <div className="relative top-32 right-52">
-        <ContRespCorrectas contador={respuestasCorrectas} />
-      </div>
-      <div className="min-h-screen">
+
+      <div className={`min-h-screen ${showMessage ? "hidden" : ""}`}>
         <div
           className="text-gray-900 py-8 text-center mt-10"
-          style={{ backgroundColor: "#FFFF70" }}
+          style={{ backgroundColor: "#ADFFFF" }}
         >
           <h1 className="text-3xl font-semibold">
-            Ejercicio 3: Reconocer nombre de las Figuras Geométricas 2D
+            Ejercicio 1: Tabla Pictórica comprensión de datos
           </h1>
         </div>
+
+        <div className="relative">
+          <BotonVolver direccion="/unidad/5/listaEjercicios_22" />
+        </div>
+        <div className="relative mr-52">
+          <ContRespCorrectas contador={contadorrespuestasCorrectasSeguidas} />
+        </div>
+
         <div className="container mx-auto mt-8 p-4 text-center">
           <div className="flex justify-center items-center">
             <button
               onClick={() => {
-                speakText(`Selecciona el nombre de la figura mostrada.`);
+                speakText("observa la tabla y responde:");
               }}
               className="bg-blue-500 hover:bg-white hover:text-black text-white py-2 px-4 rounded-full mb-2 mr-1 flex items-center"
             >
@@ -258,31 +290,85 @@ export function Ejercicio_3_3() {
 
             <h2 className="text-2xl font-semibold mb-4">Instrucciones</h2>
           </div>
-          <h3 className="text-xl">
-            Selecciona el nombre de la figura mostrada.
-          </h3>
-          <img
-            src={figuraActual.imagen}
-            alt="Figura Geométrica"
-            style={{
-              backgroundColor: figuraActual.color,
-              height: "192px",
-              width: figuraActual.nombre === "Rectángulo" ? "240px" : "192px",
-            }}
-            className="mx-auto my-4 h-48 w-48 "
-          />
-          {opcionesActuales.map((opcion, index) => (
+          <h3 className="text-xl">Observa la tabla y responde:</h3>
+
+          <div className="flex justify-center items-center">
+            <img
+              key={1}
+              src={pelotaFutbol}
+              alt="Pelota de Fútbol"
+              className="w-10 h-10 inline-block m-2"
+            />
+            <h1 className="text-5xl mb-2 "> = </h1>
+            <h1 className="text-3xl ml-2 mb-1 "> 1 gol </h1>
+          </div>
+
+          <table className="table-auto mx-auto mt-4 border border-blue-500">
+            <thead>
+              <tr>
+                <th className="border border-blue-500 px-4 py-2 text-xl">
+                  Partidos
+                </th>
+                <th className="border border-blue-500 px-4 py-2  text-xl">
+                  Cantidad de Goles
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {tablaDatos.map((fila, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? "bg-blue-100" : "bg-white"
+                  } text-center`}
+                >
+                  <td className="border border-blue-500 px-4 py-2 text-lg">
+                    {fila.partido}
+                  </td>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {Array.from({ length: fila.goles }).map((_, i) => (
+                      <img
+                        key={i}
+                        src={pelotaFutbol}
+                        alt="Pelota de Fútbol"
+                        className="w-10 h-10 inline-block"
+                      />
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="flex justify-center items-center">
             <button
-              key={index}
-              className={`bg-blue-500 text-white hover:bg-white hover:text-black py-2 px-4 rounded-full my-2 mx-1`}
-              onClick={() => handleOptionClick(opcion)}
+              onClick={() => {
+                speakText(" en cuál de los partidos se anotaron más goles? ");
+              }}
+              className="bg-blue-500 hover:bg-white hover:text-black text-white py-2 px-4 rounded-full mt-5 mr-1 flex items-center"
             >
-              {opcion}
+              <GiBugleCall className="text-xl" />
             </button>
-          ))}
+
+            <h3 className="text-xl mt-4">{pregunta}</h3>
+          </div>
+          <div className="flex justify-center items-center">
+            {tablaDatos.map((opcion) => (
+              <button
+                key={opcion.partido}
+                onClick={() => handleOptionClick(opcion.goles)}
+                className={`bg-blue-500 hover:bg-white hover:text-black text-white text-xl py-2 px-2 rounded-full m-3 ${
+                  selectedOption === opcion.goles ? "opacity-70" : ""
+                }`}
+              >
+                <span className="mr-2 text-center">{opcion.partido}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-      {message && (
+
+      {showMessage && (
         <div
           className={`fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-70 flex justify-center items-center z-10`}
         >
@@ -293,7 +379,16 @@ export function Ejercicio_3_3() {
           </div>
         </div>
       )}
+
       <PieDePagina />
     </div>
   );
+}
+
+function generateUniqueRandomOptions(min, max, count) {
+  const options = new Set();
+  while (options.size < count) {
+    options.add(Math.floor(Math.random() * (max - min + 1)) + min);
+  }
+  return Array.from(options);
 }

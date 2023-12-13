@@ -231,7 +231,7 @@ export function Ejercicio_1_1() {
       console.log("Parte 4");
 
       await updateDoc(progresoEstudianteRefId, {
-        idEjercicios: [...ejerciciosRegistrados],
+        idEjercicios: arrayUnion(idEjercicio), // actualizo el progreso del estudiante
       });
 
       console.log("ejercicios registrados", ejerciciosRegistrados);

@@ -5,12 +5,12 @@ import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { BotonVolver } from "../components/BotonVolver";
 import { ContRespCorrectas } from "../components/ContRespCorrectas";
-import circulo from "../assets/img/icono_circulo.png";
-import cuadrado from "../assets/img/icono_cuadrado.png";
-import rectangulo from "../assets/img/icono_rectangulo.png";
-import rombo from "../assets/img/icono_rombo.png";
-import triangulo from "../assets/img/icono_triangulo.png";
-import ovalo from "../assets/img/icono_ovalo.png";
+import esfera from "../assets/img/icono_esfera.png";
+import cubo from "../assets/img/icono_cubo.png";
+import cilindro from "../assets/img/icono_cilindro.png";
+import cono from "../assets/img/icono_cono.png";
+import prisma from "../assets/img/icono_prisma.png";
+import piramide from "../assets/img/icono_piramide.png";
 import { GiBugleCall } from "react-icons/gi";
 import {
   collection,
@@ -23,28 +23,28 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
-const figuras = [
-  { imagen: triangulo, nombre: "Triángulo", color: "#52BE80 " },
-  { imagen: cuadrado, nombre: "Cuadrado", color: "#A569BD" },
-  { imagen: rectangulo, nombre: "Rectángulo", color: "#F4D03F" },
-  { imagen: rombo, nombre: "Rombo", color: "#E74C3C" },
-  { imagen: circulo, nombre: "Círculo", color: "#3498DB" },
-  { imagen: ovalo, nombre: "Óvalo", color: "#E67E22" },
+const figuras3D = [
+  { imagen: esfera, nombre: "Esfera", color: "#52BE80" },
+  { imagen: cubo, nombre: "Cubo", color: "#A569BD" },
+  { imagen: cilindro, nombre: "Cilindro", color: "#F4D03F" },
+  { imagen: cono, nombre: "Cono", color: "#E74C3C" },
+  { imagen: prisma, nombre: "Prisma", color: "#3498DB" },
+  { imagen: piramide, nombre: "Pirámide", color: "#E67E22" },
 ];
 
 function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = rate;
-  //synth.cancel();
+  // synth.cancel();
   synth.speak(utterance);
 }
 
 function generateRandomNumber() {
-  return Math.floor(Math.random() * figuras.length);
+  return Math.floor(Math.random() * figuras3D.length);
 }
 
-export function Ejercicio_3_3() {
+export function Ejercicio_3_5() {
   const [randomFiguraIndex, setRandomFiguraIndex] = useState(
     generateRandomNumber()
   );
@@ -57,8 +57,8 @@ export function Ejercicio_3_3() {
   const navegar = useNavigate();
   const { user } = useAuth();
 
-  const figuraActual = figuras[randomFiguraIndex];
-  const opcionesActuales = figuras.map((figura) => figura.nombre);
+  const figuraActual = figuras3D[randomFiguraIndex];
+  const opcionesActuales = figuras3D.map((figura) => figura.nombre);
   const respuestaCorrecta = figuraActual.nombre;
 
   useEffect(() => {
@@ -68,32 +68,33 @@ export function Ejercicio_3_3() {
   }, [randomFiguraIndex, figuraActual]);
 
   const handleOptionClick = (option) => {
+    speakText(figuras3D.find((figura) => figura.nombre === option).nombre);
+
     setSelectedOption(option);
-    speakText(figuras.find((figura) => figura.nombre === option).nombre);
 
     if (option === respuestaCorrecta && respuestasCorrectas < 2) {
       setRandomFiguraIndex(generateRandomNumber());
       setRespuestasCorrectas(respuestasCorrectas + 1);
+      speakText("Correcto");
       setMessage("Correcto");
       setMessageColor("text-green-500");
-      speakText("Correcto");
     } else if (option === respuestaCorrecta && respuestasCorrectas >= 2) {
       setMessage("🎊👍¡Ejercicio completado!🎉✨");
       setMessageColor("text-blue-500");
       speakText("¡Ejercicio completado!");
-      obtenerEjercicios();
       setRespuestasCorrectas(respuestasCorrectas + 1);
-      // Agrega la lógica para registrar el progreso del estudiante y navegar a la siguiente actividad.
+      obtenerEjercicios();
       setTimeout(() => {
-        navegar("/unidad/3/listaEjercicios_19"); // Reemplaza con la ruta correcta
+        navegar("/unidad/3/listaEjercicios_20"); // Reemplaza con la ruta correcta
       }, 2000);
     } else {
-      speakText("Vuelve a intentarlo");
       setMessage("Vuelve a intentarlo.");
       setMessageColor("text-red-500");
+      speakText("Vuelve a intentarlo", 1.2);
     }
 
     // Espera 2 segundos y luego cambia la figura y el mensaje
+
     setTimeout(() => {
       setMessage(null);
       setSelectedOption(null);
@@ -137,7 +138,7 @@ export function Ejercicio_3_3() {
 
     const qEjercicios = query(
       collection(db, "Ejercicios"),
-      where("orden", "==", 3),
+      where("orden", "==", 5),
       where("unidadesId", "==", idUnidad)
     );
 
@@ -231,7 +232,7 @@ export function Ejercicio_3_3() {
     <div className="bg-blue-200">
       <Cabecera />
       <div className="relative top-32">
-        <BotonVolver direccion="/unidad/3/listaEjercicios_19" />
+        <BotonVolver direccion="/unidad/3/listaEjercicios_20" />
       </div>
       <div className="relative top-32 right-52">
         <ContRespCorrectas contador={respuestasCorrectas} />
@@ -242,34 +243,35 @@ export function Ejercicio_3_3() {
           style={{ backgroundColor: "#FFFF70" }}
         >
           <h1 className="text-3xl font-semibold">
-            Ejercicio 3: Reconocer nombre de las Figuras Geométricas 2D
+            Ejercicio 5: Reconocer nombre Figuras 3D
           </h1>
         </div>
         <div className="container mx-auto mt-8 p-4 text-center">
           <div className="flex justify-center items-center">
             <button
               onClick={() => {
-                speakText(`Selecciona el nombre de la figura mostrada.`);
+                speakText("Selecciona el nombre de la figura 3D.");
               }}
               className="bg-blue-500 hover:bg-white hover:text-black text-white py-2 px-4 rounded-full mb-2 mr-1 flex items-center"
             >
               <GiBugleCall className="text-xl" />
             </button>
-
             <h2 className="text-2xl font-semibold mb-4">Instrucciones</h2>
           </div>
+
           <h3 className="text-xl">
-            Selecciona el nombre de la figura mostrada.
+            Selecciona el{" "}
+            <span className="text-2xl mb-4 font-semibold bg-white rounded-lg">
+              {" "}
+              nombre
+            </span>{" "}
+            de la figura 3D.
           </h3>
           <img
             src={figuraActual.imagen}
-            alt="Figura Geométrica"
-            style={{
-              backgroundColor: figuraActual.color,
-              height: "192px",
-              width: figuraActual.nombre === "Rectángulo" ? "240px" : "192px",
-            }}
-            className="mx-auto my-4 h-48 w-48 "
+            alt="Figura 3D"
+            style={{ backgroundColor: figuraActual.color }}
+            className="mx-auto my-4 h-48 w-48 px-2 py-2 rounded-lg shadow-md"
           />
           {opcionesActuales.map((opcion, index) => (
             <button

@@ -21,14 +21,14 @@ function speakText(text, rate = 1) {
   synth.speak(utterance); // Reproducir el texto
 }
 
-export function ListaEjercicios_3() {
+export function ListaEjercicios_19() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
   const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
   const [cargando, setCargando] = useState(true); // valor de cargando en true para mostrar pantalla de carga
   //const [ejerciciosFaltantes, setEjerciciosFaltantes] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
   const [VALOR2, setVALOR2] = useState(); //valor de ejercicios faltantes por registrar por el estudiante
   const [idEjercicio, setIdEjercicio] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
-  const [NombresEjercicios, setNombresEjercicios] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
+  const [nombreEjercicio, setNombreEjercicio] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
 
   /*  useEffect(() => {
     obtenerEjercicios();
@@ -59,7 +59,7 @@ export function ListaEjercicios_3() {
       //---------
       const qUnidad = query(
         collection(db, "Unidades"),
-        where("orden", "==", 1)
+        where("orden", "==", 3)
       );
       const queryUnidad = await getDocs(qUnidad);
       const DocUnidad = queryUnidad.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
@@ -68,11 +68,10 @@ export function ListaEjercicios_3() {
       var idUnidad = DocUnidad[0].id; // almaceno el id de la unidad 1
 
       //---------
-
-      // id del ejercicio 3
+      // id del ejercicio 2
       const qEjercicios = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 3),
+        where("orden", "==", 2),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios = await getDocs(qEjercicios);
@@ -80,10 +79,10 @@ export function ListaEjercicios_3() {
 
       console.log("DocEjercicios", DocEjercicios[0].id);
 
-      // id del ejercicio 4
+      // id del ejercicio 3
       const qEjercicios2 = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 4),
+        where("orden", "==", 3),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios2 = await getDocs(qEjercicios2);
@@ -97,20 +96,22 @@ export function ListaEjercicios_3() {
 
       setIdEjercicio(listaEjercicios); // almaceno el id del ejercicio 1
 
-      // id del ejercicio 5
+      // id del ejercicio 4
       const qEjercicios3 = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 5),
+        where("orden", "==", 4),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios3 = await getDocs(qEjercicios3);
       const DocEjercicios3 = queryEjercicios3.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
 
-      var nombreEjercicios = [];
-      nombreEjercicios.push(DocEjercicios2[0].nombre);
-      nombreEjercicios.push(DocEjercicios3[0].nombre);
+      console.log("DocEjercicios2: ->", DocEjercicios3[0].id);
 
-      setNombresEjercicios(nombreEjercicios); // almaceno los nombres de los ejercicios
+      var nombresEjercicios = [];
+      nombresEjercicios.push(DocEjercicios2[0].nombre);
+      nombresEjercicios.push(DocEjercicios3[0].nombre);
+
+      setNombreEjercicio(nombresEjercicios); // almaceno nombres de los ejercicios
 
       //---------
       console.log("ejerciciosRegistrados[0]: ", ejerciciosRegistrados[0]);
@@ -165,13 +166,13 @@ export function ListaEjercicios_3() {
   const ejercicios = [
     {
       id: 1,
-      nombre: NombresEjercicios[0], //"Ejercicio 4:  Ordena de menor a mayor (del 1 al 10)",
+      nombre: nombreEjercicio[0], //"Ejercicio 3: Reconocer nombre de las Figuras Geométricas 2D",
       disponible: ejerciciosRegistrados.includes(idEjercicio[0]), //false,
       imagen: candado,
     },
     {
       id: 2,
-      nombre: NombresEjercicios[1], // "Ejercicio 5: Ordena de menor a mayor (del 11 al 20)",
+      nombre: nombreEjercicio[1],
       disponible: ejerciciosRegistrados.includes(idEjercicio[1]), //false
       imagen: candado,
     },
@@ -205,12 +206,12 @@ export function ListaEjercicios_3() {
     <div className="flex flex-col  justify-center items-center align-middle  min-h-screen bg-blue-200">
       <Cabecera />
       <div>
-        <BotonVolver direccion={"/unidad/1"} />
+        <BotonVolver direccion={"/unidad/3"} />
       </div>
 
       <h1
         className="text-4xl font-semibold mb-4 rounded-xl p-2 text-center w-96"
-        style={{ backgroundColor: "#FF5C5C" }}
+        style={{ backgroundColor: "#FFFF70" }}
       >
         Lista de Ejercicios
       </h1>
@@ -229,7 +230,7 @@ export function ListaEjercicios_3() {
               <Link
                 to={
                   ejercicio.disponible
-                    ? `/unidad/1/listaEjercicios/ejercicio_${ejercicio.id}`
+                    ? `/unidad/3/listaEjercicios/ejercicio_${ejercicio.id + 2}`
                     : "#"
                 }
                 key={ejercicio.id}

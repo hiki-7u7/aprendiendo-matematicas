@@ -21,14 +21,14 @@ function speakText(text, rate = 1) {
   synth.speak(utterance); // Reproducir el texto
 }
 
-export function ListaEjercicios_3() {
+export function ListaEjercicios_22() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
   const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
   const [cargando, setCargando] = useState(true); // valor de cargando en true para mostrar pantalla de carga
-  //const [ejerciciosFaltantes, setEjerciciosFaltantes] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
+  const [ejerciciosFaltantes, setEjerciciosFaltantes] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
   const [VALOR2, setVALOR2] = useState(); //valor de ejercicios faltantes por registrar por el estudiante
-  const [idEjercicio, setIdEjercicio] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
-  const [NombresEjercicios, setNombresEjercicios] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
+  const [idEjercicio, setIdEjercicio] = useState(""); //valor de ejercicios faltantes por registrar por el estudiante
+  const [nombreEjercicio, setNombreEjercicio] = useState(""); //valor de ejercicios faltantes por registrar por el estudiante
 
   /*  useEffect(() => {
     obtenerEjercicios();
@@ -59,7 +59,7 @@ export function ListaEjercicios_3() {
       //---------
       const qUnidad = query(
         collection(db, "Unidades"),
-        where("orden", "==", 1)
+        where("orden", "==", 5)
       );
       const queryUnidad = await getDocs(qUnidad);
       const DocUnidad = queryUnidad.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
@@ -69,10 +69,9 @@ export function ListaEjercicios_3() {
 
       //---------
 
-      // id del ejercicio 3
       const qEjercicios = query(
         collection(db, "Ejercicios"),
-        where("orden", "==", 3),
+        where("orden", "==", 1),
         where("unidadesId", "==", idUnidad)
       );
       const queryEjercicios = await getDocs(qEjercicios);
@@ -80,50 +79,21 @@ export function ListaEjercicios_3() {
 
       console.log("DocEjercicios", DocEjercicios[0].id);
 
-      // id del ejercicio 4
-      const qEjercicios2 = query(
-        collection(db, "Ejercicios"),
-        where("orden", "==", 4),
-        where("unidadesId", "==", idUnidad)
-      );
-      const queryEjercicios2 = await getDocs(qEjercicios2);
-      const DocEjercicios2 = queryEjercicios2.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+      setIdEjercicio(DocEjercicios[0].id); // almaceno el id del ejercicio 1
 
-      console.log("DocEjercicios2: ->", DocEjercicios2[0].id);
-
-      var listaEjercicios = [];
-      listaEjercicios.push(DocEjercicios[0].id);
-      listaEjercicios.push(DocEjercicios2[0].id);
-
-      setIdEjercicio(listaEjercicios); // almaceno el id del ejercicio 1
-
-      // id del ejercicio 5
-      const qEjercicios3 = query(
-        collection(db, "Ejercicios"),
-        where("orden", "==", 5),
-        where("unidadesId", "==", idUnidad)
-      );
-      const queryEjercicios3 = await getDocs(qEjercicios3);
-      const DocEjercicios3 = queryEjercicios3.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
-
-      var nombreEjercicios = [];
-      nombreEjercicios.push(DocEjercicios2[0].nombre);
-      nombreEjercicios.push(DocEjercicios3[0].nombre);
-
-      setNombresEjercicios(nombreEjercicios); // almaceno los nombres de los ejercicios
+      setNombreEjercicio(DocEjercicios[0].nombre); // almaceno el nombre del ejercicio 1
 
       //---------
       console.log("ejerciciosRegistrados[0]: ", ejerciciosRegistrados[0]);
       console.log("idEjercicio: ", idEjercicio);
 
-      console.log(
-        "ejercicio registrado ? ",
-        ejerciciosRegistrados.includes(idEjercicio)
-      );
-
-      console.log("idEjercicio: ", idEjercicio);
-
-      console.log("idEjercicio Nuevo: ", idEjercicio);
+      if (ejerciciosRegistrados[0] === idEjercicio) {
+        console.log("entro al if");
+        setVALOR2(true);
+      } else {
+        console.log("entro al else");
+        setVALOR2(false);
+      }
 
       //---------
 
@@ -165,15 +135,8 @@ export function ListaEjercicios_3() {
   const ejercicios = [
     {
       id: 1,
-      nombre: NombresEjercicios[0], //"Ejercicio 4:  Ordena de menor a mayor (del 1 al 10)",
-      disponible: ejerciciosRegistrados.includes(idEjercicio[0]), //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: NombresEjercicios[1], // "Ejercicio 5: Ordena de menor a mayor (del 11 al 20)",
-      disponible: ejerciciosRegistrados.includes(idEjercicio[1]), //false
-      imagen: candado,
+      nombre: nombreEjercicio,
+      disponible: true,
     },
   ];
 
@@ -205,12 +168,12 @@ export function ListaEjercicios_3() {
     <div className="flex flex-col  justify-center items-center align-middle  min-h-screen bg-blue-200">
       <Cabecera />
       <div>
-        <BotonVolver direccion={"/unidad/1"} />
+        <BotonVolver direccion={"/unidad/5"} />
       </div>
 
       <h1
         className="text-4xl font-semibold mb-4 rounded-xl p-2 text-center w-96"
-        style={{ backgroundColor: "#FF5C5C" }}
+        style={{ backgroundColor: "#ADFFFF" }}
       >
         Lista de Ejercicios
       </h1>
@@ -229,7 +192,7 @@ export function ListaEjercicios_3() {
               <Link
                 to={
                   ejercicio.disponible
-                    ? `/unidad/1/listaEjercicios/ejercicio_${ejercicio.id}`
+                    ? `/unidad/5/listaEjercicios_22/ejercicio_${ejercicio.id}`
                     : "#"
                 }
                 key={ejercicio.id}
@@ -239,7 +202,7 @@ export function ListaEjercicios_3() {
               >
                 <button
                   key={index}
-                  className={`text-lg mt-4 mb-4 border-2 rounded-lg p-1 bg-white hover:bg-blue-500  hover:text-white transition duration-300 ${
+                  className={`text-lg mt-2 mb-4 border-2 rounded-lg p-1 bg-white hover:bg-blue-500  hover:text-white transition duration-300 ${
                     ejercicio.disponible
                       ? "cursor-pointer"
                       : "cursor-not-allowed" // inverso  "cursor-not-allowed" : "cursor-pointer"
@@ -248,7 +211,7 @@ export function ListaEjercicios_3() {
                   {ejercicio.nombre}
                 </button>
                 <div className="relative flex mb-4">
-                  {index >= 0 && !ejercicios[index].disponible ? (
+                  {index > 0 && !ejercicios[index].disponible ? (
                     <span></span>
                   ) : (
                     <div
@@ -262,7 +225,7 @@ export function ListaEjercicios_3() {
                   <div>
                     <img
                       src={
-                        ejercicio.id === 3 && !ejercicio.disponible
+                        ejercicio.id === 1 && !ejercicio.disponible
                           ? null
                           : ejercicio.imagen
                       }

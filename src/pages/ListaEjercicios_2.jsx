@@ -23,393 +23,155 @@ function speakText(text, rate = 1) {
 
 export function ListaEjercicios_2() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
-  const [ejerciciosCompletados, setEjerciciosCompletados] = useState([]); //valor de unidadesCompletadas
-  const [ejerciciosDisponibles, setEjerciciosDisponibles] = useState([]); //valor de unidadesDisponibles
-
-  const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de unidades
+  const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
   const [cargando, setCargando] = useState(true); // valor de cargando en true para mostrar pantalla de carga
+  const [ejerciciosFaltantes, setEjerciciosFaltantes] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
+  const [VALOR2, setVALOR2] = useState(); //valor de ejercicios faltantes por registrar por el estudiante
+  const [idEjercicio, setIdEjercicio] = useState(""); //valor de ejercicios faltantes por registrar por el estudiante
+  const [NombresEjercicios, setNombresEjercicios] = useState(""); //valor de ejercicios faltantes por registrar por el estudiante
 
-  const obtenerEjercicios = async () => {
-    // valor de cargando en true para mostrar pantalla de carga
-    //  Obtengo el progreso de las unidades del estudiante
-    const qUnidades = query(
-      collection(db, "ProgresoEstudiante"),
-      where("estudianteId", "==", user.uid)
-    );
-    const queryUnidades = await getDocs(qUnidades);
-    const unidadesEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
-
-    console.log("id de alumno", user.uid);
-
-    console.log("unidadesEstudiante", unidadesEstudiante[0].idEjercicios);
-
-    const listaEjerReg = unidadesEstudiante[0].idEjercicios; // obtengo el progreso de las unidades del estudiante
-
-    console.log("listaEjerDisp: ", listaEjerReg);
-
-    setEjerciciosRegistrados(listaEjerReg); // obtengo el progreso de los ejercicios del estudiante
-
-    console.log("ejerciciosRegistrados_1: ", ejerciciosRegistrados);
-
-    /*  const listaEjerCom = unidadesEstudiante.map(
-      (u) => u.ejerciciosCompletados[0].unidad_1_completado
-    ); // obtengo el progreso de las unidades del estudiante
-
-    setEjerciciosDisponibles(listaEjerDisp[0]); // obtengo el progreso de los ejercicios del estudiante
-    setEjerciciosCompletados(listaEjerCom[0]); // obtengo el progreso de los ejercicios del estudiante */
-
-    const q = query(collection(db, "Ejercicios"));
-    const querySnapshot = await getDocs(q);
-    const ejercicios = querySnapshot.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
-
-    console.log("Cantidad Ejercicios: ", ejercicios.length);
-
-    let n = 1;
-    console.log("Ejercicios registrados: ", n);
-    var valor = n / ejercicios.length;
-    // convertir a porcentaje
-    valor = valor * 100;
-    // redondear el resultado
-    valor = Math.round(valor * 100) / 100;
-    // quitamos los decimales
-    valor = valor.toFixed(0);
-
-    console.log("valor: ", valor + "%");
-
-    setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
-  };
+  /*  useEffect(() => {
+    obtenerEjercicios();
+  }, []); */
 
   useEffect(() => {
+    async function obtenerEjercicios() {
+      //  Obtengo el progreso de las unidades del estudiante
+      const qUnidades = query(
+        collection(db, "ProgresoEstudiante"),
+        where("estudianteId", "==", user.uid)
+      );
+      const queryUnidades = await getDocs(qUnidades);
+      const DocEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("id de alumno", user.uid);
+
+      console.log("DocEstudiante", DocEstudiante[0].idEjercicios[0]);
+
+      const listaEjerReg = DocEstudiante[0].idEjercicios; // obtengo el progreso de las unidades del estudiante
+
+      console.log("listaEjerDisp: ", listaEjerReg);
+
+      setEjerciciosRegistrados(listaEjerReg); // obtengo el progreso de los ejercicios del estudiante
+
+      console.log("ejerciciosRegistrados_1: ", ejerciciosRegistrados);
+
+      //---------
+      const qUnidad = query(
+        collection(db, "Unidades"),
+        where("orden", "==", 1)
+      );
+      const queryUnidad = await getDocs(qUnidad);
+      const DocUnidad = queryUnidad.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("DocUnidad - ID: ", DocUnidad[0].id);
+      var idUnidad = DocUnidad[0].id; // almaceno el id de la unidad 1
+
+      //---------
+
+      const qEjercicios = query(
+        collection(db, "Ejercicios"),
+        where("orden", "==", 2),
+        where("unidadesId", "==", idUnidad)
+      );
+      const queryEjercicios = await getDocs(qEjercicios);
+      const DocEjercicios = queryEjercicios.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("DocEjercicios - ID: ", DocEjercicios[0].id);
+
+      setIdEjercicio(DocEjercicios[0].id); // almaceno el id del ejercicio 1
+
+      const qEjercicios2 = query(
+        collection(db, "Ejercicios"),
+        where("orden", "==", 3),
+        where("unidadesId", "==", idUnidad)
+      );
+      const queryEjercicios2 = await getDocs(qEjercicios2);
+      const DocEjercicios2 = queryEjercicios2.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      setNombresEjercicios(DocEjercicios2[0].nombre); // almaceno el nombre
+
+      //---------
+      console.log("ejerciciosRegistrados[0]: ", ejerciciosRegistrados[0]);
+      console.log("idEjercicio: ", idEjercicio);
+
+      if (ejerciciosRegistrados[0] === idEjercicio) {
+        console.log("entro al if");
+        setVALOR2(true);
+      } else {
+        console.log("entro al else");
+        setVALOR2(false);
+      }
+
+      //---------
+
+      /*  const q = query(collection(db, "Ejercicios"));
+      const querySnapshot = await getDocs(q);
+      const ejercicios = querySnapshot.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("Cantidad Ejercicios: ", ejercicios.length);
+
+      let n = 1;
+      console.log("Ejercicios registrados: ", n);
+      var valor = n / ejercicios.length;
+      // convertir a porcentaje
+      valor = valor * 100;
+      // redondear el resultado
+      valor = Math.round(valor * 100) / 100;
+      // quitamos los decimales
+      valor = valor.toFixed(0);
+
+      console.log("valor: ", valor + "%"); */
+
+      setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
+    }
     obtenerEjercicios();
   }, []);
 
-  console.log("ejerciciosRegistrados: ", ejerciciosRegistrados);
+  console.log("ejerciciosRegistrados:  VALOR FINAL", ejerciciosRegistrados);
+  console.log("IDEJERCICIO:  VALOR FINAl", idEjercicio);
 
-  const VALOR = ejerciciosRegistrados.length;
+  //const VALOR = ejerciciosRegistrados.length;
 
-  console.log("VALOR: ", VALOR);
+  //console.log("VALOR: VALOR FINAL ", VALOR2);
+
+  console.log(
+    "PRUEBA DE ARRRAY: ",
+    ejerciciosRegistrados.includes(idEjercicio)
+  );
 
   const ejercicios = [
-    /*  {
-      id: 1,
-      nombre: "Ejercicio 1: Contar imagenes entre 1 al 10",
-      disponible: VALOR >= 0 ? true : false, //true,
-    }, */
     {
       id: 1,
-      nombre: "Ejercicio 5: Reconocer nombre Figuras 3D",
-      disponible: VALOR >= 1 ? true : false, //false,
+      nombre: NombresEjercicios, //"Ejercicio 3:  Contar entre 1 al 20",
+      disponible: ejerciciosRegistrados.includes(idEjercicio), //false,
       imagen: candado,
     },
+  ];
+
+  // ejemplo de parte de la lista de ejercicios
+
+  /* ,
     {
-      id: 2,
-      nombre: "Ejercicio 6: Reconocer imagen de Figuras 3D",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    /*{
       id: 3,
-      nombre: "Ejercicio 5: Patrones del 1 al 20",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    } 
-    {
-      id: 2,
-      nombre: "Ejercicio 4: Patrones del 1 al 10",
+      nombre: "Ejercicio 3: Contar imagenes entre 1 al 20",
       disponible: VALOR >= 2 ? true : false, //false
       imagen: candado,
     },
     {
-      id: 3,
+      id: 4,
       nombre: "Ejercicio 4: Multiplicación de números enteros",
       disponible: VALOR >= 3 ? true : false, //false
       imagen: candado,
     },
     {
-      id: 4,
+      id: 5,
       nombre: "Ejercicio 5: División de números enteros",
       disponible: VALOR >= 4 ? true : false, //false
       imagen: candado,
     }, */
-    ,
-    ,
-  ];
 
-  // Lista de ejercicios de la unidad 1 video 2
-
-  const ejercicio2 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 3:  Contar entre 1 al 20",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 1 video 3
-
-  const ejercicio3 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 4:  Ordena de menor a mayor (del 1 al 10)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 5: Ordena de menor a mayor (del 11 al 20)",
-      disponible: VALOR >= 2 ? true : false, //false
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 4
-
-  const ejercicio4 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 6: Comparación de Números (mayor, igual o menor que)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 5
-
-  const ejercicio5 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 7: Componer Números utilizando cubos",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 8: Componer Números utilizando manzanas",
-      disponible: VALOR >= 2 ? true : false, //false
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 6
-
-  const ejercicio6 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 9: Descomponer Números",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 10: Descomponer Números utilizando manzanas",
-      disponible: VALOR >= 2 ? true : false, //false
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 7
-
-  const ejercicio7 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 11: Identificar Unidades y Decenas entre 1 a 20",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 8
-
-  const ejercicio8 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 12: Suma del 0 al 5",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 9
-
-  const ejercicio9 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 13: Suma (Máximo 10)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 10
-
-  const ejercicio10 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 14: Suma (Máximo 20)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 11
-
-  const ejercicio11 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 15: Resta (Números menores o iguales a 5)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 12
-
-  const ejercicio12 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 16: Resta (Números menores o iguales a 10)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 1 video 13
-
-  const ejercicio13 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 17: Resta (Números menores o iguales a 20)",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 2 video 1
-
-  const ejercicio14 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 1: Patrones con Figuras",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // lista de ejercicios de la unidad 2 video 2
-
-  const ejercicio15 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 2: Patrones con Animales",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 2 video 3
-
-  const ejercicio16 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 3: Patrones con Números",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 4: Patrones del 1 al 10",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 3,
-      nombre: "Ejercicio 5: Patrones del 1 al 20",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 2 video 4
-
-  const ejercicio17 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 6: Patrones del 1 al 20",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 3 video 1
-
-  const ejercicio18 = [
-    {
-      id: 1,
-      nombre: " Ejercicio 1: izquierda o derecha",
-      disponible: VALOR >= 0 ? true : false, //true,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 2: Contar y Marcar las Imágenes del 1 al 10",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 3 video 2
-
-  const ejercicio19 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 3: Reconocer nombre de las Figuras Geométricas 2D",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 4: Reconocer imagen de las Figuras Geométricas 2D",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 3 video 3
-
-  const ejercicio20 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 5: Reconocer nombre Figuras 3D",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-    {
-      id: 2,
-      nombre: "Ejercicio 6: Reconocer imagen de Figuras 3D",
-      disponible: VALOR >= 1 ? true : false, //false,
-      imagen: candado,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 4 video 1
-
-  const ejercicio21 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 1: Identificar y comparar la longitud de objetos",
-      disponible: VALOR >= 0 ? true : false, //true,
-    },
-  ];
-
-  // Lista de ejercicios de la unidad 5 video 1
-
-  const ejercicio22 = [
-    {
-      id: 1,
-      nombre: "Ejercicio 1: Identificar y comparar la longitud de objetos",
-      disponible: VALOR >= 0 ? true : false, //true,
-    },
-  ];
+  //
 
   return (
     <div className="flex flex-col  justify-center items-center align-middle  min-h-screen bg-blue-200">
@@ -420,7 +182,7 @@ export function ListaEjercicios_2() {
 
       <h1
         className="text-4xl font-semibold mb-4 rounded-xl p-2 text-center w-96"
-        style={{ backgroundColor: "#FFFF70" }}
+        style={{ backgroundColor: "#FF5C5C" }}
       >
         Lista de Ejercicios
       </h1>
@@ -449,7 +211,7 @@ export function ListaEjercicios_2() {
               >
                 <button
                   key={index}
-                  className={`text-lg mt-4 mb-4 border-2 rounded-lg p-1 bg-white hover:bg-blue-500  hover:text-white transition duration-300 ${
+                  className={`text-lg mt-4 mb-4 border-2 rounded-lg p-1 px-10 bg-white hover:bg-blue-500  hover:text-white transition duration-300 ${
                     ejercicio.disponible
                       ? "cursor-pointer"
                       : "cursor-not-allowed" // inverso  "cursor-not-allowed" : "cursor-pointer"
@@ -457,9 +219,8 @@ export function ListaEjercicios_2() {
                 >
                   {ejercicio.nombre}
                 </button>
-
                 <div className="relative flex mb-4">
-                  {!ejercicios[index].disponible ? (
+                  {index >= 0 && !ejercicios[index].disponible ? (
                     <span></span>
                   ) : (
                     <div
@@ -473,11 +234,11 @@ export function ListaEjercicios_2() {
                   <div>
                     <img
                       src={
-                        /* ejercicio.id === 1 && */ ejercicio.disponible
-                          ? null
-                          : ejercicio.imagen
+                        ejercicio.id === 1 && !ejercicio.disponible
+                          ? ejercicio.imagen
+                          : null
                       }
-                      className={`container h-10 w-10 relative ml-2 top-4  ${
+                      className={`container h-10 w-10 relative ml-2 top-7  ${
                         ejercicio.disponible ? "hidden" : ""
                       }`}
                     />

@@ -23,84 +23,145 @@ function speakText(text, rate = 1) {
 
 export function ListaEjercicios() {
   const { user } = useAuth(); //user.email para obtener el email del usuario
-  const [ejerciciosCompletados, setEjerciciosCompletados] = useState([]); //valor de unidadesCompletadas
-  const [ejerciciosDisponibles, setEjerciciosDisponibles] = useState([]); //valor de unidadesDisponibles
-
-  const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de unidades
+  const [ejerciciosRegistrados, setEjerciciosRegistrados] = useState([]); //valor de ejercicios registrados por el estudiante
   const [cargando, setCargando] = useState(true); // valor de cargando en true para mostrar pantalla de carga
+  //const [ejerciciosFaltantes, setEjerciciosFaltantes] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
+  const [VALOR2, setVALOR2] = useState(); //valor de ejercicios faltantes por registrar por el estudiante
+  const [idEjercicio, setIdEjercicio] = useState(""); //valor de ejercicios faltantes por registrar por el estudiante
+  const [NombresEjercicios, setNombresEjercicios] = useState([]); //valor de ejercicios faltantes por registrar por el estudiante
 
-  const obtenerEjercicios = async () => {
-    // valor de cargando en true para mostrar pantalla de carga
-    //  Obtengo el progreso de las unidades del estudiante
-    const qUnidades = query(
-      collection(db, "ProgresoEstudiante"),
-      where("estudianteId", "==", user.uid)
-    );
-    const queryUnidades = await getDocs(qUnidades);
-    const unidadesEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
-
-    console.log("id de alumno", user.uid);
-
-    console.log("unidadesEstudiante", unidadesEstudiante[0]);
-
-    const listaEjerReg = unidadesEstudiante[0].idEjercicios; // obtengo el progreso de las unidades del estudiante
-
-    console.log("listaEjerDisp: ", listaEjerReg);
-
-    setEjerciciosRegistrados(listaEjerReg); // obtengo el progreso de los ejercicios del estudiante
-
-    console.log("ejerciciosRegistrados_1: ", ejerciciosRegistrados);
-
-    /*  const listaEjerCom = unidadesEstudiante.map(
-      (u) => u.ejerciciosCompletados[0].unidad_1_completado
-    ); // obtengo el progreso de las unidades del estudiante
-
-    setEjerciciosDisponibles(listaEjerDisp[0]); // obtengo el progreso de los ejercicios del estudiante
-    setEjerciciosCompletados(listaEjerCom[0]); // obtengo el progreso de los ejercicios del estudiante */
-
-    const q = query(collection(db, "Ejercicios"));
-    const querySnapshot = await getDocs(q);
-    const ejercicios = querySnapshot.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
-
-    console.log("Cantidad Ejercicios: ", ejercicios.length);
-
-    let n = 1;
-    console.log("Ejercicios registrados: ", n);
-    var valor = n / ejercicios.length;
-    // convertir a porcentaje
-    valor = valor * 100;
-    // redondear el resultado
-    valor = Math.round(valor * 100) / 100;
-    // quitamos los decimales
-    valor = valor.toFixed(0);
-
-    console.log("valor: ", valor + "%");
-
-    setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
-  };
+  /*  useEffect(() => {
+    obtenerEjercicios();
+  }, []); */
 
   useEffect(() => {
+    async function obtenerEjercicios() {
+      //  Obtengo el progreso de las unidades del estudiante
+      const qUnidades = query(
+        collection(db, "ProgresoEstudiante"),
+        where("estudianteId", "==", user.uid)
+      );
+      const queryUnidades = await getDocs(qUnidades);
+      const DocEstudiante = queryUnidades.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("id de alumno", user.uid);
+
+      console.log("DocEstudiante", DocEstudiante[0].idEjercicios[0]);
+
+      const listaEjerReg = DocEstudiante[0].idEjercicios; // obtengo el progreso de las unidades del estudiante
+
+      console.log("listaEjerDisp: ", listaEjerReg);
+
+      setEjerciciosRegistrados(listaEjerReg); // obtengo el progreso de los ejercicios del estudiante
+
+      console.log("ejerciciosRegistrados_1: ", ejerciciosRegistrados);
+
+      //---------
+      const qUnidad = query(
+        collection(db, "Unidades"),
+        where("orden", "==", 1)
+      );
+      const queryUnidad = await getDocs(qUnidad);
+      const DocUnidad = queryUnidad.docs.map((doc) => doc.data()); // obtengo los datos de la unidad 1
+
+      console.log("DocUnidad", DocUnidad[0].id);
+      var idUnidad = DocUnidad[0].id; // almaceno el id de la unidad 1
+
+      //---------
+      //Consulta para obtener el id del ejercicio 1 de la unidad 1
+
+      const qEjercicios = query(
+        collection(db, "Ejercicios"),
+        where("orden", "==", 1),
+        where("unidadesId", "==", idUnidad)
+      );
+      const queryEjercicios = await getDocs(qEjercicios);
+      const DocEjercicios = queryEjercicios.docs.map((doc) => doc.data()); // obtengo los datos del ejercicio 1
+
+      console.log("DocEjercicios", DocEjercicios[0].id);
+
+      setIdEjercicio(DocEjercicios[0].id); // almaceno el id del ejercicio 1
+
+      const qEjercicios2 = query(
+        collection(db, "Ejercicios"),
+        where("orden", "==", 2),
+        where("unidadesId", "==", idUnidad)
+      );
+      const queryEjercicios2 = await getDocs(qEjercicios2);
+      const DocEjercicios2 = queryEjercicios2.docs.map((doc) => doc.data()); // obtengo los datos del ejercicio 1
+
+      var listaNombresEjercicios = [];
+      listaNombresEjercicios.push(DocEjercicios[0].nombre);
+      listaNombresEjercicios.push(DocEjercicios2[0].nombre);
+
+      setNombresEjercicios(listaNombresEjercicios); // almaceno el nombre
+
+      //---------
+      console.log("ejerciciosRegistrados[0]: ", ejerciciosRegistrados[0]);
+      console.log("idEjercicio: ", idEjercicio);
+
+      if (ejerciciosRegistrados[0] === idEjercicio) {
+        console.log("entro al if");
+        setVALOR2(true);
+      } else {
+        console.log("entro al else");
+        setVALOR2(false);
+      }
+
+      //---------
+
+      /*  const q = query(collection(db, "Ejercicios"));
+      const querySnapshot = await getDocs(q);
+      const ejercicios = querySnapshot.docs.map((doc) => doc.data()); // obtengo el progreso de las unidades del estudiante
+
+      console.log("Cantidad Ejercicios: ", ejercicios.length);
+
+      let n = 1;
+      console.log("Ejercicios registrados: ", n);
+      var valor = n / ejercicios.length;
+      // convertir a porcentaje
+      valor = valor * 100;
+      // redondear el resultado
+      valor = Math.round(valor * 100) / 100;
+      // quitamos los decimales
+      valor = valor.toFixed(0);
+
+      console.log("valor: ", valor + "%"); */
+
+      setCargando(false); // valor de cargando en false para mostrar pantalla de contenido
+    }
     obtenerEjercicios();
   }, []);
 
-  console.log("ejerciciosRegistrados: ", ejerciciosRegistrados);
+  console.log("ejerciciosRegistrados:  VALOR FINAL", ejerciciosRegistrados);
+  console.log("IDEJERCICIO:  VALOR FINAl", idEjercicio);
 
-  const VALOR = ejerciciosRegistrados.length;
+  //const VALOR = ejerciciosRegistrados.length;
 
-  console.log("VALOR: ", VALOR);
+  //console.log("VALOR: VALOR FINAL ", VALOR2);
+
+  console.log(
+    "PRUEBA DE ARRRAY: ",
+    ejerciciosRegistrados.includes(idEjercicio)
+  );
 
   const ejercicios = [
     {
       id: 1,
-      nombre: "Ejercicio 1: Contar imagenes entre 1 al 10",
-      disponible: VALOR >= 0 ? true : false, //true,
+      nombre: NombresEjercicios[0], //"Ejercicio 1: Contar imagenes entre 1 al 10",
+      disponible: true,
     },
     {
       id: 2,
-      nombre: "Ejercicio 2: Contar y Marcar las Imágenes del 1 al 10",
-      disponible: VALOR >= 1 ? true : false, //false,
+      nombre: NombresEjercicios[1], //"Ejercicio 2: Contar y Marcar las Imágenes del 1 al 10",
+      disponible: ejerciciosRegistrados.includes(idEjercicio),
       imagen: candado,
-    } /* ,
+    },
+  ];
+
+  // ejemplo de parte de la lista de ejercicios
+
+  /* ,
     {
       id: 3,
       nombre: "Ejercicio 3: Contar imagenes entre 1 al 20",
@@ -118,8 +179,9 @@ export function ListaEjercicios() {
       nombre: "Ejercicio 5: División de números enteros",
       disponible: VALOR >= 4 ? true : false, //false
       imagen: candado,
-    }, */,
-  ];
+    }, */
+
+  //
 
   return (
     <div className="flex flex-col  justify-center items-center align-middle  min-h-screen bg-blue-200">
